@@ -10,7 +10,7 @@ import {
   faStar,
   faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
-import { AccountBalanceOutlined, CurrencyExchange, HistoryEduOutlined, ShowChartOutlined, StarBorderOutlined } from "@mui/icons-material";
+import { AccountBalanceOutlined, AccountBalanceWalletOutlined, CurrencyExchange, HistoryEduOutlined, ShowChartOutlined, StarBorderOutlined } from "@mui/icons-material";
 
 export function BottomNavigator() {
   const [value, setValue] = React.useState(0);
@@ -26,7 +26,7 @@ export function BottomNavigator() {
       >
         <BottomNavigationAction
           label="Accounts"
-          icon={<AccountBalanceOutlined />}
+          icon={<AccountBalanceWalletOutlined />}
         />
         <BottomNavigationAction
           label="Pay & Transfer"
