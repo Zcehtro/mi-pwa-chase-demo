@@ -44,6 +44,63 @@ const Home: NextPage = () => {
             description="Woo-hoo! You earned 655 points on a recent purchase."
             icon={faTrophy}
           />
+
+          {/* Main Content */}
+          <Box
+            width="100%"
+            display="flex"
+            flexDirection="column"
+            gap={2}
+            p={3}
+            mt={3}
+          >
+            {/* Title */}
+            <Typography variant="h5" fontWeight="bold">
+              Accounts
+            </Typography>
+
+            {/* Overview */}
+            <Box
+              display="flex"
+              flexDirection="column"
+              gap={2}
+              sx={{
+                minHeight: "calc(100vh - 300px)",
+                bgcolor: "#0e46b736",
+                borderRadius: 2,
+                border: "2px solid #0e46b7",
+              }}
+            >
+              {/* Overview title */}
+              <Box p={2}>
+                <Typography
+                  variant="subtitle1"
+                  fontWeight="bold"
+                  color="primary.main"
+                >
+                  Overview
+                </Typography>
+              </Box>
+
+              {/* Bank Account Card */}
+              <Box
+                display="flex"
+                flexDirection="row"
+                justifyContent="space-between"
+                alignItems="center"
+                p={2}
+                bgcolor="primary.main"
+                borderRadius={1}
+              >
+                <Typography variant="subtitle1" fontWeight="bold" color="#fff">
+                  Bank Account
+                </Typography>
+                <Typography variant="subtitle1" fontWeight="bold" color="#fff">
+                  $6,400.00
+                </Typography>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </main>
       <BottomNavigator />

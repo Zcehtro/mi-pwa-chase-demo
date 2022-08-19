@@ -7,4 +7,14 @@ export const lightTheme = createTheme({
             main: "#0e46b7",
         },
     },
+    components: {
+        MuiBottomNavigationAction: {
+            styleOverrides: {
+                label: {
+                    fontSize: "0.6rem",
+                    marginTop: "1px",
+                },
+            }
+        },
+    }
 });
