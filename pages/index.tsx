@@ -8,6 +8,7 @@ import {
 import type { NextPage } from "next";
 import Head from "next/head";
 import {
+  AccountDetailCard,
   BottomNavigator,
   NotificationCard,
   PageHeader,
@@ -15,7 +16,10 @@ import {
 } from "../components/ui";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrophy } from "@fortawesome/free-solid-svg-icons";
+import {
+  faTrophy,
+  faGripLinesVertical,
+} from "@fortawesome/free-solid-svg-icons";
 
 const Home: NextPage = () => {
   return (
@@ -46,14 +50,7 @@ const Home: NextPage = () => {
           />
 
           {/* Main Content */}
-          <Box
-            width="100%"
-            display="flex"
-            flexDirection="column"
-            gap={2}
-            p={3}
-            mt={3}
-          >
+          <Box width="100%" display="flex" flexDirection="column" gap={2} p={3}>
             {/* Title */}
             <Typography variant="h5" fontWeight="bold">
               Accounts
@@ -63,12 +60,12 @@ const Home: NextPage = () => {
             <Box
               display="flex"
               flexDirection="column"
-              gap={2}
+              justifyContent="flex-start"
               sx={{
                 minHeight: "calc(100vh - 300px)",
-                bgcolor: "#0e46b736",
+                bgcolor: "#F3FAFF",
                 borderRadius: 2,
-                border: "2px solid #0e46b7",
+                border: "2px solid #ACD1DE",
               }}
             >
               {/* Overview title */}
@@ -76,7 +73,7 @@ const Home: NextPage = () => {
                 <Typography
                   variant="subtitle1"
                   fontWeight="bold"
-                  color="primary.main"
+                  color="primary"
                 >
                   Overview
                 </Typography>
@@ -90,7 +87,7 @@ const Home: NextPage = () => {
                 alignItems="center"
                 p={2}
                 bgcolor="primary.main"
-                borderRadius={1}
+                sx={{ borderTopRightRadius: 5, borderTopLeftRadius: 5 }}
               >
                 <Typography variant="subtitle1" fontWeight="bold" color="#fff">
                   Bank Account
@@ -99,6 +96,23 @@ const Home: NextPage = () => {
                   $6,400.00
                 </Typography>
               </Box>
+
+              {/*Bank Sub-account Card */}
+              <AccountDetailCard
+                accountName="CHASE CHECKING"
+                accountNumber="123456785545"
+                accountBalance="$1,150.00"
+              />
+              <AccountDetailCard
+                accountName="CHASE SAVINGS"
+                accountNumber="123456782200"
+                accountBalance="$5,250.00"
+              />
+              <AccountDetailCard
+                accountName="CHASE PAYMENTS"
+                accountNumber="123456785231"
+                accountBalance="$3,720.00"
+              />
             </Box>
           </Box>
         </Box>
