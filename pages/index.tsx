@@ -1,6 +1,21 @@
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+} from "@mui/material";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { BottomNavigator } from "../components/ui";
+import {
+  BottomNavigator,
+  NotificationCard,
+  PageHeader,
+  Widget,
+} from "../components/ui";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 
 const Home: NextPage = () => {
   return (
@@ -11,7 +26,26 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main></main>
+      <main>
+        {/* Page Header */}
+        <PageHeader />
+        {/* Page Content */}
+        <Box
+          width="100%"
+          maxWidth="600px"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          mt={2}
+        >
+          {/* Today's Snapshot Card */}
+          <NotificationCard
+            title="Today's Snapshot"
+            description="Woo-hoo! You earned 655 points on a recent purchase."
+            icon={faTrophy}
+          />
+        </Box>
+      </main>
       <BottomNavigator />
     </div>
   );
