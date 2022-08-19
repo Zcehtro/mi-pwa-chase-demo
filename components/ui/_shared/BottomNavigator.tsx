@@ -24,23 +24,23 @@ export function BottomNavigator() {
         }}
       >
         <BottomNavigationAction
-          label="Recents"
+          label="Accounts"
           icon={<FontAwesomeIcon icon={faWallet} size="2x" />}
         />
         <BottomNavigationAction
-          label="Recents"
+          label="Pay & Transfer"
           icon={<FontAwesomeIcon icon={faSackDollar} size="2x" />}
         />
         <BottomNavigationAction
-          label="Recents"
+          label="Plan & Track"
           icon={<FontAwesomeIcon icon={faFilePen} size="2x" />}
         />
         <BottomNavigationAction
-          label="Recents"
+          label="Benefits"
           icon={<FontAwesomeIcon icon={faStar} size="2x" />}
         />
         <BottomNavigationAction
-          label="Recents"
+          label="Investments"
           icon={<FontAwesomeIcon icon={faChartLine} size="2x" />}
         />
       </BottomNavigation>
