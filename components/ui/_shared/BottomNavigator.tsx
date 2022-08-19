@@ -1,5 +1,5 @@
 import * as React from "react";
-import Box from "@mui/material/Box";
+import {Box, Paper} from "@mui/material";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,12 +10,13 @@ import {
   faStar,
   faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
+import { AccountBalanceOutlined, CurrencyExchange, HistoryEduOutlined, ShowChartOutlined, StarBorderOutlined } from "@mui/icons-material";
 
 export function BottomNavigator() {
   const [value, setValue] = React.useState(0);
 
   return (
-    <Box sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}>
+    <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
       <BottomNavigation
         showLabels
         value={value}
@@ -25,25 +26,25 @@ export function BottomNavigator() {
       >
         <BottomNavigationAction
           label="Accounts"
-          icon={<FontAwesomeIcon icon={faWallet} size="2x" />}
+          icon={<AccountBalanceOutlined />}
         />
         <BottomNavigationAction
           label="Pay & Transfer"
-          icon={<FontAwesomeIcon icon={faSackDollar} size="2x" />}
+          icon={<CurrencyExchange  />}
         />
         <BottomNavigationAction
           label="Plan & Track"
-          icon={<FontAwesomeIcon icon={faFilePen} size="2x" />}
+          icon={<HistoryEduOutlined />}
         />
         <BottomNavigationAction
           label="Benefits"
-          icon={<FontAwesomeIcon icon={faStar} size="2x" />}
+          icon={<StarBorderOutlined /> }
         />
         <BottomNavigationAction
           label="Investments"
-          icon={<FontAwesomeIcon icon={faChartLine} size="2x" />}
+          icon={<ShowChartOutlined /> }
         />
       </BottomNavigation>
-    </Box>
+    </Paper>
   );
 }
