@@ -23,6 +23,7 @@ export function BottomNavigator() {
         onChange={(event, newValue) => {
           setValue(newValue);
         }}
+        sx={{minHeight: "60px"}}
       >
         <BottomNavigationAction
           label="Accounts"
