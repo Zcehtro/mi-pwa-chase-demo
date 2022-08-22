@@ -1,10 +1,4 @@
-import {
-  AccordionProps,
-  AccordionSummaryProps,
-  styled,
-  Typography,
-  
-} from "@mui/material";
+import { AccordionProps, AccordionSummaryProps, styled, Typography } from "@mui/material";
 
 import {
   CreditCardOutlined,
@@ -17,8 +11,8 @@ import {
   ArrowForwardIosSharp,
 } from "@mui/icons-material";
 
-import MuiAccordion from '@mui/material/Accordion'
-import MuiAccordionSummary from '@mui/material/AccordionSummary'
+import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
@@ -46,15 +40,51 @@ export const PayTransferContent = [
     label: "Pay bills",
     drawerContents: (
       <>
-        <Typography>Antel</Typography>
-        <Typography>UTE</Typography>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>Antel</Typography>
+          </AccordionSummary>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>UTE</Typography>
+          </AccordionSummary>
+        </Accordion>
       </>
     ),
   },
   {
     icon: <PaidOutlined color="primary" sx={{ fontSize: 50 }} />,
     label: "Send Money",
-    drawerContents: <></>,
+    drawerContents: (
+      <>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>Favorite 1</Typography>
+          </AccordionSummary>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>Favorite 2</Typography>
+          </AccordionSummary>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>Favorite 3</Typography>
+          </AccordionSummary>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>Favorite 4</Typography>
+          </AccordionSummary>
+        </Accordion>
+        <Accordion>
+          <AccordionSummary>
+            <Typography>New destination acccount..</Typography>
+          </AccordionSummary>
+        </Accordion>
+      </>
+    ),
   },
   {
     icon: <AccountBalanceOutlined color="primary" sx={{ fontSize: 50 }} />,
@@ -67,18 +97,12 @@ export const PayTransferContent = [
     drawerContents: (
       <>
         <Accordion>
-          <AccordionSummary
-            aria-controls={`panel1a-content`}
-            id={`panel1a-header`}
-          >
+          <AccordionSummary>
             <Typography>Account transfers</Typography>
           </AccordionSummary>
         </Accordion>
         <Accordion>
-          <AccordionSummary
-            aria-controls={`panel1a-content`}
-            id={`panel1a-header`}
-          >
+          <AccordionSummary>
             <Typography>Brokerage transfers</Typography>
           </AccordionSummary>
         </Accordion>

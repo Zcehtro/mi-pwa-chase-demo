@@ -1,4 +1,4 @@
-import { AccordionContent, PayTransferContent } from "./Content";
+import { AccordionContent, PayTransferContent } from "../../components/ui/pay_transfer/Content";
 
 import { useState } from "react";
 
