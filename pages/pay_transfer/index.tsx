@@ -5,13 +5,14 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import Head from "next/head";
 
-import { Unstable_Grid2 as Grid2, AccordionDetails, Typography } from "@mui/material";
+import { Unstable_Grid2 as Grid2, AccordionDetails, Typography, Box, AppBar } from "@mui/material";
 import { BottomNavigator, PayTransferGridItem as GridItem } from "../../components/ui";
 import { ExpandMore, ArrowForwardIosSharp } from "@mui/icons-material";
 
 import { styled } from "@mui/material/styles";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
 import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
+import { MainLayout } from "../../components/layouts";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
@@ -44,21 +45,22 @@ const PayTransfer: NextPage = () => {
   };
 
   return (
-    <div>
-      <Head>
-        <title>Pay and Transfer</title>
-        <meta name="description" content="Pan & Transfer using Chase Mobile" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+    <MainLayout>
+      <Box>
+        <AppBar>
+          <Typography color="white" variant="h6" textAlign="center">
+            Pay & Transfer
+          </Typography>
+        </AppBar>
+      </Box>
 
-      <main style={{ backgroundColor: "#f3f7f8", height: "100vh" }}>
+      <Box style={{ backgroundColor: "#f3f7f8", height: "100vh" }}>
         <Grid2 style={{ margin: "0 15px", padding: "0 0 40px" }} container spacing={4}>
           {PayTransferContent.map(({ icon, label, drawerContents }, index) => (
             <GridItem icon={icon} label={label} drawerContents={drawerContents} key={index} />
           ))}
-          ;
         </Grid2>
-        <div style={{ margin: "40px 25px" }}>
+        <Box style={{ margin: "40px 25px" }}>
           {AccordionContent.map((element, index) => (
             <Accordion
               expanded={expanded === `panel${index + 1}`}
@@ -75,11 +77,10 @@ const PayTransfer: NextPage = () => {
               <AccordionDetails>{element.details}</AccordionDetails>
             </Accordion>
           ))}
-         
-        </div>
-      </main>
+        </Box>
+      </Box>
       <BottomNavigator />
-    </div>
+    </MainLayout>
   );
 };
 
