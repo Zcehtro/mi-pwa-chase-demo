@@ -27,7 +27,7 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary expandIcon={<ArrowForwardIosSharp />} {...props} />
+  <MuiAccordionSummary expandIcon={<ExpandMore />} {...props} />
 ))(({ theme }) => ({
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(0deg)",
@@ -55,7 +55,7 @@ const PayTransfer: NextPage = () => {
       </Box>
 
       <Box style={{ backgroundColor: "#f3f7f8", height: "100vh" }}>
-        <Grid2 style={{ margin: "0 15px", padding: "0 0 40px" }} container spacing={4}>
+        <Grid2 style={{ margin: "0 15px", padding: "20px 0 10px" }} container spacing={4}>
           {PayTransferContent.map(({ icon, label, drawerContents }, index) => (
             <GridItem icon={icon} label={label} drawerContents={drawerContents} key={index} />
           ))}
@@ -68,7 +68,6 @@ const PayTransfer: NextPage = () => {
               key={index}
             >
               <AccordionSummary
-                expandIcon={<ExpandMore />}
                 aria-controls={`panel${index + 1}-content`}
                 id={`panel${index + 1}-header`}
               >
