@@ -1,7 +1,20 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Typography,
+  Card,
+  CardActionArea,
+  CardContent,
+} from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faComments, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faComments,
+  faUser,
+  faCheckCircle,
+  faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
 import { Widget } from "./";
+import { userWidgets } from "../../data";
 
 export const PageHeader = () => {
   return (
@@ -44,10 +57,46 @@ export const PageHeader = () => {
         justifyContent="flex-start"
         flexWrap="wrap"
       >
-        <Widget label="See statements" />
-        <Widget label="Payment history" />
-        <Widget label="+" />
+        {userWidgets.map((widget) => (
+          <Widget key={widget._id} {...widget} />
+        ))}
+        <Widget add label="Add" />
       </Box>
+
+      {/* Last movement card */}
+
+      <Card sx={{ my: "2px", backgroundColor: "rgba(255,255,255,0.2)" }}>
+        <CardActionArea>
+          <CardContent
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 1,
+            }}
+          >
+            {/* Movement card icon */}
+            <FontAwesomeIcon icon={faCheckCircle} color="#77DD77" size="2x" />
+            <Box sx={{ whiteSpace: "nowrap" }}>
+              <Typography variant="body1" fontSize="12px" color="#eaeaea">
+                Successfully sent <b>$1.000,00</b> to <b>John Doe</b>
+              </Typography>
+              <Typography
+                variant="body2"
+                fontSize="11px"
+                color="rgba(255,255,255,0.4)"
+              >
+                See details
+              </Typography>
+            </Box>
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              color="rgba(255,255,255, 0.5)"
+              size="1x"
+            />
+          </CardContent>
+        </CardActionArea>
+      </Card>
     </Box>
   );
 };
