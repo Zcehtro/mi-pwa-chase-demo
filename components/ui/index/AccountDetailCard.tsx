@@ -15,13 +15,22 @@ interface Props {
   name: string;
   number: string;
   balance: string;
+
+  onClick?: () => void;
 }
 
-export const AccountDetailCard: FC<Props> = ({ name, number, balance }) => {
+export const AccountDetailCard: FC<Props> = ({
+  name,
+  number,
+  balance,
+  onClick,
+}) => {
   return (
-    <Card sx={{ padding: 1 }}>
+    <Card sx={{ my: "2px" }} onClick={onClick}>
       <CardActionArea>
-        <CardContent sx={{ display: "flex", flexDirection: "row" }}>
+        <CardContent
+          sx={{ display: "flex", flexDirection: "row", px: 2, py: 3 }}
+        >
           <Box width="60%">
             <Typography
               variant="caption"

@@ -1,29 +1,23 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardContent,
-  Typography,
-} from "@mui/material";
+import { useContext } from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
-import {
-  AccountDetailCard,
-  BottomNavigator,
-  NotificationCard,
-  PageHeader,
-  Widget,
-} from "../components/ui";
-
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faTrophy,
-  faGripLinesVertical,
-} from "@fortawesome/free-solid-svg-icons";
+import { Box, Drawer, Typography } from "@mui/material";
+import { faTrophy } from "@fortawesome/free-solid-svg-icons";
 import { MainLayout } from "../components/layouts";
 import { bankAccounts } from "../data";
+import { UIContext } from "../context/ui";
+import {
+  AccountDetailCard,
+  NotificationCard,
+  PageHeader,
+} from "../components/ui";
 
 const Home: NextPage = () => {
+  const { drawerOpen, toggleDrawer } = useContext(UIContext);
+
+  const toggleDrawerVisibility = () => {
+    toggleDrawer(!drawerOpen);
+  };
+
   return (
     <MainLayout>
       {/* Page Header */}
@@ -42,6 +36,7 @@ const Home: NextPage = () => {
           title="Today's Snapshot"
           description="Woo-hoo! You earned 655 points on a recent purchase."
           icon={faTrophy}
+          onClick={toggleDrawerVisibility}
         />
 
         {/* Main Content */}
@@ -57,7 +52,7 @@ const Home: NextPage = () => {
             flexDirection="column"
             justifyContent="flex-start"
             sx={{
-              minHeight: "calc(100vh - 300px)",
+              minHeight: "calc(100vh - 370px)",
               bgcolor: "#F3FAFF",
               borderRadius: 2,
               border: "2px solid #ACD1DE",
@@ -90,11 +85,24 @@ const Home: NextPage = () => {
 
             {/*Bank Sub-account Card */}
             {bankAccounts.map((account) => (
-              <AccountDetailCard key={account._id} {...account} />
+              <AccountDetailCard
+                key={account._id}
+                {...account}
+                onClick={toggleDrawerVisibility}
+              />
             ))}
           </Box>
         </Box>
       </Box>
+      <Drawer
+        anchor="bottom"
+        open={drawerOpen}
+        onClose={toggleDrawerVisibility}
+      >
+        <Typography variant="h5" fontWeight="bold" color="#555">
+          Drawer content goes here
+        </Typography>
+      </Drawer>
     </MainLayout>
   );
 };

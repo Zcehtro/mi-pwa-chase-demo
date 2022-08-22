@@ -5,6 +5,7 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Chip,
   Typography,
 } from "@mui/material";
 
@@ -14,13 +15,20 @@ interface Props {
   title: string;
   description: string;
   icon: any;
+
+  onClick?: () => void;
 }
 
-export const NotificationCard: FC<Props> = ({ title, description, icon }) => {
+export const NotificationCard: FC<Props> = ({
+  title,
+  description,
+  icon,
+  onClick,
+}) => {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card sx={{ maxWidth: 345 }} onClick={onClick}>
       <CardActionArea>
-        <CardContent>
+        <CardContent sx={{ paddingY: 3 }}>
           <Box
             display="flex"
             justifyContent="flex-start"
@@ -31,6 +39,7 @@ export const NotificationCard: FC<Props> = ({ title, description, icon }) => {
             <Typography variant="subtitle1" fontWeight="bold">
               {title}
             </Typography>
+            <Chip label="30 sec read" sx={{ color: "#999" }} size="small" />
           </Box>
           <Typography variant="body2" color="text.secondary" pl={5}>
             {description}
