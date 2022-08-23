@@ -1,41 +1,52 @@
 import { FC, ReactNode } from "react";
+import { useRouter } from "next/router";
 
-import { styled, AccordionProps, AccordionSummaryProps, Typography } from "@mui/material";
+import {
+  Typography,
+  CardActionArea,
+  CardContent,
+  Card,
+} from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-
-import MuiAccordion from "@mui/material/Accordion";
-import MuiAccordionSummary from "@mui/material/AccordionSummary";
 
 interface Props {
   children: ReactNode;
+  href?: string;
 }
 
-const Accordion = styled((props: AccordionProps) => (
-  <MuiAccordion disableGutters elevation={0} {...props} />
-))(({ theme }) => ({
-  border: `1px solid ${theme.palette.divider}`,
-  "&:not(:last-child)": {
-    borderBottom: 0,
-  },
-  "&:before": {
-    display: "none",
-  },
-}));
+export const InactiveAccordion: FC<Props> = ({ children, href }) => {
+  const router = useRouter();
 
-const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary expandIcon={<ExpandMore />} {...props} />
-))(({ theme }) => ({
-  "& .MuiAccordionSummary-expandIconWrapper": {
-    transform: "rotate(-90deg)",
-  },
-}));
+  const goLink = () => {
+    if (href) router.push(href);
+  };
 
-export const InactiveAccordion: FC<Props> = ({ children }) => {
   return (
-    <Accordion square={true}>
-      <AccordionSummary>
-        <Typography>{children}</Typography>
-      </AccordionSummary>
-    </Accordion>
+    <Card
+      sx={{
+        borderBottom: `1px solid lightgray`,
+        "&:not(:last-child)": {
+          borderBottom: 0,
+        },
+        "&:before": {
+          display: "none",
+        },
+        borderRadius: 0,
+      }}
+      onClick={goLink}
+    >
+      <CardActionArea>
+        <CardContent
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <Typography>{children}</Typography>
+          <ExpandMore sx={{ transform: "rotate(-90deg)" }} />
+        </CardContent>
+      </CardActionArea>
+    </Card>
   );
 };
