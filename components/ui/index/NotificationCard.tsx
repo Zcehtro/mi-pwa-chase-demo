@@ -16,7 +16,7 @@ interface Props {
   description: string;
   icon: any;
 
-  onClick?: () => void;
+  onClick?: (e: any) => void;
 }
 
 export const NotificationCard: FC<Props> = ({

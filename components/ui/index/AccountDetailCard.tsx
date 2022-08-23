@@ -16,7 +16,7 @@ interface Props {
   number: string;
   balance: string;
 
-  onClick?: () => void;
+  onClick?: (e: any) => void;
 }
 
 export const AccountDetailCard: FC<Props> = ({
