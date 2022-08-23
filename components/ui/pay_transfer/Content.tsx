@@ -8,11 +8,11 @@ import {
   CallSplitOutlined,
   NoteOutlined,
   ExpandMore,
-  ArrowForwardIosSharp,
 } from "@mui/icons-material";
 
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import { InactiveAccordion } from "./InactiveAccordion";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
@@ -27,10 +27,10 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary expandIcon={<ArrowForwardIosSharp />} {...props} />
+  <MuiAccordionSummary expandIcon={<ExpandMore />} {...props} />
 ))(({ theme }) => ({
   "& .MuiAccordionSummary-expandIconWrapper": {
-    transform: "rotate(0deg)",
+    transform: "rotate(-90deg)",
   },
 }));
 
@@ -40,16 +40,8 @@ export const PayTransferContent = [
     label: "Pay bills",
     drawerContents: (
       <>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Antel</Typography>
-          </AccordionSummary>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>UTE</Typography>
-          </AccordionSummary>
-        </Accordion>
+        <InactiveAccordion>Antel</InactiveAccordion>
+        <InactiveAccordion>UTE</InactiveAccordion>
       </>
     ),
   },
@@ -58,31 +50,11 @@ export const PayTransferContent = [
     label: "Send Money",
     drawerContents: (
       <>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Favorite 1</Typography>
-          </AccordionSummary>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Favorite 2</Typography>
-          </AccordionSummary>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Favorite 3</Typography>
-          </AccordionSummary>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Favorite 4</Typography>
-          </AccordionSummary>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>New destination acccount..</Typography>
-          </AccordionSummary>
-        </Accordion>
+        <InactiveAccordion>Favorite 1</InactiveAccordion>
+        <InactiveAccordion>Favorite 2</InactiveAccordion>
+        <InactiveAccordion>Favorite 3</InactiveAccordion>
+        <InactiveAccordion>Favorite 4</InactiveAccordion>
+        <InactiveAccordion>New destination acccount..</InactiveAccordion>
       </>
     ),
   },
@@ -96,16 +68,8 @@ export const PayTransferContent = [
     label: "Transfer",
     drawerContents: (
       <>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Account transfers</Typography>
-          </AccordionSummary>
-        </Accordion>
-        <Accordion>
-          <AccordionSummary>
-            <Typography>Brokerage transfers</Typography>
-          </AccordionSummary>
-        </Accordion>
+        <InactiveAccordion>Account transfers</InactiveAccordion>
+        <InactiveAccordion>Brokerage transfers</InactiveAccordion>
       </>
     ),
   },
