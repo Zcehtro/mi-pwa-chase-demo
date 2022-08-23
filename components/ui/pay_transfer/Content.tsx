@@ -68,7 +68,7 @@ export const PayTransferContent = [
     label: "Transfer",
     drawerContents: (
       <>
-        <InactiveAccordion>Account transfers</InactiveAccordion>
+        <InactiveAccordion href="/pay_transfer/transfer">Account transfers</InactiveAccordion>
         <InactiveAccordion>Brokerage transfers</InactiveAccordion>
       </>
     ),

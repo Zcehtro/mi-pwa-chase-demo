@@ -3,11 +3,10 @@ import { AccordionContent, PayTransferContent } from "../../components/ui/pay_tr
 import { useState } from "react";
 
 import type { NextPage } from "next";
-import Head from "next/head";
 
 import { Unstable_Grid2 as Grid2, AccordionDetails, Typography, Box, AppBar } from "@mui/material";
 import { BottomNavigator, PayTransferGridItem as GridItem } from "../../components/ui";
-import { ExpandMore, ArrowForwardIosSharp } from "@mui/icons-material";
+import { ExpandMore } from "@mui/icons-material";
 
 import { styled } from "@mui/material/styles";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
