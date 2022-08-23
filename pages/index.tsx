@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import type { NextPage } from "next";
 import { Box, Drawer, Typography } from "@mui/material";
-import { faTrophy } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { MainLayout } from "../components/layouts";
 import { bankAccounts } from "../data";
 import { UIContext } from "../context/ui";
@@ -14,7 +14,9 @@ import {
 const Home: NextPage = () => {
   const { drawerOpen, toggleDrawer } = useContext(UIContext);
 
-  const toggleDrawerVisibility = () => {
+  const toggleDrawerVisibility = (e: any) => {
+    //get the id of the clicked element
+    const id = e.target.id;
     toggleDrawer(!drawerOpen);
   };
 
@@ -35,7 +37,7 @@ const Home: NextPage = () => {
         <NotificationCard
           title="Today's Snapshot"
           description="Woo-hoo! You earned 655 points on a recent purchase."
-          icon={faTrophy}
+          icon={faStar}
           onClick={toggleDrawerVisibility}
         />
 
@@ -78,7 +80,7 @@ const Home: NextPage = () => {
               <Typography variant="subtitle1" fontWeight="bold" color="#fff">
                 Bank Account
               </Typography>
-              <Typography variant="subtitle1" fontWeight="bold" color="#fff">
+              <Typography variant="subtitle1" color="#fff">
                 $6,400.00
               </Typography>
             </Box>
