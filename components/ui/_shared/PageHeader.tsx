@@ -25,7 +25,9 @@ export const PageHeader = () => {
   const [showWidgetList, setShowWidgetList] = useState(false);
   const [showAccounts, setShowAccounts] = useState(false);
 
-  const handleAddWidget = () => {};
+  const handleAddWidget = () => {
+    setShowWidgetList(true);
+  };
 
   const showAccountsDialog = () => {
     setShowAccounts(true);

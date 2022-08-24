@@ -54,7 +54,7 @@ const Home: NextPage = () => {
         {/* Main Content */}
         <Box width="100%" display="flex" flexDirection="column" gap={2} p={3}>
           {/* Title */}
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h5" fontWeight="bold" sx={{ color: "#555" }}>
             Accounts
           </Typography>
 
@@ -64,15 +64,20 @@ const Home: NextPage = () => {
             flexDirection="column"
             justifyContent="flex-start"
             sx={{
-              minHeight: "calc(100vh - 370px)",
               bgcolor: "#F3FAFF",
               borderRadius: 2,
-              border: "2px solid #ACD1DE",
+              border: "1px solid rgb(0, 110, 215, 0.6)",
+              mb: 1,
             }}
           >
             {/* Overview title */}
             <Box p={2}>
-              <Typography variant="subtitle1" fontWeight="bold" color="primary">
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                color="primary"
+                sx={{ opacity: 0.6 }}
+              >
                 Overview
               </Typography>
             </Box>
@@ -88,10 +93,10 @@ const Home: NextPage = () => {
               sx={{ borderTopRightRadius: 5, borderTopLeftRadius: 5 }}
             >
               <Typography variant="subtitle1" fontWeight="bold" color="#fff">
-                Bank Account
+                Bank Accounts
               </Typography>
               <Typography variant="subtitle1" color="#fff">
-                $6,400.00
+                $10,120.00
               </Typography>
             </Box>
 
@@ -104,8 +109,70 @@ const Home: NextPage = () => {
               />
             ))}
           </Box>
+
+          {/* Movements */}
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="flex-start"
+            sx={{
+              borderRadius: 2,
+              border: "1px solid rgb(0, 110, 215, 0.6)",
+              mb: 1,
+            }}
+          >
+            {/* Movements title */}
+            <Box p={2}>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                color="primary"
+                sx={{ opacity: 0.6 }}
+              >
+                Movements
+              </Typography>
+              <Typography
+                variant="caption"
+                fontSize="10px"
+                sx={{ color: "#888" }}
+              >
+                This field is only a placeholder for the sake of this example.
+              </Typography>
+            </Box>
+          </Box>
+          {/* Auto-debit */}
+          <Box
+            display="flex"
+            flexDirection="column"
+            justifyContent="flex-start"
+            sx={{
+              borderRadius: 2,
+              border: "1px solid rgb(0, 110, 215, 0.6)",
+              mb: 1,
+            }}
+          >
+            {/* Movements title */}
+            <Box p={2}>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                color="primary"
+                sx={{ opacity: 0.6 }}
+              >
+                Auto Debit
+              </Typography>
+              <Typography
+                variant="caption"
+                fontSize="10px"
+                sx={{ color: "#888" }}
+              >
+                This field is another placeholder for the sake of this example.
+              </Typography>
+            </Box>
+          </Box>
         </Box>
       </Box>
+      {/*Basic drawer placeholder */}
       <Drawer
         anchor="bottom"
         open={drawerOpen}

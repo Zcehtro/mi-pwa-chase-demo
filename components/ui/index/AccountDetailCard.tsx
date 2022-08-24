@@ -26,7 +26,7 @@ export const AccountDetailCard: FC<Props> = ({
   onClick,
 }) => {
   return (
-    <Card sx={{ my: "2px" }} onClick={onClick}>
+    <Card sx={{ mt: "2px" }} onClick={onClick}>
       <CardActionArea>
         <CardContent
           sx={{ display: "flex", flexDirection: "row", px: 2, py: 3 }}

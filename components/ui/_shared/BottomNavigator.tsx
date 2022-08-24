@@ -11,18 +11,20 @@ import {
 } from "@mui/icons-material";
 import { useRouter } from "next/router";
 
-
 export function BottomNavigator() {
   const [value, setValue] = React.useState(0);
-  
+
   const router = useRouter();
-  
+
   const goLink = (href: string) => {
     router.push(href);
   };
 
   return (
-    <Paper sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }} elevation={3}>
+    <Paper
+      sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
+      elevation={3}
+    >
       <BottomNavigation
         showLabels
         value={value}
@@ -36,7 +38,7 @@ export function BottomNavigator() {
           icon={<AccountBalanceWalletOutlined />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/")}
-          />
+        />
         <BottomNavigationAction
           label="Pay & Transfer"
           icon={<CurrencyExchange />}
