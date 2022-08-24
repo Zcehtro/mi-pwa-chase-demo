@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import { FC } from 'react';
 import {
   Box,
   Button,
@@ -21,13 +22,6 @@ type Inputs = {
 };
 
 const SignIn: NextPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
-
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
   return (
     <AuthLayout>
       <Box
@@ -48,7 +42,24 @@ const SignIn: NextPage = () => {
         </Typography>
 
         {/*Login Form */}
-        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3 }}>
+        <LoginForm />
+        
+      </Box>
+    </AuthLayout>
+  );
+};
+
+
+const LoginForm: FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Inputs>();
+
+  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  return(
+    <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3 }}>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={1}>
@@ -56,7 +67,7 @@ const SignIn: NextPage = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Enter your user ID"
+                    label={ errors.email ? "This field is required" : "Enter your email" }
                     variant="standard"
                     {...register("email", { required: true })}
                   />
@@ -65,7 +76,7 @@ const SignIn: NextPage = () => {
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
-                    label="Enter your password"
+                    label={ errors.password ? "This field is required" : "Enter your password" }
                     variant="standard"
                     type="password"
                     {...register("password", { required: true })}
@@ -85,20 +96,11 @@ const SignIn: NextPage = () => {
                     Sign In
                   </Button>
                 </Grid>
-                {/*RHF error display */}
-                <Grid item xs={12} sx={{ color: "red" }}>
-                  <Typography variant="caption" textAlign="center">
-                    {errors.email && <span>* The email is required</span>}
-                    {errors.password && <span>* The password is required</span>}
-                  </Typography>
-                </Grid>
               </Grid>
             </form>
           </CardContent>
         </Card>
-      </Box>
-    </AuthLayout>
-  );
-};
+  )
+}
 
 export default SignIn;
