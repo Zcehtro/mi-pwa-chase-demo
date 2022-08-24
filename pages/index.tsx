@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Box, Drawer, Typography } from "@mui/material";
+import { Box, Drawer, Typography, Button } from "@mui/material";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { MainLayout } from "../components/layouts";
 import { bankAccounts } from "../data";
@@ -111,8 +111,32 @@ const Home: NextPage = () => {
         open={drawerOpen}
         onClose={toggleDrawerVisibility}
       >
-        <Typography variant="h5" fontWeight="bold" color="#555">
-          Drawer content goes here
+        <Typography
+          variant="h6"
+          fontSize="16px"
+          fontWeight="bold"
+          color="#555"
+          textAlign="center"
+          sx={{ mt: 2, px: 2 }}
+        >
+          You're looking a placeholder because this feature is not yet
+          implemented.
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          fontSize="13px"
+          color="#999"
+          textAlign="center"
+        >
+          Maybe you can add your bank account details here later.
+        </Typography>
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Button variant="contained" color="primary" disabled>
+            Add Bank Account
+          </Button>
+        </Box>
+        <Typography variant="caption" color="#999" textAlign="center" mb={2}>
+          This feature isn't available yet.
         </Typography>
       </Drawer>
     </MainLayout>
