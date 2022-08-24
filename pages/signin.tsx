@@ -64,7 +64,7 @@ const LoginForm: FC = () => {
   };
 
   useEffect(() => {
-    if (!isLoggedIn) router.push("/signin");
+    if (isLoggedIn) router.push("/");
   }),
     [isLoggedIn];
 
