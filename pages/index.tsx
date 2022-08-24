@@ -186,7 +186,7 @@ const Home: NextPage = () => {
           textAlign="center"
           sx={{ mt: 2, px: 2 }}
         >
-          You're looking a placeholder because this feature is not yet
+          You&apos;re looking a placeholder because this feature is not yet
           implemented.
         </Typography>
         <Typography
@@ -203,7 +203,7 @@ const Home: NextPage = () => {
           </Button>
         </Box>
         <Typography variant="caption" color="#999" textAlign="center" mb={2}>
-          This feature isn't available yet.
+          This feature isn&apos;t available yet.
         </Typography>
       </Drawer>
     </MainLayout>
