@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import type { NextPage } from "next";
+import { useRouter } from "next/router";
 import { Box, Drawer, Typography } from "@mui/material";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { MainLayout } from "../components/layouts";
 import { bankAccounts } from "../data";
 import { UIContext } from "../context/ui";
+import { USERContext } from "../context/user";
 import {
   AccountDetailCard,
   NotificationCard,
@@ -13,12 +15,20 @@ import {
 
 const Home: NextPage = () => {
   const { drawerOpen, toggleDrawer } = useContext(UIContext);
+  const { isLoggedIn, email, password, id } = useContext(USERContext);
+  const router = useRouter();
 
   const toggleDrawerVisibility = (e: any) => {
     //get the id of the clicked element
     const id = e.target.id;
     toggleDrawer(!drawerOpen);
   };
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/signin");
+    }
+  }, [isLoggedIn]);
 
   return (
     <MainLayout>
@@ -86,7 +96,7 @@ const Home: NextPage = () => {
             </Box>
 
             {/*Bank Sub-account Card */}
-            {bankAccounts.map((account) => (
+            {bankAccounts.map(account => (
               <AccountDetailCard
                 key={account._id}
                 {...account}
