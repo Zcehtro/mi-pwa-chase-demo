@@ -1,4 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Widget } from "./";
+import { userWidgets, availableWidgets } from "../../data";
+import { AccountsDialog } from "./";
 import {
   Box,
   IconButton,
@@ -8,24 +12,24 @@ import {
   CardContent,
   Drawer,
 } from "@mui/material";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faComments,
   faUser,
   faCheckCircle,
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
-import { Widget } from "./";
-import { userWidgets, availableWidgets } from "../../data";
+
 export const PageHeader = () => {
   const [widgetList, setWidgetList] = useState(availableWidgets);
   const [userWidgetList, setUserWidgetList] = useState(userWidgets);
   const [showWidgetList, setShowWidgetList] = useState(false);
+  const [showAccounts, setShowAccounts] = useState(false);
 
-  const handleAddWidget = () => {
-    setShowWidgetList(true);
-  }
+  const handleAddWidget = () => {};
 
+  const showAccountsDialog = () => {
+    setShowAccounts(true);
+  };
 
   return (
     <Box
@@ -48,7 +52,7 @@ export const PageHeader = () => {
         <IconButton>
           <FontAwesomeIcon icon={faComments} color="#fff" />
         </IconButton>
-        <IconButton>
+        <IconButton onClick={showAccountsDialog}>
           <FontAwesomeIcon icon={faUser} color="#fff" />
         </IconButton>
       </Box>
@@ -67,26 +71,71 @@ export const PageHeader = () => {
         justifyContent="flex-start"
         flexWrap="wrap"
       >
-        {userWidgets.map((widget) => (
+        {userWidgets.map(widget => (
           <Widget key={widget._id} {...widget} />
         ))}
-        <Widget add label="Add" onClick={handleAddWidget} zIndex={showWidgetList ? 1000 : 1} />
+        <Widget
+          add
+          label="Add"
+          onClick={handleAddWidget}
+          zIndex={showWidgetList ? 1000 : 1}
+        />
       </Box>
       {/* Add Widget Drawer */}
-      <Drawer anchor="bottom" open={showWidgetList} onClose={() => setShowWidgetList(false)}>
-        <Box width="100%" maxWidth="600px" display="flex" flexDirection="column" py={3} pl={2} bgcolor="primary.main">
-
+      <Drawer
+        anchor="bottom"
+        open={showWidgetList}
+        onClose={() => setShowWidgetList(false)}
+      >
+        <Box
+          width="100%"
+          maxWidth="600px"
+          display="flex"
+          flexDirection="column"
+          py={3}
+          pl={2}
+          bgcolor="primary.main"
+        >
           {/* Equipped Widgets on edit */}
-          <Typography variant="h6" fontSize="16px" fontWeight="bold" color="primary.contrastText"> Your widgets </Typography>
-          <Box width="100%" maxWidth="600px" display="flex" flexWrap="wrap" justifyContent="flex-start" mb={5}>
-            {userWidgets.map((widget) => (
-                <Widget key={widget._id} {...widget} size="small" />
+          <Typography
+            variant="h6"
+            fontSize="16px"
+            fontWeight="bold"
+            color="primary.contrastText"
+          >
+            {" "}
+            Your widgets{" "}
+          </Typography>
+          <Box
+            width="100%"
+            maxWidth="600px"
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="flex-start"
+            mb={5}
+          >
+            {userWidgets.map(widget => (
+              <Widget key={widget._id} {...widget} size="small" />
             ))}
           </Box>
-          <Typography variant="h6" fontSize="16px" fontWeight="bold" color="primary.contrastText"> Available widgets </Typography>
-          <Box width="100%" maxWidth="600px" display="flex" flexWrap="wrap" justifyContent="center">
-            {availableWidgets.map((widget) => (
-                <Widget key={widget._id} {...widget} add />
+          <Typography
+            variant="h6"
+            fontSize="16px"
+            fontWeight="bold"
+            color="primary.contrastText"
+          >
+            {" "}
+            Available widgets{" "}
+          </Typography>
+          <Box
+            width="100%"
+            maxWidth="600px"
+            display="flex"
+            flexWrap="wrap"
+            justifyContent="center"
+          >
+            {availableWidgets.map(widget => (
+              <Widget key={widget._id} {...widget} add />
             ))}
           </Box>
         </Box>
@@ -126,6 +175,12 @@ export const PageHeader = () => {
           </CardContent>
         </CardActionArea>
       </Card>
+
+      {/* Accounts Dialog */}
+      <AccountsDialog
+        open={showAccounts}
+        onClose={() => setShowAccounts(false)}
+      />
     </Box>
   );
 };

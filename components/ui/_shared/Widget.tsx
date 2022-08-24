@@ -6,7 +6,7 @@ import { faAdd } from "@fortawesome/free-solid-svg-icons";
 interface Props {
   label: string;
   zIndex?: number;
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium" | undefined;
   add?: boolean;
 
   onClick?: () => void;
@@ -18,7 +18,7 @@ export const Widget: FC<Props> = ({ label, add, onClick, zIndex, size }) => {
       clickable
       onClick={onClick}
       label={label}
-      size={ size ? size : "medium" }
+      size={size ? size : "medium"}
       icon={add ? <FontAwesomeIcon icon={faAdd} /> : undefined}
       sx={{
         zIndex: zIndex || 1,
