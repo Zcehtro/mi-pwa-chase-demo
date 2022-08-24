@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   IconButton,
@@ -5,6 +6,7 @@ import {
   Card,
   CardActionArea,
   CardContent,
+  Drawer,
 } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -14,9 +16,17 @@ import {
   faChevronRight,
 } from "@fortawesome/free-solid-svg-icons";
 import { Widget } from "./";
-import { userWidgets } from "../../data";
-
+import { userWidgets, availableWidgets } from "../../data";
 export const PageHeader = () => {
+  const [widgetList, setWidgetList] = useState(availableWidgets);
+  const [userWidgetList, setUserWidgetList] = useState(userWidgets);
+  const [showWidgetList, setShowWidgetList] = useState(false);
+
+  const handleAddWidget = () => {
+    setShowWidgetList(true);
+  }
+
+
   return (
     <Box
       width="100%"
@@ -60,8 +70,27 @@ export const PageHeader = () => {
         {userWidgets.map((widget) => (
           <Widget key={widget._id} {...widget} />
         ))}
-        <Widget add label="Add" />
+        <Widget add label="Add" onClick={handleAddWidget} zIndex={showWidgetList ? 1000 : 1} />
       </Box>
+      {/* Add Widget Drawer */}
+      <Drawer anchor="bottom" open={showWidgetList} onClose={() => setShowWidgetList(false)}>
+        <Box width="100%" maxWidth="600px" display="flex" flexDirection="column" py={3} pl={2} bgcolor="primary.main">
+
+          {/* Equipped Widgets on edit */}
+          <Typography variant="h6" fontSize="16px" fontWeight="bold" color="primary.contrastText"> Your widgets </Typography>
+          <Box width="100%" maxWidth="600px" display="flex" flexWrap="wrap" justifyContent="flex-start" mb={5}>
+            {userWidgets.map((widget) => (
+                <Widget key={widget._id} {...widget} size="small" />
+            ))}
+          </Box>
+          <Typography variant="h6" fontSize="16px" fontWeight="bold" color="primary.contrastText"> Available widgets </Typography>
+          <Box width="100%" maxWidth="600px" display="flex" flexWrap="wrap" justifyContent="center">
+            {availableWidgets.map((widget) => (
+                <Widget key={widget._id} {...widget} add />
+            ))}
+          </Box>
+        </Box>
+      </Drawer>
 
       {/* Last movement card */}
 

@@ -5,22 +5,26 @@ import { faAdd } from "@fortawesome/free-solid-svg-icons";
 
 interface Props {
   label: string;
+  zIndex?: number;
+  size?: "small" | "medium" | "large";
   add?: boolean;
 
   onClick?: () => void;
 }
 
-export const Widget: FC<Props> = ({ label, add, onClick }) => {
+export const Widget: FC<Props> = ({ label, add, onClick, zIndex, size }) => {
   return (
     <Chip
       clickable
       onClick={onClick}
       label={label}
+      size={ size ? size : "medium" }
       icon={add ? <FontAwesomeIcon icon={faAdd} /> : undefined}
       sx={{
+        zIndex: zIndex || 1,
         mr: 1,
         mb: 1,
-        bgcolor: "#fff",
+        bgcolor: size === "small" ? "rgba(255,255,255,0.5)" : "#fff",
         color: "primary.main",
         fontWeight: "bold",
         minWidth: "50px",

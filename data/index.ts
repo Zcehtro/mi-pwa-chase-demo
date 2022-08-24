@@ -53,7 +53,22 @@ const availableWidgets: WidgetArray = [
   },
   {
     _id: 5,
-    label: "See statements",
+    label: "Pay checks",
+    goTo: "/see-statements",
+  },
+  {
+    _id: 6,
+    label: "Submit a check",
+    goTo: "/see-statements",
+  },
+  {
+    _id: 7,
+    label: "Request loan",
+    goTo: "/see-statements",
+  },
+  {
+    _id: 8,
+    label: "Pay loan",
     goTo: "/see-statements",
   },
 ];
