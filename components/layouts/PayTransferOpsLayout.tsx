@@ -1,16 +1,17 @@
 import { FC, PropsWithChildren, ReactNode, useState } from "react";
 
 import { Avatar, Drawer, Typography, Grid, Box } from "@mui/material";
+import { motion } from "framer-motion";
 
 interface Props {
   label: string;
   icon: JSX.Element;
-  children?: ReactNode;
+  drawerContents?: ReactNode;
 }
 
 type Anchor = "bottom";
 
-export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon, children }) => {
+export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon, drawerContents }) => {
   const [anchorDirection, setAnchorDirection] = useState({ bottom: false });
 
   const toggleDrawer =
@@ -36,13 +37,15 @@ export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon
           margin="1rem"
           padding="30px 0 0"
         >
-          <Avatar
-            alt={label}
-            sx={{ backgroundColor: "white", width: 80, height: 80 }}
-            onClick={toggleDrawer("bottom", true)}
-          >
-            {icon}
-          </Avatar>
+          <motion.button className="paytransfer-btn-motion" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Avatar
+              alt={label}
+              sx={{ backgroundColor: "white", width: 80, height: 80 }}
+              onClick={toggleDrawer("bottom", true)}
+            >
+              {icon}
+            </Avatar>
+          </motion.button>
         </Box>
         <Box textAlign="center" margin="0" padding="0">
           <Typography color="primary.main" display="flex" justifyContent="center" fontWeight="bold">
@@ -59,7 +62,7 @@ export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon
         <Typography variant="h5" align="center" sx={{ margin: "1rem 0 0.6rem" }}>
           {label}
         </Typography>
-        {children}
+        {drawerContents}
       </Drawer>
     </>
   );

@@ -2,21 +2,18 @@ import { FC } from "react";
 
 import { NoteOutlined } from "@mui/icons-material";
 import { PayTransferOpsLayout } from "../../../layouts";
+import { PayTransferButton } from "./types";
 
-type ComponentProps = {
-  label: string;
-  icon: JSX.Element;
-};
-
-const Content: ComponentProps = {
+const Content: PayTransferButton = {
   label: "Deposit checks",
   icon: <NoteOutlined color="primary" sx={{ fontSize: 50 }} />,
+  drawerContents: <></>,
 };
 
 export const DepositChecks: FC = () => {
   return (
     <>
-      <PayTransferOpsLayout {...Content}></PayTransferOpsLayout>
+      <PayTransferOpsLayout {...Content} />
     </>
   );
 };
