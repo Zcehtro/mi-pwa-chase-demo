@@ -14,6 +14,7 @@ import {
 import { AuthLayout } from "../components/layouts";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
+import Link from "next/link";
 
 {
   /* Form input definitions */
@@ -32,6 +33,7 @@ const SignIn: NextPage = () => {
         alignItems="center"
         justifyContent="center"
         sx={{ minHeight: 420, backgroundColor: "primary.main" }}
+        paddingY={7}
       >
         {/* Company Logo */}
         <Typography
@@ -100,11 +102,18 @@ const LoginForm: FC = () => {
             </Grid>
             {/*Remember Me Checkbox */}
             <Grid item xs={6}>
-              <Checkbox defaultChecked /> Remember me
+              <Checkbox defaultChecked />
+              <Typography variant="caption" color="primary">
+                Remember me
+              </Typography>
             </Grid>
             {/*Use token checkbox */}
-            <Grid item xs={6}>
-              <Checkbox /> Use token
+            <Grid item xs={6} alignItems="center" display="flex">
+              <Link href="/forgot-password">
+                <Typography variant="caption" color="primary">
+                  ¿Forgot password?
+                </Typography>
+              </Link>
             </Grid>
             {/*Submit button */}
             <Grid item xs={12}>
