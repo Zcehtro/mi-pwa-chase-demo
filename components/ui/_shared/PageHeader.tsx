@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Widget } from "./";
-import { userWidgets, availableWidgets } from "../../data";
-import { AccountsDialog } from "./";
+import { Widget } from "..";
+import { userWidgets, availableWidgets } from "../../../data";
+import { AccountsDialog } from "..";
 import {
   Box,
   IconButton,

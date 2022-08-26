@@ -1,22 +1,17 @@
-import { FC, useState } from "react";
+import { FC, PropsWithChildren, ReactNode, useState } from "react";
 
-import {
-  Avatar,
-  Box,
-  Drawer,
-  Typography,
-  Unstable_Grid2 as Grid2,
-} from "@mui/material";
+import { Avatar, Drawer, Typography, Grid, Box } from "@mui/material";
+import { motion } from "framer-motion";
 
 interface Props {
-  icon: any;
   label: string;
-  drawerContents: any;
+  icon: JSX.Element;
+  drawerContents?: ReactNode;
 }
 
 type Anchor = "bottom";
 
-export const PayTransferGridItem: FC<Props> = ({ icon, label, drawerContents }) => {
+export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon, drawerContents }) => {
   const [anchorDirection, setAnchorDirection] = useState({ bottom: false });
 
   const toggleDrawer =
@@ -34,43 +29,39 @@ export const PayTransferGridItem: FC<Props> = ({ icon, label, drawerContents }) 
 
   return (
     <>
-      <Grid2
-        xs={4}
-        md={2}
-        display="flex"
-        justifyContent="center"
-        flexDirection="column"
-        margin="0"
-        padding="0"
-      >
-        <Grid2
+      <Grid item xs={4} md={2}>
+        <Box
           display="flex"
           justifyContent="center"
           textAlign="center"
           margin="1rem"
           padding="30px 0 0"
         >
-          <Avatar
-            alt={label}
-            sx={{ backgroundColor: "white", width: 80, height: 80 }}
-            onClick={toggleDrawer("bottom", true)}
-          >
-            {icon}
-          </Avatar>
-        </Grid2>
-        <Grid2 textAlign="center" margin="0" padding="0">
+          <motion.button className="paytransfer-btn-motion" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+            <Avatar
+              alt={label}
+              sx={{ backgroundColor: "white", width: 80, height: 80 }}
+              onClick={toggleDrawer("bottom", true)}
+            >
+              {icon}
+            </Avatar>
+          </motion.button>
+        </Box>
+        <Box textAlign="center" margin="0" padding="0">
           <Typography color="primary.main" display="flex" justifyContent="center" fontWeight="bold">
             {label}
           </Typography>
-        </Grid2>
-      </Grid2>
+        </Box>
+      </Grid>
 
       <Drawer
         anchor={"bottom"}
         open={anchorDirection["bottom"]}
         onClose={toggleDrawer("bottom", false)}
       >
-        <Typography variant="h5" align="center" sx={{margin: "1rem 0 0.6rem" }}>{label}</Typography>
+        <Typography variant="h5" align="center" sx={{ margin: "1rem 0 0.6rem" }}>
+          {label}
+        </Typography>
         {drawerContents}
       </Drawer>
     </>
