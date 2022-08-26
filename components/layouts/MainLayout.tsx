@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import Head from "next/head";
-import { BottomNavigator, Transition } from "../ui";
-import { Box } from "@mui/material";
+import { BottomNavigator } from "../ui";
+import { Transition } from "../ui";
 
 interface Props {
   children: ReactNode;
@@ -16,11 +16,14 @@ export const MainLayout: FC<Props> = ({ children }) => {
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
         />
-        <meta name="description" content="This is a pwa demo inspired in chase web app." />
+        <meta
+          name="description"
+          content="This is a pwa demo inspired in chase web app."
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box style={{ height: "100vh" }}>{children}</Box>
+      <Transition>{children}</Transition>
       <BottomNavigator />
     </>
   );

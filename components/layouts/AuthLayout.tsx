@@ -24,8 +24,7 @@ export const AuthLayout: FC<Props> = ({ children }) => {
       <main>{children}</main>
       <footer
         style={{
-          position: "absolute",
-          bottom: 0,
+          marginTop: "15px",
           width: "100%",
           height: "80px",
           textAlign: "center",

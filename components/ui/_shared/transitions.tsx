@@ -9,12 +9,15 @@ export const Transition = ({ children }: any) => {
   const { asPath } = useRouter();
 
   return (
-    <div className="effect-1">
-      <AnimatePresence initial={false} exitBeforeEnter>
-        <motion.div key={asPath} variants={variants} animate="in" initial="out" exit="out">
-          {children}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+    <motion.main
+      key={asPath}
+      variants={variants}
+      animate="in"
+      initial="out"
+      exit="out"
+      transition={{ type: "linear" }}
+    >
+      {children}
+    </motion.main>
   );
 };

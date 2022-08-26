@@ -1,11 +1,12 @@
 import "../styles/globals.css";
-//import "../styles/transition.css";
+import "../styles/transition.css";
 
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@mui/system";
 import { lightTheme } from "../themes";
 import { UIProvider } from "../context/ui";
 import { USERProvider } from "../context/user";
+import { AnimatePresence } from "framer-motion";
 
 // The following import prevents a Font Awesome icon server-side rendering bug,
 // where the icons flash from a very large icon down to a properly sized one:
@@ -17,15 +18,15 @@ config.autoAddCss = false; /* eslint-disable import/first */
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    //<Transition>
     <UIProvider>
       <USERProvider>
-        <ThemeProvider theme={lightTheme}>
-          <Component {...pageProps} />
-        </ThemeProvider>
+        <AnimatePresence initial={false} exitBeforeEnter>
+          <ThemeProvider theme={lightTheme}>
+            <Component {...pageProps} />
+          </ThemeProvider>
+        </AnimatePresence>
       </USERProvider>
     </UIProvider>
-    //</Transition>
   );
 }
 
