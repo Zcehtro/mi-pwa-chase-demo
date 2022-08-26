@@ -54,13 +54,11 @@ const PayTransfer: NextPage = () => {
 
   return (
     <MainLayout>
-      <Box>
-        <AppBar>
-          <Typography color="white" variant="h6" textAlign="center">
-            Pay & Transfer
-          </Typography>
-        </AppBar>
-      </Box>
+      <AppBar>
+        <Typography color="white" variant="h6" textAlign="center">
+          Pay & Transfer
+        </Typography>
+      </AppBar>
 
       <Box style={{ backgroundColor: "#f3f7f8", height: "100vh", padding: "30px 0 0 0" }}>
         <Grid container spacing={4}>
@@ -89,7 +87,6 @@ const PayTransfer: NextPage = () => {
           ))}
         </Box>
       </Box>
-      <BottomNavigator />
     </MainLayout>
   );
 };

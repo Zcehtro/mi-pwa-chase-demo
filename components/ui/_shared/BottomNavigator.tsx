@@ -44,21 +44,24 @@ export function BottomNavigator() {
           icon={<CurrencyExchange />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/pay_transfer")}
-        />
+          />
         <BottomNavigationAction
           label="Plan & Track"
           icon={<HistoryEduOutlined />}
           sx={{ padding: "0 2px" }}
-        />
+          onClick={() => goLink("/plan_track")}
+          />
         <BottomNavigationAction
           label="Benefits"
           icon={<StarBorderOutlined />}
           sx={{ padding: "0 2px" }}
-        />
+          onClick={() => goLink("/benefits")}
+          />
         <BottomNavigationAction
           label="Investments"
           icon={<ShowChartOutlined />}
           sx={{ padding: "0 2px" }}
+          onClick={() => goLink("/investments")}
         />
       </BottomNavigation>
     </Paper>
