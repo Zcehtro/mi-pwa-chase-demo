@@ -10,6 +10,7 @@ import {
   Grid,
   TextField,
   Typography,
+  Divider,
 } from "@mui/material";
 import { AuthLayout } from "../components/layouts";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -48,6 +49,8 @@ const SignIn: NextPage = () => {
         {/*Login Form */}
         <LoginForm />
       </Box>
+      {/* Links */}
+      <BottomLinks />
     </AuthLayout>
   );
 };
@@ -71,7 +74,7 @@ const LoginForm: FC = () => {
     [isLoggedIn];
 
   return (
-    <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3 }}>
+    <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: "10px" }}>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={1}>
@@ -82,10 +85,9 @@ const LoginForm: FC = () => {
                 label="Enter your email"
                 variant="standard"
                 {...register("email", { required: true })}
+                error={errors.email ? true : false}
+                helperText={errors.email ? "Email is required" : ""}
               />
-              <Typography variant="caption" color="error">
-                {errors.email && "* Email is required"}
-              </Typography>
             </Grid>
             {/*Password Input */}
             <Grid item xs={12}>
@@ -95,10 +97,9 @@ const LoginForm: FC = () => {
                 variant="standard"
                 type="password"
                 {...register("password", { required: true })}
+                error={errors.password ? true : false}
+                helperText={errors.password ? "Password is required" : ""}
               />
-              <Typography variant="caption" color="error">
-                {errors.password && "* Password is required"}
-              </Typography>
             </Grid>
             {/*Remember Me Checkbox */}
             <Grid item xs={6}>
@@ -108,7 +109,13 @@ const LoginForm: FC = () => {
               </Typography>
             </Grid>
             {/*Use token checkbox */}
-            <Grid item xs={6} alignItems="center" display="flex">
+            <Grid
+              item
+              xs={6}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
               <Link href="/forgot-password">
                 <Typography variant="caption" color="primary">
                   ¿Forgot password?
@@ -125,6 +132,37 @@ const LoginForm: FC = () => {
         </form>
       </CardContent>
     </Card>
+  );
+};
+
+const BottomLinks: FC = () => {
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      gap={2}
+      mt={2}
+      flexWrap="wrap"
+    >
+      <Link href="/about">
+        <Typography color="primary.main" fontWeight="bold">
+          About
+        </Typography>
+      </Link>
+      <Divider orientation="vertical" flexItem />
+      <Link href="/signup">
+        <Typography color="primary.main" fontWeight="bold">
+          Open an Account
+        </Typography>
+      </Link>
+      <Divider orientation="vertical" flexItem />
+      <Link href="/privacy">
+        <Typography color="primary.main" fontWeight="bold">
+          Privacy
+        </Typography>
+      </Link>
+    </Box>
   );
 };
 

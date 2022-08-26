@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import "../styles/transition.css";
+//import "../styles/transition.css";
 
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "@mui/system";
@@ -17,15 +17,15 @@ config.autoAddCss = false; /* eslint-disable import/first */
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Transition>
-      <UIProvider>
-        <USERProvider>
-          <ThemeProvider theme={lightTheme}>
-            <Component {...pageProps} />
-          </ThemeProvider>
-        </USERProvider>
-      </UIProvider>
-    </Transition>
+    //<Transition>
+    <UIProvider>
+      <USERProvider>
+        <ThemeProvider theme={lightTheme}>
+          <Component {...pageProps} />
+        </ThemeProvider>
+      </USERProvider>
+    </UIProvider>
+    //</Transition>
   );
 }
 
