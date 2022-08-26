@@ -15,12 +15,10 @@ import {
 
 const Home: NextPage = () => {
   const { drawerOpen, toggleDrawer } = useContext(UIContext);
-  const { isLoggedIn, email, password, id } = useContext(USERContext);
+  const { isLoggedIn } = useContext(USERContext);
   const router = useRouter();
 
   const toggleDrawerVisibility = (e: any) => {
-    //get the id of the clicked element
-    const id = e.target.id;
     toggleDrawer(!drawerOpen);
   };
 

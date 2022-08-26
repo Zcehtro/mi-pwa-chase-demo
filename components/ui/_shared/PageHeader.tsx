@@ -88,6 +88,7 @@ export const PageHeader = () => {
         anchor="bottom"
         open={showWidgetList}
         onClose={() => setShowWidgetList(false)}
+        PaperProps={{ sx: { backgroundColor: "transparent" } }}
       >
         <Box
           width="100%"
@@ -97,6 +98,7 @@ export const PageHeader = () => {
           py={3}
           pl={2}
           bgcolor="primary.main"
+          sx={{ bgcolor: "rgba(0,94,184,0.75)" }}
         >
           {/* Equipped Widgets on edit */}
           <Typography

@@ -124,7 +124,12 @@ const LoginForm: FC = () => {
             </Grid>
             {/*Submit button */}
             <Grid item xs={12}>
-              <Button fullWidth variant="contained" type="submit">
+              <Button
+                fullWidth
+                variant="contained"
+                type="submit"
+                sx={{ mt: 2 }}
+              >
                 Sign In
               </Button>
             </Grid>
@@ -146,19 +151,19 @@ const BottomLinks: FC = () => {
       flexWrap="wrap"
     >
       <Link href="/about">
-        <Typography color="primary.main" fontWeight="bold">
+        <Typography color="primary.main" fontWeight="bold" component="a">
           About
         </Typography>
       </Link>
       <Divider orientation="vertical" flexItem />
       <Link href="/signup">
-        <Typography color="primary.main" fontWeight="bold">
+        <Typography color="primary.main" fontWeight="bold" component="a">
           Open an Account
         </Typography>
       </Link>
       <Divider orientation="vertical" flexItem />
       <Link href="/privacy">
-        <Typography color="primary.main" fontWeight="bold">
+        <Typography color="primary.main" fontWeight="bold" component="a">
           Privacy
         </Typography>
       </Link>
