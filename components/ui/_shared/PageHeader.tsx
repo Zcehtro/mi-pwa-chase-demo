@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Widget } from "..";
+import { Widget } from "./Widget";
 import { userWidgets, availableWidgets } from "../../../data";
-import { AccountsDialog } from "..";
+import { AccountsDialog } from "../index/AccountsDialog";
 import {
   Box,
   IconButton,
@@ -107,8 +107,7 @@ export const PageHeader = () => {
             fontWeight="bold"
             color="primary.contrastText"
           >
-            {" "}
-            Your widgets{" "}
+            Your widgets
           </Typography>
           <Box
             width="100%"

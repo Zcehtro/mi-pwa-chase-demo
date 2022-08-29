@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
 
-import { MainLayout } from "../../components/layouts";
+import { MainLayout } from "../../components/layouts/MainLayout";
 
 const Investments: NextPage = () => {
   return (

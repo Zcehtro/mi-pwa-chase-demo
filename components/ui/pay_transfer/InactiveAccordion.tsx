@@ -1,12 +1,7 @@
 import { FC, ReactNode } from "react";
 import { useRouter } from "next/router";
 
-import {
-  Typography,
-  CardActionArea,
-  CardContent,
-  Card,
-} from "@mui/material";
+import { Typography, CardActionArea, CardContent, Card } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 
 interface Props {

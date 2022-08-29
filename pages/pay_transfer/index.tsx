@@ -5,13 +5,15 @@ import { useState } from "react";
 import type { NextPage } from "next";
 
 import { Grid, AccordionDetails, Typography, Box, AppBar } from "@mui/material";
-import { BottomNavigator } from "../../components/ui";
+import { BottomNavigator } from "../../components/ui/_shared/BottomNavigator";
 import { ExpandMore } from "@mui/icons-material";
 
 import { styled } from "@mui/material/styles";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
-import { MainLayout } from "../../components/layouts";
+import MuiAccordionSummary, {
+  AccordionSummaryProps,
+} from "@mui/material/AccordionSummary";
+import { MainLayout } from "../../components/layouts/MainLayout";
 
 import {
   DepositChecks,
@@ -48,9 +50,10 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const PayTransfer: NextPage = () => {
   const [expanded, setExpanded] = useState<string | false>(false);
 
-  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-    setExpanded(isExpanded ? panel : false);
-  };
+  const handleChange =
+    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
 
   return (
     <MainLayout>
@@ -60,7 +63,13 @@ const PayTransfer: NextPage = () => {
         </Typography>
       </AppBar>
 
-      <Box style={{ backgroundColor: "#f3f7f8", height: "100vh", padding: "30px 0 0 0" }}>
+      <Box
+        style={{
+          backgroundColor: "#f3f7f8",
+          height: "100vh",
+          padding: "30px 0 0 0",
+        }}
+      >
         <Grid container spacing={4}>
           <PayBills />
           <SendMoney />

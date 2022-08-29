@@ -12,7 +12,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { AuthLayout } from "../components/layouts";
+import { AuthLayout } from "../components/layouts/AuthLayout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
 import Link from "next/link";

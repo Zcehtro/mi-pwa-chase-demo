@@ -3,15 +3,13 @@ import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Box, Drawer, Typography, Button } from "@mui/material";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { MainLayout } from "../components/layouts";
+import { MainLayout } from "../components/layouts/MainLayout";
 import { bankAccounts } from "../data";
 import { UIContext } from "../context/ui";
 import { USERContext } from "../context/user";
-import {
-  AccountDetailCard,
-  NotificationCard,
-  PageHeader,
-} from "../components/ui";
+import { AccountDetailCard } from "../components/ui/index/AccountDetailCard";
+import { NotificationCard } from "../components/ui/index/NotificationCard";
+import { PageHeader } from "../components/ui/_shared/PageHeader";
 
 const Home: NextPage = () => {
   const { drawerOpen, toggleDrawer } = useContext(UIContext);

@@ -13,14 +13,14 @@ import { AnimatePresence } from "framer-motion";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 // Prevent fontawesome from adding its CSS since we did it manually above:
 import { config } from "@fortawesome/fontawesome-svg-core";
-import { Transition } from "../components/ui";
+import { Transition } from "../components/ui/_shared/transitions";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <UIProvider>
       <USERProvider>
-        <AnimatePresence initial={false} exitBeforeEnter>
+        <AnimatePresence initial={false} mode="wait">
           <ThemeProvider theme={lightTheme}>
             <Component {...pageProps} />
           </ThemeProvider>

@@ -1,7 +1,7 @@
 import { FC, ReactNode } from "react";
 import Head from "next/head";
-import { BottomNavigator } from "../ui";
-import { Transition } from "../ui";
+import { BottomNavigator } from "../ui/_shared/BottomNavigator";
+import { Transition } from "../ui/_shared/transitions";
 
 interface Props {
   children: ReactNode;

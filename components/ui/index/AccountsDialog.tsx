@@ -8,6 +8,7 @@ import {
   Button,
   Avatar,
   Box,
+  Typography,
 } from "@mui/material";
 import { Person } from "@mui/icons-material";
 import { FC, useContext } from "react";
@@ -27,30 +28,9 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
 
   return (
     <Dialog open={open}>
-      <List>
-        <ListItem>
-          <ListItemAvatar>
-            <Avatar>
-              <Person />
-            </Avatar>
-          </ListItemAvatar>
-          <ListItemText primary="John Doe" secondary={email} />
-        </ListItem>
-      </List>
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-end"
-        sx={{ padding: 2, mt: 3 }}
-        gap={1}
-      >
-        <Button onClick={handleLogout} variant="text" sx={{ color: "red" }}>
-          logout
-        </Button>
-        <Button variant="text" onClick={onClose}>
-          Close
-        </Button>
-      </Box>
+      <Typography variant="h6">
+        Hello there, <b>{email}</b>
+      </Typography>
     </Dialog>
   );
 };

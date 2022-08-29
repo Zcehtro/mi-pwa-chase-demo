@@ -1,7 +1,7 @@
 import { FC } from "react";
 
 import { CallSplitOutlined } from "@mui/icons-material";
-import { PayTransferOpsLayout } from "../../../layouts";
+import { PayTransferOpsLayout } from "../../../layouts/PayTransferOpsLayout";
 import { PayTransferButton } from "./types";
 
 const Content: PayTransferButton = {
