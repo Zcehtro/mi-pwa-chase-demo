@@ -40,3 +40,7 @@ symLinks.bat
 #own files
 /lighthouse/*.json
 /lighthouse/*.html
+
+# workbox files
+/public/sw.js*
+public/workbox*
