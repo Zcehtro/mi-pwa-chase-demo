@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <USERProvider>
         <ThemeProvider theme={lightTheme}>
           <div className="effect-1">
-            <AnimatePresence initial={false}>
+            <AnimatePresence exitBeforeEnter initial={false}>
               <Component {...pageProps} key={asPath} />
             </AnimatePresence>
           </div>
