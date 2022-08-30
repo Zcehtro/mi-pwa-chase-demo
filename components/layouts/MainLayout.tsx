@@ -1,13 +1,17 @@
 import { FC, ReactNode } from "react";
 import Head from "next/head";
 import { BottomNavigator } from "../ui/_shared/BottomNavigator";
-import { Transition } from "../ui/_shared/transitions";
+import { TransitionSlide } from "../ui/_shared/transitions";
+import { useRouter } from "next/router";
+import Box from "@mui/material/Box";
 
 interface Props {
   children: ReactNode;
 }
 
 export const MainLayout: FC<Props> = ({ children }) => {
+  const router = useRouter();
+
   return (
     <>
       <Head>
@@ -23,7 +27,10 @@ export const MainLayout: FC<Props> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Transition>{children}</Transition>
+      <TransitionSlide>
+        <Box sx={{ height: "100vh" }}>{children}</Box>
+      </TransitionSlide>
+
       <BottomNavigator />
     </>
   );

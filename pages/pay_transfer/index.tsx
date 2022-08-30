@@ -5,7 +5,6 @@ import { useState } from "react";
 import type { NextPage } from "next";
 
 import { Grid, AccordionDetails, Typography, Box, AppBar } from "@mui/material";
-import { BottomNavigator } from "../../components/ui/_shared/BottomNavigator";
 import { ExpandMore } from "@mui/icons-material";
 
 import { styled } from "@mui/material/styles";
@@ -62,7 +61,6 @@ const PayTransfer: NextPage = () => {
           Pay & Transfer
         </Typography>
       </AppBar>
-
       <Box
         style={{
           backgroundColor: "#f3f7f8",
