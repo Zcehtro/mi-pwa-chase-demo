@@ -1,12 +1,12 @@
 import { FC } from "react";
 
-import { NoteOutlined } from "@mui/icons-material";
+import NoteOutlinedIcon from "@mui/icons-material/NoteOutlined";
 import { PayTransferOpsLayout } from "../../../layouts/PayTransferOpsLayout";
 import { PayTransferButton } from "./types";
 
 const Content: PayTransferButton = {
   label: "Deposit checks",
-  icon: <NoteOutlined color="primary" sx={{ fontSize: 50 }} />,
+  icon: <NoteOutlinedIcon color="primary" sx={{ fontSize: 50 }} />,
   drawerContents: <></>,
 };
 

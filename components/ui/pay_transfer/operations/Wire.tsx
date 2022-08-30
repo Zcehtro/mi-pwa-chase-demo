@@ -1,12 +1,12 @@
 import { FC } from "react";
 
-import { AccountBalanceOutlined } from "@mui/icons-material";
+import AccountBalanceOutlinedIcon from "@mui/icons-material/AccountBalanceOutlined";
 import { PayTransferOpsLayout } from "../../../layouts/PayTransferOpsLayout";
 import { PayTransferButton } from "./types";
 
 const Content: PayTransferButton = {
   label: "Wire",
-  icon: <AccountBalanceOutlined color="primary" sx={{ fontSize: 50 }} />,
+  icon: <AccountBalanceOutlinedIcon color="primary" sx={{ fontSize: 50 }} />,
   drawerContents: <></>,
 };
 

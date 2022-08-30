@@ -1,14 +1,12 @@
 import * as React from "react";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import BottomNavigation from "@mui/material/BottomNavigation";
 import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import {
-  AccountBalanceWalletOutlined,
-  CurrencyExchange,
-  HistoryEduOutlined,
-  ShowChartOutlined,
-  StarBorderOutlined,
-} from "@mui/icons-material";
+import AccountBalanceWalletOutlinedIcon from "@mui/icons-material/AccountBalanceWalletOutlined";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import HistoryEduOutlinedIcon from "@mui/icons-material/HistoryEduOutlined";
+import ShowChartOutlinedIcon from "@mui/icons-material/ShowChartOutlined";
+import StarBorderOutlinedIcon from "@mui/icons-material/StarBorderOutlined";
 import { useRouter } from "next/router";
 
 export function BottomNavigator() {
@@ -35,31 +33,31 @@ export function BottomNavigator() {
       >
         <BottomNavigationAction
           label="Accounts"
-          icon={<AccountBalanceWalletOutlined />}
+          icon={<AccountBalanceWalletOutlinedIcon />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/")}
         />
         <BottomNavigationAction
           label="Pay & Transfer"
-          icon={<CurrencyExchange />}
+          icon={<CurrencyExchangeIcon />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/pay_transfer")}
-          />
+        />
         <BottomNavigationAction
           label="Plan & Track"
-          icon={<HistoryEduOutlined />}
+          icon={<HistoryEduOutlinedIcon />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/plan_track")}
-          />
+        />
         <BottomNavigationAction
           label="Benefits"
-          icon={<StarBorderOutlined />}
+          icon={<StarBorderOutlinedIcon />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/benefits")}
-          />
+        />
         <BottomNavigationAction
           label="Investments"
-          icon={<ShowChartOutlined />}
+          icon={<ShowChartOutlinedIcon />}
           sx={{ padding: "0 2px" }}
           onClick={() => goLink("/investments")}
         />

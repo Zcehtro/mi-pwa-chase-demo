@@ -1,11 +1,14 @@
-import { AccordionContent } from "../../components/ui/pay_transfer/Content";
-
 import { useState } from "react";
 
 import type { NextPage } from "next";
 
-import { Grid, AccordionDetails, Typography, Box, AppBar } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
+import { AccordionContent } from "../../components/ui/pay_transfer/Content";
+
+import AppBar from "@mui/material/AppBar";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import AccordionDetails from "@mui/material/AccordionDetails";
 
 import { styled } from "@mui/material/styles";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
@@ -22,6 +25,7 @@ import {
   Transfer,
   Wire,
 } from "../../components/ui/pay_transfer/operations";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 const Accordion = styled((props: AccordionProps) => (
   <MuiAccordion disableGutters elevation={0} {...props} />
@@ -36,7 +40,7 @@ const Accordion = styled((props: AccordionProps) => (
 }));
 
 const AccordionSummary = styled((props: AccordionSummaryProps) => (
-  <MuiAccordionSummary expandIcon={<ExpandMore />} {...props} />
+  <MuiAccordionSummary expandIcon={<ExpandMoreIcon />} {...props} />
 ))(({ theme }) => ({
   "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
     transform: "rotate(0deg)",

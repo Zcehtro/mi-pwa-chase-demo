@@ -1,13 +1,13 @@
 import { FC } from "react";
 
-import { PaidOutlined } from "@mui/icons-material";
+import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import { InactiveAccordion } from "../InactiveAccordion";
 import { PayTransferOpsLayout } from "../../../layouts/PayTransferOpsLayout";
 import { PayTransferButton } from "./types";
 
 const Content: PayTransferButton = {
   label: "Send Money",
-  icon: <PaidOutlined color="primary" sx={{ fontSize: 50 }} />,
+  icon: <PaidOutlinedIcon color="primary" sx={{ fontSize: 50 }} />,
   drawerContents: (
     <>
       <InactiveAccordion>Favorite 1</InactiveAccordion>
