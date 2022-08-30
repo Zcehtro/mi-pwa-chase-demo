@@ -12,8 +12,3 @@ body {
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
   position: relative;
 }
-
-//Framer Motion transition
-.transition {
-  transition: all 0.2s ease-in-out;
-}
