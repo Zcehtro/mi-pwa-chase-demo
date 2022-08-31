@@ -7,25 +7,28 @@ interface Props {
   label: string;
   icon: JSX.Element;
   drawerContents?: ReactNode;
+  open?: boolean;
 }
 
-type Anchor = "bottom";
+export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({
+  label,
+  icon,
+  drawerContents,
+  open = false,
+}) => {
+  const [anchorDirection, setAnchorDirection] = useState({ bottom: open });
 
-export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon, drawerContents }) => {
-  const [anchorDirection, setAnchorDirection] = useState({ bottom: false });
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === "keydown" &&
+      ((event as React.KeyboardEvent).key === "Tab" ||
+        (event as React.KeyboardEvent).key === "Shift")
+    ) {
+      return;
+    }
 
-  const toggleDrawer =
-    (anchor: Anchor, open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === "keydown" &&
-        ((event as React.KeyboardEvent).key === "Tab" ||
-          (event as React.KeyboardEvent).key === "Shift")
-      ) {
-        return;
-      }
-
-      setAnchorDirection({ ...anchorDirection, [anchor]: open });
-    };
+    setAnchorDirection({ bottom: open });
+  };
 
   return (
     <>
@@ -37,11 +40,15 @@ export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon
           margin="1rem"
           padding="30px 0 0"
         >
-          <motion.button className="paytransfer-btn-motion" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+          <motion.button
+            className="paytransfer-btn-motion"
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+          >
             <Avatar
               alt={label}
               sx={{ backgroundColor: "white", width: 80, height: 80 }}
-              onClick={toggleDrawer("bottom", true)}
+              onClick={toggleDrawer(true)}
             >
               {icon}
             </Avatar>
@@ -54,11 +61,7 @@ export const PayTransferOpsLayout: FC<PropsWithChildren<Props>> = ({ label, icon
         </Box>
       </Grid>
 
-      <Drawer
-        anchor={"bottom"}
-        open={anchorDirection["bottom"]}
-        onClose={toggleDrawer("bottom", false)}
-      >
+      <Drawer anchor={"bottom"} open={anchorDirection["bottom"]} onClose={toggleDrawer(false)}>
         <Typography variant="h5" align="center" sx={{ margin: "1rem 0 0.6rem" }}>
           {label}
         </Typography>
