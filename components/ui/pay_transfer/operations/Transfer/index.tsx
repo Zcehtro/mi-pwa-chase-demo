@@ -58,6 +58,7 @@ export const Transfer: FC = () => {
   const [sourceAccount, setSourceAccount] = useState("");
   const [destinationAccount, setDestinationAccount] = useState("");
   const [transferDate, setTransferDate] = useState("");
+  const [checkedSwitch, setCheckedSwitch] = useState(true);
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -95,8 +96,6 @@ export const Transfer: FC = () => {
   const handleChangeAmount = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
     setValues({ ...values, [prop]: event.target.value });
   };
-
-  const [checkedSwitch, setCheckedSwitch] = useState(true);
 
   const handleChangeSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedSwitch(event.target.checked);
@@ -155,6 +154,7 @@ export const Transfer: FC = () => {
         open={openDialog}
         onClose={handleCloseDialog}
         TransitionComponent={Transition}
+        transitionDuration={800}
       >
         <SecondaryLayout>
           <Box>
