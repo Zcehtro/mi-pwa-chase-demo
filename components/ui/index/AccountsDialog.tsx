@@ -8,6 +8,7 @@ import {
   Card,
   Button,
   Input,
+  Skeleton,
 } from "@mui/material";
 import { FC, useContext, useRef, useState } from "react";
 import { USERContext } from "../../../context/user";
@@ -91,8 +92,11 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
   const BASE_URL = "https://api.imgbb.com/1";
   const imgRef = useRef<HTMLInputElement>(null);
   const [imgSrc, setImgSrc] = useState(image);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async () => {
+    console.log("uploading...");
+    setIsLoading(true);
     const req = await axios({
       method: "POST",
       url: `${BASE_URL}/upload?key=${API_KEY}`,
@@ -105,6 +109,8 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
     });
 
     setImgSrc(req.data.data.url);
+    console.log("Image uploaded");
+    setIsLoading(false);
   };
 
   return (
@@ -120,24 +126,28 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
               {updatedAt}
             </Typography>
             <Button variant="text" color="primary" fullWidth>
-              <label htmlFor="file">Upload</label>
+              <label htmlFor={title.replace(" ", "-").toLowerCase()}>Upload</label>
               <input
                 ref={imgRef}
                 onChange={handleUpload}
                 type="file"
-                id="file"
+                id={title.replace(" ", "-").toLowerCase()}
                 accept="image/*"
                 hidden
               />
             </Button>
           </Box>
           {/* Image */}
-          <CardMedia
-            component="img"
-            image={imgSrc}
-            alt={title}
-            sx={{ width: 90, borderRadius: "8px" }}
-          />
+          {isLoading ? (
+            <Skeleton variant="rectangular" width={90} height={70} sx={{ borderRadius: "8px" }} />
+          ) : (
+            <CardMedia
+              component="img"
+              image={imgSrc}
+              alt={title}
+              sx={{ width: 90, borderRadius: "8px" }}
+            />
+          )}
         </CardContent>
       </CardActionArea>
     </Card>
