@@ -28,13 +28,7 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
     <Dialog open={open} PaperProps={{ sx: { minWidth: "90vw", p: 2 } }}>
       {/*Name, account id and email */}
       <Box>
-        <Box
-          display="flex"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap={1}
-          color="#555"
-        >
+        <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1} color="#555">
           <Typography variant="body1" fontSize="20px">
             <strong>Jhon Doe</strong>
           </Typography>
@@ -47,26 +41,15 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
         </Typography>
       </Box>
       {/* ID Images Title */}
-      <Typography
-        variant="h5"
-        fontSize="15px"
-        fontWeight="bold"
-        color="#555"
-        mt={2}
-      >
+      <Typography variant="h5" fontSize="15px" fontWeight="bold" color="#555" mt={2}>
         ID Images
       </Typography>
       <Typography variant="body1" fontSize="11px" color="#888" ml="5px">
-        The uploaded images are used to verify your identity, please consider to
-        upload at least one image.
+        The uploaded images are used to verify your identity, please consider to upload at least one
+        image.
       </Typography>
       {/* ID Images Wrapper */}
-      <Box
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        justifyContent="flex-start"
-      >
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="flex-start">
         <ImageCard
           image="https://upload.wikimedia.org/wikipedia/commons/f/fe/C%C3%A9dula_de_Identidad_electr%C3%B3nica_de_Uruguay_-_Frente.jpg"
           title="Document overse"
@@ -79,30 +62,17 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
         />
       </Box>
       {/* Actions buttons */}
-      <Box
-        display="flex"
-        flexDirection="column"
-        justifyContent="flex-end"
-        mt={2}
-      >
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          gap={1}
-          mb={1}
-        >
-          {/*Upload input*/}
-          <Input type="file" />
+      <Box display="flex" flexDirection="column" justifyContent="flex-end" mt={2}>
+        <Box display="flex" alignItems="center" justifyContent="space-between" gap={1} mb={1}>
+          {/*Logout button*/}
+          <Button variant="text" color="error" onClick={handleLogout} fullWidth>
+            Logout
+          </Button>
           {/*Save button*/}
           <Button variant="text" color="primary" fullWidth onClick={onClose}>
             Save
           </Button>
         </Box>
-        {/*Logout button*/}
-        <Button variant="text" color="error" onClick={handleLogout} fullWidth>
-          Logout
-        </Button>
       </Box>
     </Dialog>
   );
@@ -128,6 +98,10 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
             <Typography variant="body1" fontSize="12px">
               {updatedAt}
             </Typography>
+            <Button variant="text" color="primary" fullWidth>
+              <label htmlFor="file">Upload</label>
+              <input type="file" id="file" accept="image/*" hidden />
+            </Button>
           </Box>
           {/* Image */}
           <CardMedia
