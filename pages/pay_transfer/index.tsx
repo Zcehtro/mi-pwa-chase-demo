@@ -4,17 +4,9 @@ import type { NextPage } from "next";
 
 import { AccordionContent } from "../../components/ui/pay_transfer/Content";
 
-import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Grid from "@mui/material/Grid";
-import AccordionDetails from "@mui/material/AccordionDetails";
-
-import { styled } from "@mui/material/styles";
+import { Box, styled, AppBar, Typography, Grid, AccordionDetails, Toolbar } from "@mui/material";
 import MuiAccordion, { AccordionProps } from "@mui/material/Accordion";
-import MuiAccordionSummary, {
-  AccordionSummaryProps,
-} from "@mui/material/AccordionSummary";
+import MuiAccordionSummary, { AccordionSummaryProps } from "@mui/material/AccordionSummary";
 import { MainLayout } from "../../components/layouts/MainLayout";
 
 import {
@@ -53,23 +45,24 @@ const AccordionSummary = styled((props: AccordionSummaryProps) => (
 const PayTransfer: NextPage = () => {
   const [expanded, setExpanded] = useState<string | false>(false);
 
-  const handleChange =
-    (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
-      setExpanded(isExpanded ? panel : false);
-    };
+  const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+    setExpanded(isExpanded ? panel : false);
+  };
 
   return (
     <MainLayout>
       <AppBar>
-        <Typography color="white" variant="h6" textAlign="center">
-          Pay & Transfer
-        </Typography>
+        <Toolbar>
+          <Typography color="white" variant="h6" textAlign="center" sx={{ flexGrow: 1 }}>
+            Pay & Transfer
+          </Typography>
+        </Toolbar>
       </AppBar>
       <Box
         style={{
           backgroundColor: "#f3f7f8",
           height: "100vh",
-          padding: "30px 0 0 0",
+          padding: "40px 0 0 0",
         }}
       >
         <Grid container spacing={4}>
