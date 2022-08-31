@@ -1,8 +1,8 @@
 import { FC, ReactNode } from "react";
 import { useRouter } from "next/router";
 
-import { Typography, CardActionArea, CardContent, Card } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 
 interface Props {
   children: ReactNode;
@@ -39,7 +39,7 @@ export const InactiveAccordion: FC<Props> = ({ children, href }) => {
           }}
         >
           <Typography>{children}</Typography>
-          <ExpandMore sx={{ transform: "rotate(-90deg)" }} />
+          <ExpandMoreIcon sx={{ transform: "rotate(-90deg)" }} />
         </CardContent>
       </CardActionArea>
     </Card>
