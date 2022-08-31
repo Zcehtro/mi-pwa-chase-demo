@@ -145,7 +145,7 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
               component="img"
               image={imgSrc}
               alt={title}
-              sx={{ width: 90, borderRadius: "8px" }}
+              sx={{ width: 90, maxHeight: 70, borderRadius: "8px" }}
             />
           )}
         </CardContent>

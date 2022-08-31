@@ -2,7 +2,7 @@ import { useContext, useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Box, Drawer, Typography, Button } from "@mui/material";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { MainLayout } from "../components/layouts/MainLayout";
 import { bankAccounts } from "../data";
 import { UIContext } from "../context/ui";
@@ -26,6 +26,10 @@ const Home: NextPage = () => {
     }
   }, [isLoggedIn]);
 
+  const goToLocation = (e: any) => {
+    router.push("/location");
+  };
+
   return (
     <MainLayout>
       {/* Page Header */}
@@ -41,10 +45,10 @@ const Home: NextPage = () => {
       >
         {/* Today's Snapshot Card */}
         <NotificationCard
-          title="Today's Snapshot"
-          description="Woo-hoo! You earned 655 points on a recent purchase."
-          icon={faStar}
-          onClick={toggleDrawerVisibility}
+          title="¿Where i am?"
+          description="¿Have you ever wanted to know where you are? Well, now you can!"
+          icon={faLocationDot}
+          onClick={goToLocation}
         />
 
         {/* Main Content */}
@@ -97,12 +101,8 @@ const Home: NextPage = () => {
             </Box>
 
             {/*Bank Sub-account Card */}
-            {bankAccounts.map(account => (
-              <AccountDetailCard
-                key={account._id}
-                {...account}
-                onClick={toggleDrawerVisibility}
-              />
+            {bankAccounts.map((account) => (
+              <AccountDetailCard key={account._id} {...account} onClick={toggleDrawerVisibility} />
             ))}
           </Box>
 
@@ -127,11 +127,7 @@ const Home: NextPage = () => {
               >
                 Movements
               </Typography>
-              <Typography
-                variant="caption"
-                fontSize="10px"
-                sx={{ color: "#888" }}
-              >
+              <Typography variant="caption" fontSize="10px" sx={{ color: "#888" }}>
                 This field is only a placeholder for the sake of this example.
               </Typography>
             </Box>
@@ -157,11 +153,7 @@ const Home: NextPage = () => {
               >
                 Auto Debit
               </Typography>
-              <Typography
-                variant="caption"
-                fontSize="10px"
-                sx={{ color: "#888" }}
-              >
+              <Typography variant="caption" fontSize="10px" sx={{ color: "#888" }}>
                 This field is another placeholder for the sake of this example.
               </Typography>
             </Box>
@@ -169,11 +161,7 @@ const Home: NextPage = () => {
         </Box>
       </Box>
       {/*Basic drawer placeholder */}
-      <Drawer
-        anchor="bottom"
-        open={drawerOpen}
-        onClose={toggleDrawerVisibility}
-      >
+      <Drawer anchor="bottom" open={drawerOpen} onClose={toggleDrawerVisibility}>
         <Typography
           variant="h6"
           fontSize="16px"
@@ -182,15 +170,9 @@ const Home: NextPage = () => {
           textAlign="center"
           sx={{ mt: 2, px: 2 }}
         >
-          You&apos;re looking a placeholder because this feature is not yet
-          implemented.
+          You&apos;re looking a placeholder because this feature is not yet implemented.
         </Typography>
-        <Typography
-          variant="subtitle1"
-          fontSize="13px"
-          color="#999"
-          textAlign="center"
-        >
+        <Typography variant="subtitle1" fontSize="13px" color="#999" textAlign="center">
           Maybe you can add your bank account details here later.
         </Typography>
         <Box display="flex" justifyContent="center" mt={2}>

@@ -15,8 +15,7 @@ const Location: NextPage = () => {
           Location
         </Typography>
         <Typography variant="body1" sx={{ color: "#555" }}>
-          In the future, this will be a map that displays the closest bank to
-          you.
+          In the future, this will be a map that displays the closest bank to you.
         </Typography>
         <Typography variant="h6" sx={{ color: "#555" }}>
           Coordinates
@@ -24,6 +23,7 @@ const Location: NextPage = () => {
         <Typography variant="body1" sx={{ color: "#555" }}>
           {`${coords?.latitude}, ${coords?.longitude}`}
         </Typography>
+        <Box width="100%" height="400px"></Box>
       </Box>
     </MainLayout>
   );
