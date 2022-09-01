@@ -2,6 +2,7 @@ import { MainLayout } from "../components/layouts/MainLayout";
 import { NextPage } from "next";
 import { Box, Typography } from "@mui/material";
 import { useGeolocated } from "react-geolocated";
+import { Map } from "../components/ui/_shared/Map";
 
 const Location: NextPage = () => {
   const { coords } = useGeolocated({
@@ -23,7 +24,9 @@ const Location: NextPage = () => {
         <Typography variant="body1" sx={{ color: "#555" }}>
           {`${coords?.latitude}, ${coords?.longitude}`}
         </Typography>
-        <Box width="100%" height="400px"></Box>
+        <Box width="100%" height="800px">
+          <Map lat={coords?.latitude} lon={coords?.longitude} altitude={coords?.altitude} />
+        </Box>
       </Box>
     </MainLayout>
   );
