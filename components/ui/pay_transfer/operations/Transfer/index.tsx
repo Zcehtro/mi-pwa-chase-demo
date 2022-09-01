@@ -33,7 +33,7 @@ import { InactiveAccordion } from "../../InactiveAccordion";
 import { TransitionProps } from "@mui/material/transitions";
 import { SecondaryLayout } from "../../../../layouts/SecondaryLayout";
 
-interface State {
+interface StateTransferAmount {
   amount: string;
 }
 
@@ -54,11 +54,12 @@ export const Transfer: FC = () => {
 
   const [anchorDirection, setAnchorDirection] = useState({ bottom: false });
   const [openDialog, setOpenDialog] = useState(false);
-  const [values, setValues] = useState<State>({ amount: "0" });
+  const [transferAmount, setTransferAmount] = useState<StateTransferAmount>({ amount: "0" });
   const [sourceAccount, setSourceAccount] = useState("");
   const [destinationAccount, setDestinationAccount] = useState("");
   const [transferDate, setTransferDate] = useState("");
   const [checkedSwitch, setCheckedSwitch] = useState(true);
+  const [drawerAnimationDuration, setDrawerAnimationDuration] = useState("500"); // TODO temporary, delete after hardcoding specified value
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -93,9 +94,10 @@ export const Transfer: FC = () => {
     setOpenDialog(false);
   };
 
-  const handleChangeAmount = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value });
-  };
+  const handleChangeAmount =
+    (prop: keyof StateTransferAmount) => (event: ChangeEvent<HTMLInputElement>) => {
+      setTransferAmount({ ...transferAmount, [prop]: event.target.value });
+    };
 
   const handleChangeSwitch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCheckedSwitch(event.target.checked);
@@ -147,6 +149,18 @@ export const Transfer: FC = () => {
           </Box>
           <Divider />
         </List>
+        <TextField
+          id="outlined-number"
+          label="Drawer animation speed (milliseconds)"
+          type="string"
+          placeholder="500"
+          value={drawerAnimationDuration}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            setDrawerAnimationDuration(event.target.value)
+          }
+          sx={{ width: "300px", margin: "auto" }}
+          // TODO remove TextField after desired transition animation has been chosen
+        />
         <InactiveAccordion>Brokerage Transfers</InactiveAccordion>
       </Drawer>
       <Dialog
@@ -154,7 +168,7 @@ export const Transfer: FC = () => {
         open={openDialog}
         onClose={handleCloseDialog}
         TransitionComponent={Transition}
-        transitionDuration={800}
+        transitionDuration={Number(drawerAnimationDuration)} // TODO INSERT STATE
       >
         <SecondaryLayout>
           <Box>
@@ -196,7 +210,7 @@ export const Transfer: FC = () => {
               <Input
                 id="standard-adornment-amount"
                 type="number"
-                value={values.amount}
+                value={transferAmount.amount}
                 onChange={handleChangeAmount("amount")}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 sx={{ fontSize: "2rem" }}
