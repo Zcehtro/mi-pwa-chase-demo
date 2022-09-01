@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, forwardRef, ReactElement, Ref, useState } from "react";
+import { ChangeEvent, FC, forwardRef, ReactElement, Ref, useState, MouseEvent } from "react";
 
 import {
   List,
@@ -29,13 +29,21 @@ import ForwardToInboxOutlinedIcon from "@mui/icons-material/ForwardToInboxOutlin
 import { motion } from "framer-motion";
 
 import { PayTransferButton } from "../types";
-import { InactiveAccordion } from "../../InactiveAccordion";
 import { TransitionProps } from "@mui/material/transitions";
 import { SecondaryLayout } from "../../../../layouts/SecondaryLayout";
 
+// Interfaces -------------------------------------------------------------------------------------
 interface StateTransferAmount {
   amount: string;
 }
+
+interface StateUIDialog {
+  AccountTransfers: boolean;
+  BrokerageTransfers: boolean;
+}
+
+type DialogHandles = "AccountTransfers" | "BrokerageTransfers";
+// ------------------------------------------------------------------------------------------------
 
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -53,13 +61,15 @@ export const Transfer: FC = () => {
   };
 
   const [anchorDirection, setAnchorDirection] = useState({ bottom: false });
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogs, setOpenDialogs] = useState<StateUIDialog>({
+    AccountTransfers: false,
+    BrokerageTransfers: false,
+  });
   const [transferAmount, setTransferAmount] = useState<StateTransferAmount>({ amount: "0" });
   const [sourceAccount, setSourceAccount] = useState("");
   const [destinationAccount, setDestinationAccount] = useState("");
   const [transferDate, setTransferDate] = useState("");
   const [checkedSwitch, setCheckedSwitch] = useState(true);
-  const [drawerAnimationDuration, setDrawerAnimationDuration] = useState("500"); // TODO temporary, delete after hardcoding specified value
 
   const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
     if (
@@ -85,13 +95,19 @@ export const Transfer: FC = () => {
     setTransferDate(event.target.value);
   };
 
-  const handleClickOpenDialog = () => {
-    setOpenDialog(true);
+  const handleClickOpenDialog = (dialog: DialogHandles) => {
+    setOpenDialogs({
+      AccountTransfers: dialog === "AccountTransfers",
+      BrokerageTransfers: dialog === "BrokerageTransfers",
+    });
     setAnchorDirection({ bottom: false });
   };
 
   const handleCloseDialog = () => {
-    setOpenDialog(false);
+    setOpenDialogs({
+      AccountTransfers: false,
+      BrokerageTransfers: false,
+    });
   };
 
   const handleChangeAmount =
@@ -139,36 +155,28 @@ export const Transfer: FC = () => {
           {Content.label}
         </Typography>
         <List>
-          <Box>
-            <ListItem button onClick={handleClickOpenDialog}>
-              <ListItemText
-                primary="Account Transfers"
-                secondary="Transfer money to an account of your choosing"
-              />
-            </ListItem>
-          </Box>
+          <ListItem button onClick={() => handleClickOpenDialog("AccountTransfers")}>
+            <ListItemText
+              primary="Account Transfers"
+              secondary="Transfer money to an account of your choosing"
+            />
+          </ListItem>
           <Divider />
+          <ListItem button onClick={() => handleClickOpenDialog("BrokerageTransfers")}>
+            <ListItemText
+              primary="Brokerage Transfers"
+              secondary="Transfer money to a broker account"
+            />
+          </ListItem>
         </List>
-        <TextField
-          id="outlined-number"
-          label="Drawer animation speed (milliseconds)"
-          type="string"
-          placeholder="500"
-          value={drawerAnimationDuration}
-          onChange={(event: ChangeEvent<HTMLInputElement>) =>
-            setDrawerAnimationDuration(event.target.value)
-          }
-          sx={{ width: "300px", margin: "auto" }}
-          // TODO remove TextField after desired transition animation has been chosen
-        />
-        <InactiveAccordion>Brokerage Transfers</InactiveAccordion>
       </Drawer>
+
       <Dialog
         fullScreen
-        open={openDialog}
+        open={openDialogs["AccountTransfers"]}
         onClose={handleCloseDialog}
         TransitionComponent={Transition}
-        transitionDuration={Number(drawerAnimationDuration)} // TODO INSERT STATE
+        transitionDuration={700}
       >
         <SecondaryLayout>
           <Box>
@@ -360,6 +368,41 @@ export const Transfer: FC = () => {
           </Box>
           <Box>
             <Button>Transfer</Button>
+          </Box>
+        </SecondaryLayout>
+      </Dialog>
+
+      <Dialog
+        fullScreen
+        open={openDialogs["BrokerageTransfers"]}
+        onClose={handleCloseDialog}
+        TransitionComponent={Transition}
+        transitionDuration={700}
+      >
+        <SecondaryLayout>
+          <Box>
+            <AppBar>
+              <Toolbar>
+                <IconButton edge="start" sx={{ mr: 8 }} />
+                <Typography
+                  color="white"
+                  variant="h6"
+                  fontSize="18"
+                  textAlign="center"
+                  sx={{ flexGrow: 1 }}
+                >
+                  Brokerage Transfers
+                </Typography>
+                <Button color="inherit" onClick={handleCloseDialog}>
+                  Cancel
+                </Button>
+              </Toolbar>
+            </AppBar>
+          </Box>
+          <Box sx={{ mt: "100px" }}>
+            <Typography>
+              Testing different dialogs in same component. React state magic!!✨
+            </Typography>
           </Box>
         </SecondaryLayout>
       </Dialog>
