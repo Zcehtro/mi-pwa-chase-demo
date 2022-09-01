@@ -24,8 +24,8 @@ const Location: NextPage = () => {
         <Typography variant="body1" sx={{ color: "#555" }}>
           {`${coords?.latitude}, ${coords?.longitude}`}
         </Typography>
-        <Box width="100%" height="800px">
-          <Map lat={coords?.latitude} lon={coords?.longitude} altitude={coords?.altitude} />
+        <Box width="100%" height="400px">
+          {coords && <Map lat={coords.latitude} lon={coords.longitude} />}
         </Box>
       </Box>
     </MainLayout>

@@ -6,8 +6,8 @@ const topoJson =
   "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/south-america.json";
 
 interface MapProps {
-  lat?: number;
-  lon?: number;
+  lat: number;
+  lon: number;
   altitude?: number;
 }
 
@@ -34,7 +34,7 @@ export const Map: FC<MapProps> = ({ lat, lon, altitude }) => {
             ))
           }
         </Geographies>
-        <Marker coordinates={marker.coordinates}>
+        <Marker coordinates={[lon, lat]}>
           <g
             fill="none"
             stroke="#FF5533"
