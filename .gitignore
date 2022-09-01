@@ -35,9 +35,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-symLinks.bat
 
 #own files
+symLinks.bat
+symLinks.ps1
 /lighthouse/*.json
 /lighthouse/*.html
 
