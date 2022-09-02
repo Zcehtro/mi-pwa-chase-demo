@@ -71,7 +71,7 @@ const Home: NextPage = () => {
             }}
           >
             {/* Overview title */}
-            <AccordionSummary p={2}>
+            <AccordionSummary>
               <Typography
                 variant="subtitle1"
                 fontWeight="bold"
