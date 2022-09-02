@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Box, Drawer, Typography, Button } from "@mui/material";
+import { Box, Drawer, Typography, Button, Accordion, AccordionSummary } from "@mui/material";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { MainLayout } from "../components/layouts/MainLayout";
 import { bankAccounts } from "../data";
@@ -59,11 +59,11 @@ const Home: NextPage = () => {
           </Typography>
 
           {/* Overview */}
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="flex-start"
+          <Accordion
             sx={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
               bgcolor: "#F3FAFF",
               borderRadius: 2,
               border: "1px solid rgb(0, 110, 215, 0.6)",
@@ -71,7 +71,7 @@ const Home: NextPage = () => {
             }}
           >
             {/* Overview title */}
-            <Box p={2}>
+            <AccordionSummary p={2}>
               <Typography
                 variant="subtitle1"
                 fontWeight="bold"
@@ -80,7 +80,7 @@ const Home: NextPage = () => {
               >
                 Overview
               </Typography>
-            </Box>
+            </AccordionSummary>
 
             {/* Bank Account Card */}
             <Box
@@ -104,7 +104,7 @@ const Home: NextPage = () => {
             {bankAccounts.map((account) => (
               <AccountDetailCard key={account._id} {...account} onClick={toggleDrawerVisibility} />
             ))}
-          </Box>
+          </Accordion>
 
           {/* Movements */}
           <Box
