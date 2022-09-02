@@ -2,8 +2,7 @@ import { Box } from "@mui/material";
 import { FC } from "react";
 import { ComposableMap, Geographies, Geography, Marker } from "react-simple-maps";
 
-const topoJson =
-  "https://raw.githubusercontent.com/deldersveld/topojson/master/continents/south-america.json";
+const topoJson = "https://raw.githubusercontent.com/alotropico/uruguay.geo/master/uruguay.json";
 
 interface MapProps {
   lat: number;
@@ -24,7 +23,8 @@ export const Map: FC<MapProps> = ({ lat, lon, altitude }) => {
         projection="geoAzimuthalEqualArea"
         projectionConfig={{
           rotate: [58, 20, 0],
-          scale: 400,
+          scale: 7000,
+          center: [2, -12.5],
         }}
       >
         <Geographies geography={topoJson}>
