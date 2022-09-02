@@ -62,7 +62,13 @@ const PayTransfer: NextPage = () => {
         style={{
           backgroundColor: "#f3f7f8",
           height: "100vh",
-          padding: "40px 0 0 0",
+          width: "100vw",
+          position: "absolute",
+        }}
+      ></Box>
+      <Box
+        style={{
+          padding: "60px 0 0",
         }}
       >
         <Grid container spacing={4}>
