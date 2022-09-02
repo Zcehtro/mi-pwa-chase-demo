@@ -43,5 +43,5 @@ symLinks.ps1
 /lighthouse/*.html
 
 # workbox files
-/public/sw.js*
+/public/sw.js.map
 public/workbox*
