@@ -1,6 +1,12 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { FC, useContext, useEffect } from "react";
+import { AuthLayout } from "../components/layouts/AuthLayout";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { USERContext } from "../context/user";
+import Link from "next/link";
+import { useVisitorData } from "@fingerprintjs/fingerprintjs-pro-react";
+import axios from "axios";
 import {
   Box,
   Button,
@@ -12,10 +18,6 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { AuthLayout } from "../components/layouts/AuthLayout";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { USERContext } from "../context/user";
-import Link from "next/link";
 
 {
   /* Form input definitions */
@@ -37,12 +39,7 @@ const SignIn: NextPage = () => {
         paddingY={7}
       >
         {/* Company Logo */}
-        <Typography
-          variant="h3"
-          color="white"
-          fontWeight="bold"
-          textAlign="center"
-        >
+        <Typography variant="h3" color="white" fontWeight="bold" textAlign="center">
           LOGO
         </Typography>
 
@@ -64,8 +61,20 @@ const LoginForm: FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  const onSubmit: SubmitHandler<Inputs> = data => {
-    loginUser("1", data.email, data.password);
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    const { email, password } = data;
+
+    try {
+      const res = await axios.post("https://pwa-chase-api.vercel.app/api/signin", {
+        email,
+        password,
+      });
+
+      const user = res.data.user;
+      loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -109,13 +118,7 @@ const LoginForm: FC = () => {
               </Typography>
             </Grid>
             {/*Use token checkbox */}
-            <Grid
-              item
-              xs={6}
-              display="flex"
-              justifyContent="center"
-              alignItems="center"
-            >
+            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
               <Link href="/forgot-password">
                 <Typography variant="caption" color="primary">
                   ¿Forgot password?
@@ -124,12 +127,7 @@ const LoginForm: FC = () => {
             </Grid>
             {/*Submit button */}
             <Grid item xs={12}>
-              <Button
-                fullWidth
-                variant="contained"
-                type="submit"
-                sx={{ mt: 2 }}
-              >
+              <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
                 Sign In
               </Button>
             </Grid>
@@ -142,14 +140,7 @@ const LoginForm: FC = () => {
 
 const BottomLinks: FC = () => {
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      gap={2}
-      mt={2}
-      flexWrap="wrap"
-    >
+    <Box display="flex" justifyContent="center" alignItems="center" gap={2} mt={2} flexWrap="wrap">
       <Link href="/about">
         <Typography color="primary.main" fontWeight="bold" component="a">
           About

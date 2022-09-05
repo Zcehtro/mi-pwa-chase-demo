@@ -60,9 +60,6 @@ const Home: NextPage = () => {
 
           {/* Overview */}
           <Accordion
-            TransitionProps={{
-              timeout: 1,
-            }}
             sx={{
               display: "flex",
               flexDirection: "column",
