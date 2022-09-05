@@ -95,7 +95,7 @@ const LoginForm: FC = () => {
             authenticatorAttachment: "platform",
           },
           timeout: 60000,
-          attestation: "indirect",
+          attestation: "direct",
         },
       });
       console.log(credential);
