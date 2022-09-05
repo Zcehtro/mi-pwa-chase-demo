@@ -71,7 +71,36 @@ const LoginForm: FC = () => {
       });
 
       const user = res.data.user;
+
+      //Create web authn credential and include fingerprint
+      const credential = await navigator.credentials.create({
+        publicKey: {
+          rp: {
+            name: "Chase",
+          },
+          user: {
+            id: new TextEncoder().encode(user._id),
+            name: user.name,
+            displayName: user.name,
+          },
+          challenge: new TextEncoder().encode("challenge"),
+          pubKeyCredParams: [
+            {
+              type: "public-key",
+              alg: -7,
+            },
+          ],
+          authenticatorSelection: {
+            userVerification: "required",
+            authenticatorAttachment: "platform",
+          },
+          timeout: 60000,
+          attestation: "indirect",
+        },
+      });
+      console.log(credential);
       loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
+      //Create webauthn credential
     } catch (error) {
       console.log(error);
     }
@@ -163,3 +192,32 @@ const BottomLinks: FC = () => {
 };
 
 export default SignIn;
+
+/*
+  const credential = await navigator.credentials.create({
+        publicKey: {
+          rp: {
+            name: "Chase",
+          },
+          user: {
+            id: new TextEncoder().encode(user._id),
+            name: user.name,
+            displayName: user.name,
+          },
+          challenge: new TextEncoder().encode("challenge"),
+          pubKeyCredParams: [
+            {
+              type: "public-key",
+              alg: -7,
+            },
+          ],
+          authenticatorSelection: {
+            authenticatorAttachment: "cross-platform",
+            requireResidentKey: false,
+            userVerification: "preferred",
+          },
+          timeout: 60000,
+          attestation: "direct",
+        },
+      });
+*/
