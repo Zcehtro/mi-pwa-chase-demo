@@ -77,9 +77,10 @@ const LoginForm: FC = () => {
         publicKey: {
           rp: {
             name: "Chase",
+            id: "localhost",
           },
           user: {
-            id: new TextEncoder().encode(user._id),
+            id: new Uint8Array(16),
             name: user.name,
             displayName: user.name,
           },
@@ -91,14 +92,20 @@ const LoginForm: FC = () => {
             },
           ],
           authenticatorSelection: {
-            userVerification: "required",
             authenticatorAttachment: "platform",
+            userVerification: "required",
           },
           timeout: 60000,
           attestation: "direct",
         },
       });
-      console.log(credential);
+
+      //Send webauthn credential to server
+      const webauthnRes = await axios.post("https://pwa-chase-api.vercel.app/api/webauthn", {
+        email,
+        credential,
+      });
+
       loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
       //Create webauthn credential
     } catch (error) {
