@@ -4,6 +4,7 @@ import { FC, useContext, useEffect } from "react";
 import { AuthLayout } from "../components/layouts/AuthLayout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
+import { authenticate } from "../libs/auth";
 import Link from "next/link";
 import axios from "axios";
 import {
@@ -60,6 +61,11 @@ const LoginForm: FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
+  //Call authenticate function on useEffect
+  useEffect(() => {
+    authenticate();
+  }, []);
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { email, password } = data;
 
@@ -97,6 +103,7 @@ const LoginForm: FC = () => {
                 {...register("email", { required: true })}
                 error={errors.email ? true : false}
                 helperText={errors.email ? "Email is required" : ""}
+                autoComplete="webauthn"
               />
             </Grid>
             {/*Password Input */}
@@ -109,6 +116,7 @@ const LoginForm: FC = () => {
                 {...register("password", { required: true })}
                 error={errors.password ? true : false}
                 helperText={errors.password ? "Password is required" : ""}
+                autoComplete="webauthn"
               />
             </Grid>
             {/*Remember Me Checkbox */}

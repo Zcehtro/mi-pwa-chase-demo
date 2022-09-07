@@ -8,7 +8,7 @@ export const authenticate = async () => {
   console.log("Authentication Options (Autofill)", opts);
 
   //Assertion
-  startAuthentication(opts, true)
+  startAuthentication(opts, false)
     .then(async (asseResp) => {
       const verificationResp = await axios({
         method: "POST",
