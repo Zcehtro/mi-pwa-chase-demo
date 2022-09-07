@@ -6,6 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
 import Link from "next/link";
 import axios from "axios";
+import { registration } from "../libs/auth";
 import {
   Box,
   Button,
@@ -22,11 +23,13 @@ import {
   /* Form input definitions */
 }
 type Inputs = {
+  name: string;
+  surname: string;
   email: string;
   password: string;
 };
 
-const SignIn: NextPage = () => {
+const SignUp: NextPage = () => {
   return (
     <AuthLayout>
       <Box
@@ -43,7 +46,7 @@ const SignIn: NextPage = () => {
         </Typography>
 
         {/*Login Form */}
-        <LoginForm />
+        <SignupForm />
       </Box>
       {/* Links */}
       <BottomLinks />
@@ -51,7 +54,7 @@ const SignIn: NextPage = () => {
   );
 };
 
-const LoginForm: FC = () => {
+const SignupForm: FC = () => {
   const { loginUser, isLoggedIn } = useContext(USERContext);
   const router = useRouter();
   const {
@@ -61,18 +64,19 @@ const LoginForm: FC = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
-    const { email, password } = data;
+    const { email, password, name, surname } = data;
 
     try {
-      const res = await axios.post("https://pwa-chase-api.vercel.app/api/signin", {
+      const res = await axios.post("https://pwa-chase-api.vercel.app/api/signup", {
         email,
         password,
+        name,
+        surname,
       });
 
       const user = res.data.user;
-
+      registration();
       loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
-      //Create webauthn credential
     } catch (error) {
       console.log(error);
     }
@@ -88,6 +92,28 @@ const LoginForm: FC = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={1}>
+            {/* Name Input */}
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Enter your name"
+                variant="standard"
+                {...register("name", { required: true })}
+                error={errors.name ? true : false}
+                helperText={errors.name ? "Name is required" : ""}
+              />
+            </Grid>
+            {/* Surname Input */}
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Enter your surname"
+                variant="standard"
+                {...register("surname", { required: true })}
+                error={errors.surname ? true : false}
+                helperText={errors.surname ? "Surname is required" : ""}
+              />
+            </Grid>
             {/*Email Input */}
             <Grid item xs={12}>
               <TextField
@@ -163,7 +189,7 @@ const BottomLinks: FC = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
 
 /*
   const credential = await navigator.credentials.create({

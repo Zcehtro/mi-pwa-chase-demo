@@ -16,29 +16,22 @@ import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
 import { AnimatePresence } from "framer-motion";
 import { useRouter } from "next/router";
-import { FpjsProvider } from "@fingerprintjs/fingerprintjs-pro-react";
 config.autoAddCss = false; /* eslint-disable import/first */
 
 function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
-    <FpjsProvider
-      loadOptions={{
-        apiKey: "yAbGiewFFugx3yWpwGe1",
-      }}
-    >
-      <UIProvider>
-        <USERProvider>
-          <ThemeProvider theme={lightTheme}>
-            <div className="effect-1">
-              <AnimatePresence mode="wait" initial={false}>
-                <Component {...pageProps} key={asPath} />
-              </AnimatePresence>
-            </div>
-          </ThemeProvider>
-        </USERProvider>
-      </UIProvider>
-    </FpjsProvider>
+    <UIProvider>
+      <USERProvider>
+        <ThemeProvider theme={lightTheme}>
+          <div className="effect-1">
+            <AnimatePresence mode="wait" initial={false}>
+              <Component {...pageProps} key={asPath} />
+            </AnimatePresence>
+          </div>
+        </ThemeProvider>
+      </USERProvider>
+    </UIProvider>
   );
 }
 
