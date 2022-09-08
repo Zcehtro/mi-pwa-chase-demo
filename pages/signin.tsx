@@ -4,7 +4,7 @@ import { FC, useContext, useEffect } from "react";
 import { AuthLayout } from "../components/layouts/AuthLayout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
-import { authenticate } from "../libs/auth";
+//import { authenticate } from "../libs/auth";
 import Link from "next/link";
 import axios from "axios";
 import {
@@ -61,9 +61,8 @@ const LoginForm: FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
-  //Call authenticate function on useEffect
   useEffect(() => {
-    authenticate();
+    //authenticate();
   }, []);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
