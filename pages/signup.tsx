@@ -6,7 +6,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
 import Link from "next/link";
 import axios from "axios";
-import { registration } from "../libs/auth";
+//import { registration } from "../libs/auth";
 import {
   Box,
   Button,
@@ -65,7 +65,10 @@ const SignupForm: FC = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { email, password, name, surname } = data;
+    //Vanilla WebAuthn
+    /*
 
+    
     try {
       const res = await axios.post("https://pwa-chase-api.vercel.app/api/signup", {
         email,
@@ -75,11 +78,12 @@ const SignupForm: FC = () => {
       });
 
       const user = res.data.user;
-      registration();
+
       loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
     } catch (error) {
       console.log(error);
     }
+    */
   };
 
   useEffect(() => {

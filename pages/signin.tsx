@@ -62,7 +62,9 @@ const LoginForm: FC = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { email, password } = data;
+    //Vanilla WebAuthn
 
+    /*
     try {
       const res = await axios.post("https://pwa-chase-api.vercel.app/api/signin", {
         email,
@@ -72,10 +74,10 @@ const LoginForm: FC = () => {
       const user = res.data.user;
 
       loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
-      //Create webauthn credential
     } catch (error) {
       console.log(error);
     }
+*/
   };
 
   useEffect(() => {
