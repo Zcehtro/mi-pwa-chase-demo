@@ -8,6 +8,7 @@ interface ContextProps {
   password: string | null;
   publicKey: string | null;
   isLoggedIn: boolean;
+  webAuthnEnabled: boolean;
 
   // Methods
   loginUser: (
@@ -18,8 +19,10 @@ interface ContextProps {
     password: string,
     publicKey: string,
     isLoggedIn: boolean,
+    webAuthnEnabled: boolean,
   ) => void;
   logoutUser: () => void;
+  registerWebauthn: () => void;
 }
 
 export const USERContext = createContext({} as ContextProps);

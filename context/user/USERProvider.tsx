@@ -8,6 +8,7 @@ export interface USERState {
   email: string | null;
   password: string | null;
   publicKey: string | null;
+  webAuthnEnabled: boolean;
   isLoggedIn: boolean;
 }
 
@@ -18,6 +19,7 @@ const USER_INITIAL_STATE: USERState = {
   email: null,
   password: null,
   publicKey: null,
+  webAuthnEnabled: false,
   isLoggedIn: false,
 };
 
@@ -36,6 +38,7 @@ export const USERProvider: FC<Props> = ({ children }) => {
     password: string,
     publicKey: string,
     isLoggedIn: boolean,
+    webAuthnEnabled: boolean,
   ) => {
     dispatch({
       type: "LOGIN_USER",
@@ -47,6 +50,7 @@ export const USERProvider: FC<Props> = ({ children }) => {
         password,
         publicKey,
         isLoggedIn,
+        webAuthnEnabled,
       },
     });
   };
@@ -55,12 +59,17 @@ export const USERProvider: FC<Props> = ({ children }) => {
     dispatch({ type: "LOGOUT_USER" });
   };
 
+  const registerWebauthn = () => {
+    dispatch({ type: "REGISTER_WEBAUTHN" });
+  };
+
   return (
     <USERContext.Provider
       value={{
         ...state,
         loginUser,
         logoutUser,
+        registerWebauthn,
       }}
     >
       {children}

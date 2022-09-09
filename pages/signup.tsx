@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { FC, useContext, useEffect } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { AuthLayout } from "../components/layouts/AuthLayout";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { USERContext } from "../context/user";
@@ -56,6 +56,7 @@ const SignUp: NextPage = () => {
 
 const SignupForm: FC = () => {
   const { loginUser, isLoggedIn } = useContext(USERContext);
+  const [error, setError] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -75,10 +76,19 @@ const SignupForm: FC = () => {
       });
 
       const user = res.data.user;
-      registration();
-      loginUser(user._id, user.name, user.surname, user.email, user.password, user.publicKey, true);
-    } catch (error) {
+      loginUser(
+        user._id,
+        user.name,
+        user.surname,
+        user.email,
+        user.password,
+        user.publicKey,
+        true,
+        user.webAuthnEnabled,
+      );
+    } catch (error: any) {
       console.log(error);
+      setError(true);
     }
   };
 
@@ -137,23 +147,13 @@ const SignupForm: FC = () => {
                 helperText={errors.password ? "Password is required" : ""}
               />
             </Grid>
-            {/*Remember Me Checkbox */}
-            <Grid item xs={6}>
-              <Checkbox defaultChecked />
-              <Typography variant="caption" color="primary">
-                Remember me
-              </Typography>
-            </Grid>
-            {/*Use token checkbox */}
-            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
-              <Link href="/forgot-password">
-                <Typography variant="caption" color="primary">
-                  ¿Forgot password?
-                </Typography>
-              </Link>
-            </Grid>
             {/*Submit button */}
             <Grid item xs={12}>
+              {error && (
+                <Typography color="error" textAlign="center">
+                  Something was wrong
+                </Typography>
+              )}
               <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
                 Sign In
               </Button>
@@ -174,9 +174,9 @@ const BottomLinks: FC = () => {
         </Typography>
       </Link>
       <Divider orientation="vertical" flexItem />
-      <Link href="/signup">
+      <Link href="/signin">
         <Typography color="primary.main" fontWeight="bold" component="a">
-          Open an Account
+          ¿Already have an account?
         </Typography>
       </Link>
       <Divider orientation="vertical" flexItem />
