@@ -8,7 +8,7 @@ export const authenticate = async () => {
   console.log("Authentication Options (Autofill)", opts);
 
   //Assertion
-  startAuthentication(opts, false)
+  startAuthentication(opts, true)
     .then(async (asseResp) => {
       const verificationResp = await axios({
         method: "POST",
@@ -20,13 +20,17 @@ export const authenticate = async () => {
       });
       const verificationJSON = verificationResp.data;
 
-      if (verificationJSON && verificationJSON.verified) {
-        console.log("Authentication Successful");
-        return true;
+      if (!verificationJSON && !verificationJSON.verified) {
+        console.log("Authentication Failed");
+        return false;
       }
+
+      console.log("Authentication Successful");
+      return true;
     })
     .catch((err) => {
       console.log("Authentication Failed", err);
       return false;
     });
+  return false;
 };

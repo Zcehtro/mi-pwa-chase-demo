@@ -155,7 +155,7 @@ const SignupForm: FC = () => {
                 </Typography>
               )}
               <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
-                Sign In
+                Register
               </Button>
             </Grid>
           </Grid>
