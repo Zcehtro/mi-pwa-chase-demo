@@ -95,19 +95,21 @@ export const LoginForm: FC = () => {
       attResp = await startRegistration(opts);
       console.log('[DEBUG] Registration Response', JSON.stringify(attResp, null, 2));
     } catch (err: any) {
+      let msg;
       if (err.name === 'InvalidStateError') {
         console.error('[DEBUG] Error: Authenticator was probably already registered by user');
-        setWebAuthnMessage({
-          status: true,
-          message: 'Authenticator was probably already registered by user',
-        });
+        msg = 'Error: Authenticator was probably already registered by user';
       } else {
         console.error('[DEBUG] Error 1:', err);
-        // setWebAuthnMessage({ status: true, message: JSON.stringify(err.message) });
+        msg = JSON.stringify(err.message);
       }
 
       // throw err;
 
+      setWebAuthnMessage({
+        status: true,
+        message: msg,
+      });
       return;
     }
 
