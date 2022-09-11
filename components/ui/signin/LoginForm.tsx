@@ -146,7 +146,7 @@ export const LoginForm: FC = () => {
 
       asseResp = await startAuthentication(opts);
       console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
-    } catch (error) {
+    } catch (error: any) {
       console.error('[DEBUG] error 2:', JSON.stringify(error.message));
       setWebAuthnMessage({ status: true, message: JSON.stringify(error.message) });
       // throw error;
