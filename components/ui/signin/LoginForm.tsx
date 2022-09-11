@@ -99,9 +99,12 @@ export const LoginForm: FC = () => {
         console.error('[DEBUG] Error: Authenticator was probably already registered by user');
       } else {
         console.error('[DEBUG] Error 1:', err);
+        // setWebAuthnError({ status: true, message: JSON.stringify(err.message) });
       }
 
-      throw err;
+      // throw err;
+
+      return;
     }
     const verificationResp = await fetch(`${BASE_URL}/verify-registration`, {
       method: 'POST',
@@ -234,7 +237,11 @@ export const LoginForm: FC = () => {
                   >
                     Register WebAuthn
                   </Button>
-                  {webAuthnError.status && <p>{webAuthnError.message}</p>}
+                  {webAuthnError.status && (
+                    <Typography variant="caption" color="red">
+                      {webAuthnError.message}
+                    </Typography>
+                  )}
                 </Grid>
               </Grid>
             </form>
