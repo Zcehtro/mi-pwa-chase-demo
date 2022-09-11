@@ -1,6 +1,4 @@
-import { Fragment, FC, useContext, useEffect, useState } from 'react';
-import type { NextPage } from 'next';
-import { useRouter } from 'next/router';
+import { FC, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 
 import axios from 'axios';
@@ -13,19 +11,11 @@ import {
   startRegistration,
 } from '@simplewebauthn/browser';
 
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Checkbox,
-  Grid,
-  TextField,
-  Typography,
-  Divider,
-} from '@mui/material';
+import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
+
 import { USERContext } from '../../../context/user';
 import { BASE_URL } from '../../../libs/auth';
+import { WebAuthnModal } from './WebAuthnModal';
 
 type Inputs = {
   email: string;
@@ -37,13 +27,19 @@ export const LoginForm: FC = () => {
   const [webAuthnModal, setWebAuthnModal] = useState(false);
   const [webAuthnError, setWebAuthnError] = useState({ status: false, message: '' });
 
-  const router = useRouter();
-
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
+
+  const clear = () => {
+    setWebAuthnError({ status: false, message: '' });
+  };
+
+  useEffect(() => {
+    clear();
+  }, []);
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { email, password } = data;
@@ -128,14 +124,6 @@ export const LoginForm: FC = () => {
     }
   };
 
-  const clear = () => {
-    setWebAuthnError({ status: false, message: '' });
-  };
-
-  useEffect(() => {
-    clear();
-  }, []);
-
   const auth = async () => {
     const resp = await fetch(`${BASE_URL}/generate-authentication-options`);
     let asseResp;
@@ -191,43 +179,14 @@ export const LoginForm: FC = () => {
   }, []);
 
   return (
-    <Fragment>
+    <>
       {webAuthnModal ? (
-        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
-          <CardContent>
-            <Typography variant="h5" color="primary" fontWeight="bold" textAlign="center">
-              WebAuthn
-            </Typography>
-            <Divider sx={{ mt: 2, mb: 2 }} />
-            <Typography
-              variant="body1"
-              color="#555"
-              fontSize="15px"
-              fontWeight="bold"
-              textAlign="center"
-            >
-              ¿Do you want to register WebAuthn for 2fa?
-            </Typography>
-            <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={webauthnRegistration}>
-              Yes
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              sx={{ mt: 2 }}
-              //on click navigate to home
-              onClick={() => router.push('/')}
-            >
-              No
-            </Button>
-          </CardContent>
-        </Card>
+        <WebAuthnModal />
       ) : (
         <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={1}>
-                {/*Email Input */}
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -238,7 +197,6 @@ export const LoginForm: FC = () => {
                     helperText={errors.email ? 'Email is required' : ''}
                   />
                 </Grid>
-                {/*Password Input */}
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -250,14 +208,12 @@ export const LoginForm: FC = () => {
                     helperText={errors.password ? 'Password is required' : ''}
                   />
                 </Grid>
-                {/*Remember Me Checkbox */}
                 <Grid item xs={6}>
                   <Checkbox defaultChecked />
                   <Typography variant="caption" color="primary">
                     Remember me
                   </Typography>
                 </Grid>
-                {/*Use token checkbox */}
                 <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
                   <Link href="/forgot-password">
                     <Typography variant="caption" color="primary">
@@ -265,7 +221,6 @@ export const LoginForm: FC = () => {
                     </Typography>
                   </Link>
                 </Grid>
-                {/*Submit button */}
                 <Grid item xs={12}>
                   <Button fullWidth variant="contained" onClick={handleSignIn} sx={{ mt: 2 }}>
                     Sign In
@@ -286,6 +241,6 @@ export const LoginForm: FC = () => {
           </CardContent>
         </Card>
       )}
-    </Fragment>
+    </>
   );
 };
