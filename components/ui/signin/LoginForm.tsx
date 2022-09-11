@@ -124,8 +124,8 @@ export const LoginForm: FC = () => {
 
     let msg;
     if (verificationJSON && verificationJSON.verified) {
-      console.log('[DEBUG] `Authenticator registered!`');
-      msg = 'Authenticator registered. TODO: Flujo con nuestro server para algo ???';
+      console.log('[DEBUG] Authenticator registered!');
+      msg = 'Success! Authenticator registered. TODO: Flujo con nuestro server para algo ???';
     } else {
       msg = `Something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`;
       console.log('[DEBUG]', msg);
@@ -168,7 +168,7 @@ export const LoginForm: FC = () => {
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] User authenticated!');
       msg =
-        'User authenticated by device. TODO: flujo con nuestro server para ver si es un usuario y es quien dice ser.';
+        'Success! User authenticated by device. TODO: flujo con nuestro server para ver si es un usuario y es quien dice ser.';
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
       console.log('[DEBUG] error', msg);
