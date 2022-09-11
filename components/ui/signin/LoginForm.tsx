@@ -25,7 +25,7 @@ type Inputs = {
 export const LoginForm: FC = () => {
   const { loginUser, logoutUser, isLoggedIn, registerWebauthn, email } = useContext(USERContext);
   const [webAuthnModal, setWebAuthnModal] = useState(false);
-  const [webAuthnError, setWebAuthnError] = useState({ status: false, message: '' });
+  const [webAuthnMessage, setWebAuthnMessage] = useState({ status: false, message: '' });
 
   const {
     register,
@@ -34,7 +34,7 @@ export const LoginForm: FC = () => {
   } = useForm<Inputs>();
 
   const clear = () => {
-    setWebAuthnError({ status: false, message: '' });
+    setWebAuthnMessage({ status: false, message: '' });
   };
 
   useEffect(() => {
@@ -97,15 +97,20 @@ export const LoginForm: FC = () => {
     } catch (err: any) {
       if (err.name === 'InvalidStateError') {
         console.error('[DEBUG] Error: Authenticator was probably already registered by user');
+        setWebAuthnMessage({
+          status: true,
+          message: 'Authenticator was probably already registered by user',
+        });
       } else {
         console.error('[DEBUG] Error 1:', err);
-        // setWebAuthnError({ status: true, message: JSON.stringify(err.message) });
+        // setWebAuthnMessage({ status: true, message: JSON.stringify(err.message) });
       }
 
       // throw err;
 
       return;
     }
+
     const verificationResp = await fetch(`${BASE_URL}/verify-registration`, {
       method: 'POST',
       headers: {
@@ -117,14 +122,18 @@ export const LoginForm: FC = () => {
     const verificationJSON = await verificationResp.json();
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
+    let msg;
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] `Authenticator registered!`');
+      msg = 'Authenticator registered. TODO: Flujo con nuestro server para algo ???';
     } else {
-      console.log(
-        '[DEBUG]',
-        `Oh no, something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`,
-      );
+      msg = `Something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`;
+      console.log('[DEBUG]', msg);
     }
+    setWebAuthnMessage({
+      status: true,
+      message: msg,
+    });
   };
 
   const auth = async () => {
@@ -139,7 +148,7 @@ export const LoginForm: FC = () => {
       console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
     } catch (error) {
       console.error('[DEBUG] error 2:', JSON.stringify(error.message));
-      setWebAuthnError({ status: true, message: JSON.stringify(error.message) });
+      setWebAuthnMessage({ status: true, message: JSON.stringify(error.message) });
       // throw error;
       return;
     }
@@ -155,21 +164,29 @@ export const LoginForm: FC = () => {
     const verificationJSON = await verificationResp.json();
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
+    let msg;
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] User authenticated!');
+      msg =
+        'User authenticated by device. TODO: flujo con nuestro server para ver si es un usuario y es quien dice ser.';
     } else {
-      console.log(
-        '[DEBUG] error',
-        `Oh no, something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`,
-      );
+      msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
+      console.log('[DEBUG] error', msg);
     }
+
+    setWebAuthnMessage({
+      status: true,
+      message: msg,
+    });
   };
 
   const handleSignIn = () => {
+    clear();
     auth();
   };
 
   const handleRegisterWebAuthn = () => {
+    clear();
     webauthnRegistration();
   };
 
@@ -233,13 +250,13 @@ export const LoginForm: FC = () => {
                     fullWidth
                     variant="contained"
                     onClick={handleRegisterWebAuthn}
-                    sx={{ mt: 2 }}
+                    sx={{ my: 2 }}
                   >
                     Register WebAuthn
                   </Button>
-                  {webAuthnError.status && (
-                    <Typography variant="caption" color="red">
-                      {webAuthnError.message}
+                  {webAuthnMessage.status && (
+                    <Typography variant="caption" color="primary">
+                      {webAuthnMessage.message}
                     </Typography>
                   )}
                 </Grid>
