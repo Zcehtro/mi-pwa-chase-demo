@@ -18,6 +18,9 @@ import {
   Divider,
 } from "@mui/material";
 
+import { signIn, signOut, useSession } from "next-auth/react";
+import { startRegistration } from "@simplewebauthn/browser";
+
 {
   /* Form input definitions */
 }
@@ -52,6 +55,8 @@ const SignIn: NextPage = () => {
 };
 
 const LoginForm: FC = () => {
+  const { data: session, status } = useSession();
+
   const { loginUser, isLoggedIn } = useContext(USERContext);
   const router = useRouter();
   const {
@@ -64,7 +69,7 @@ const LoginForm: FC = () => {
     const { email, password } = data;
 
     try {
-      const res = await axios.post("https://pwa-chase-api.vercel.app/api/signin", {
+      const res = await axios.post(process.env.NEXT_PUBLIC_DEMO_SIGNIN_URL!, {
         email,
         password,
       });

@@ -18,6 +18,7 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
+import { startRegistration } from "@simplewebauthn/browser";
 
 {
   /* Form input definitions */
@@ -63,11 +64,40 @@ const SignupForm: FC = () => {
     formState: { errors },
   } = useForm<Inputs>();
 
+  async function registerWebauthn() {
+    const optionsResponse = await fetch(process.env.NEXT_PUBLIC_DEMO_RP_REGISTER!);
+    if (optionsResponse.status !== 200) {
+      alert("Could not get registration options from server");
+      return;
+    }
+    const opt = await optionsResponse.json();
+
+    try {
+      const credential = await startRegistration(opt);
+
+      const response = await fetch(process.env.NEXT_PUBLIC_DEMO_RP_REGISTER!, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credential),
+        credentials: "include",
+      });
+      if (response.status != 201) {
+        alert("Could not register webauthn credentials.");
+      } else {
+        alert("Your webauthn credentials have been registered.");
+      }
+    } catch (err) {
+      alert(`Registration failed. ${(err as Error).message}`);
+    }
+  }
+
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const { email, password, name, surname } = data;
 
     try {
-      const res = await axios.post("https://pwa-chase-api.vercel.app/api/signup", {
+      const res = await axios.post(process.env.NEXT_PUBLIC_DEMO_SIGNUP_URL!, {
         email,
         password,
         name,

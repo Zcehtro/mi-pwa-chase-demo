@@ -34,7 +34,7 @@ export function BottomNavigator() {
           label="Accounts"
           icon={<AccountBalanceWalletOutlinedIcon />}
           sx={{ padding: "0 2px" }}
-          onClick={() => goLink("/")}
+          onClick={() => goLink("/accounts")}
         />
         <BottomNavigationAction
           label="Pay & Transfer"
