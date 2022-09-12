@@ -1,15 +1,15 @@
-import { useContext, useEffect } from "react";
-import type { NextPage } from "next";
-import { useRouter } from "next/router";
-import { Box, Drawer, Typography, Button, Accordion, AccordionSummary } from "@mui/material";
-import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { MainLayout } from "../components/layouts/MainLayout";
-import { bankAccounts } from "../data";
-import { UIContext } from "../context/ui";
-import { USERContext } from "../context/user";
-import { AccountDetailCard } from "../components/ui/index/AccountDetailCard";
-import { NotificationCard } from "../components/ui/index/NotificationCard";
-import { PageHeader } from "../components/ui/_shared/PageHeader";
+import { useContext, useEffect } from 'react';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { Box, Drawer, Typography, Button, Accordion, AccordionSummary } from '@mui/material';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { MainLayout } from '../components/layouts/MainLayout';
+import { bankAccounts } from '../data';
+import { UIContext } from '../context/ui';
+import { USERContext } from '../context/user';
+import { AccountDetailCard } from '../components/ui/index/AccountDetailCard';
+import { NotificationCard } from '../components/ui/index/NotificationCard';
+import { PageHeader } from '../components/ui/_shared/PageHeader';
 
 const Home: NextPage = () => {
   const { drawerOpen, toggleDrawer } = useContext(UIContext);
@@ -20,14 +20,8 @@ const Home: NextPage = () => {
     toggleDrawer(!drawerOpen);
   };
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push("/signin");
-    }
-  }, [isLoggedIn]);
-
   const goToLocation = (e: any) => {
-    router.push("/location");
+    router.push('/location');
   };
 
   return (
@@ -35,38 +29,33 @@ const Home: NextPage = () => {
       {/* Page Header */}
       <PageHeader />
       {/* Page Content */}
-      <Box
-        width="100%"
-        maxWidth="600px"
-        display="flex"
-        flexDirection="column"
-        alignItems="center"
-        mt={2}
-      >
+      <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2}>
         {/* Today's Snapshot Card */}
-        <NotificationCard
-          title="¿Where i am?"
-          description="¿Have you ever wanted to know where you are? Well, now you can!"
-          icon={faLocationDot}
-          onClick={goToLocation}
-        />
+        <Box width="100%" px={3}>
+          <NotificationCard
+            title="¿Where i am?"
+            description="¿Have you ever wanted to know where you are? Well, now you can!"
+            icon={faLocationDot}
+            onClick={goToLocation}
+          />
+        </Box>
 
         {/* Main Content */}
         <Box width="100%" display="flex" flexDirection="column" gap={2} p={3}>
           {/* Title */}
-          <Typography variant="h5" fontWeight="bold" sx={{ color: "#555" }}>
+          <Typography variant="h5" fontWeight="bold" sx={{ color: '#555' }}>
             Accounts
           </Typography>
 
           {/* Overview */}
           <Accordion
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "flex-start",
-              bgcolor: "#F3FAFF",
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+              bgcolor: '#F3FAFF',
               borderRadius: 2,
-              border: "1px solid rgb(0, 110, 215, 0.6)",
+              border: '1px solid rgb(0, 110, 215, 0.6)',
               mb: 1,
             }}
           >
@@ -113,7 +102,7 @@ const Home: NextPage = () => {
             justifyContent="flex-start"
             sx={{
               borderRadius: 2,
-              border: "1px solid rgb(0, 110, 215, 0.6)",
+              border: '1px solid rgb(0, 110, 215, 0.6)',
               mb: 1,
             }}
           >
@@ -127,7 +116,7 @@ const Home: NextPage = () => {
               >
                 Movements
               </Typography>
-              <Typography variant="caption" fontSize="10px" sx={{ color: "#888" }}>
+              <Typography variant="caption" fontSize="10px" sx={{ color: '#888' }}>
                 This field is only a placeholder for the sake of this example.
               </Typography>
             </Box>
@@ -139,7 +128,7 @@ const Home: NextPage = () => {
             justifyContent="flex-start"
             sx={{
               borderRadius: 2,
-              border: "1px solid rgb(0, 110, 215, 0.6)",
+              border: '1px solid rgb(0, 110, 215, 0.6)',
               mb: 1,
             }}
           >
@@ -153,7 +142,7 @@ const Home: NextPage = () => {
               >
                 Auto Debit
               </Typography>
-              <Typography variant="caption" fontSize="10px" sx={{ color: "#888" }}>
+              <Typography variant="caption" fontSize="10px" sx={{ color: '#888' }}>
                 This field is another placeholder for the sake of this example.
               </Typography>
             </Box>
