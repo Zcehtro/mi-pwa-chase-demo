@@ -1,25 +1,25 @@
-import { USERState } from "./";
+import { USERState } from './';
 
 type USERActionType =
-  | { type: "LOGIN_USER"; payload: USERState }
-  | { type: "LOGOUT_USER" }
-  | { type: "REGISTER_WEBAUTHN" };
+  | { type: 'LOGIN_USER'; payload: USERState }
+  | { type: 'LOGOUT_USER' }
+  | { type: 'REGISTER_WEBAUTHN' };
 
 export const userReducer = (state: USERState, action: USERActionType): USERState => {
   switch (action.type) {
-    case "LOGIN_USER":
+    case 'LOGIN_USER':
       return {
         ...state,
         isLoggedIn: true,
-        id: action.payload.id,
-        name: action.payload.name,
-        surname: action.payload.surname,
-        email: action.payload.email,
-        password: action.payload.password,
-        publicKey: action.payload.publicKey,
-        webAuthnEnabled: action.payload.webAuthnEnabled,
+        id: action.payload.user.id,
+        name: action.payload.user.name,
+        surname: action.payload.user.surname,
+        email: action.payload.user.email,
+        password: action.payload.user.password,
+        publicKey: action.payload.user.publicKey,
+        webAuthnEnabled: action.payload.user.webAuthnEnabled,
       };
-    case "LOGOUT_USER":
+    case 'LOGOUT_USER':
       return {
         ...state,
         id: null,
@@ -31,7 +31,7 @@ export const userReducer = (state: USERState, action: USERActionType): USERState
         publicKey: null,
         webAuthnEnabled: false,
       };
-    case "REGISTER_WEBAUTHN":
+    case 'REGISTER_WEBAUTHN':
       return {
         ...state,
         webAuthnEnabled: true,

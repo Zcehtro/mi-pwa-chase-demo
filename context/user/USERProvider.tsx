@@ -1,7 +1,7 @@
-import { FC, PropsWithChildren, useReducer } from "react";
-import { USERContext, userReducer } from ".";
+import { FC, PropsWithChildren, useReducer } from 'react';
+import { USERContext, userReducer } from '.';
 
-export interface USERState {
+export interface UserModel {
   id: string | null;
   name: string | null;
   surname: string | null;
@@ -12,7 +12,7 @@ export interface USERState {
   isLoggedIn: boolean;
 }
 
-const USER_INITIAL_STATE: USERState = {
+const USER_INITIAL_STATE: UserModel = {
   id: null,
   name: null,
   surname: null,
@@ -30,37 +30,21 @@ interface Props {
 export const USERProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, USER_INITIAL_STATE);
 
-  const loginUser = (
-    id: string,
-    name: string,
-    surname: string,
-    email: string,
-    password: string,
-    publicKey: string,
-    isLoggedIn: boolean,
-    webAuthnEnabled: boolean,
-  ) => {
+  const loginUser = (user: UserModel) => {
     dispatch({
-      type: "LOGIN_USER",
+      type: 'LOGIN_USER',
       payload: {
-        id,
-        name,
-        surname,
-        email,
-        password,
-        publicKey,
-        isLoggedIn,
-        webAuthnEnabled,
+        user,
       },
     });
   };
 
   const logoutUser = () => {
-    dispatch({ type: "LOGOUT_USER" });
+    dispatch({ type: 'LOGOUT_USER' });
   };
 
   const registerWebauthn = () => {
-    dispatch({ type: "REGISTER_WEBAUTHN" });
+    dispatch({ type: 'REGISTER_WEBAUTHN' });
   };
 
   return (

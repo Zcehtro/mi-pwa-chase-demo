@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { USERContext, UserModel } from '../../../context/user';
 
 import {
   browserSupportsWebAuthn,
@@ -24,6 +25,18 @@ const MakeReq = axios.create({
   headers: { 'Content-Type': 'application/json' },
 });
 
+//!Development purposes only
+const TEST_USER: UserModel = {
+  id: '1',
+  name: 'John',
+  surname: 'Doe',
+  email: 'jhondoe@123.com',
+  password: '123456',
+  publicKey: '123456',
+  isLoggedIn: true,
+  webAuthnEnabled: false,
+};
+
 export const LoginForm: FC = () => {
   const [webAuthnRegistered, setWebAuthnRegistered] = useState(false);
   const [LoggedIn, setLoggedIn] = useState(false);
@@ -31,6 +44,9 @@ export const LoginForm: FC = () => {
     status: false,
     message: '',
   });
+
+  //User Context
+  const { loginUser, isLoggedIn } = useContext(USERContext);
 
   const router = useRouter();
   const {
@@ -43,56 +59,15 @@ export const LoginForm: FC = () => {
     setWebAuthnMessage({ status: false, message: '' });
   };
 
-  useEffect(() => {
-    clear();
-  }, []);
-
-  // const onSubmit: SubmitHandler<Inputs> = async (data) => {
-  //   const { email, password } = data;
-
-  //   try {
-  //     const res = await axios.post(
-  //       'https://pwa-chase-api.vercel.app/api/signin',
-  //       {
-  //         email,
-  //         password
-  //       }
-  //     );
-
-  //     const user = res.data.user;
-
-  //     const webAuthnAvailable = await platformAuthenticatorIsAvailable();
-
-  //     // loginUser(
-  //     //   user._id,
-  //     //   user.name,
-  //     //   user.surname,
-  //     //   user.email,
-  //     //   user.password,
-  //     //   user.publicKey,
-  //     //   true,
-  //     //   user.webAuthnEnabled
-  //     // );
-
-  //     if (!user.webAuthnEnabled && webAuthnAvailable) {
-  //       setWebAuthnModal(true);
-  //     }
-
-  //     //if is webauthn enabled
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  //Register biometric data with WebAuthn
+  //? Register biometric data with WebAuthn
   const WebAuthnRegistration = async () => {
     // "Generate registration options"
-    const resp = await MakeReq.get('/api/registration/generate-registration-options');
+    const resp = await fetch('/api/registration/generate-registration-options');
     //Attestation resp
     let attResp;
 
     try {
-      const opts = await resp.data;
+      const opts = await resp.json();
       console.log('[DEBUG] generate-registration-options', opts);
 
       //Resident key is set to required
@@ -125,15 +100,15 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    const verificationResp = await MakeReq('/api/registration/verify-registration', {
+    const verificationResp = await fetch('/api/registration/verify-registration', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify(attResp),
+      body: JSON.stringify(attResp),
     });
 
-    const verificationJSON = await verificationResp.data;
+    const verificationJSON = await verificationResp.json();
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
@@ -152,13 +127,13 @@ export const LoginForm: FC = () => {
     });
   };
 
-  //Use the registered biometric data to authenticate
+  //? Use the registered biometric data to authenticate
   const WebAuthnAuthentication = async () => {
-    const resp = await MakeReq.get('/api/auth/generate-authentication-options');
+    const resp = await fetch('/api/auth/generate-authentication-options');
     let asseResp;
 
     try {
-      const opts = await resp.data;
+      const opts = await resp.json();
       console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
 
       asseResp = await startAuthentication(opts);
@@ -173,22 +148,24 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    const verificationResp = await MakeReq('/api/auth/verify-authentication', {
+    const verificationResp = await fetch('/api/auth/verify-authentication', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      data: JSON.stringify(asseResp),
+      body: JSON.stringify(asseResp),
     });
 
-    const verificationJSON = await verificationResp.data;
+    const verificationJSON = await verificationResp.json();
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] User authenticated!');
       msg = 'Success! User authenticated by device.';
-      setLoggedIn(true);
+
+      //? Authenticate User
+      loginUser(TEST_USER);
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
       console.log('[DEBUG] error', msg);
@@ -210,17 +187,20 @@ export const LoginForm: FC = () => {
     WebAuthnRegistration();
   };
 
+  //? UseEffect Hook Calls
+  useEffect(() => {
+    clear();
+  }, []);
+
   useEffect(() => {
     if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
       console.log('[DEBUG] supportsWebAuthn');
     } else {
       console.log('[DEBUG] No supportsWebAuthn');
     }
-  }, []);
 
-  useEffect(() => {
-    if (LoggedIn && webAuthnRegistered) router.push('/');
-  });
+    if (isLoggedIn) router.push('/');
+  }, [isLoggedIn]);
 
   const handleSubmitMock = () => {
     console.log('[DEBUG] call onSubmit: <form onSubmit={handleSubmit(onSubmit)}>');
