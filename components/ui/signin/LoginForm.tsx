@@ -98,7 +98,7 @@ export const LoginForm: FC = () => {
   // };
   */
 
-  //WebAuthn Registration
+  //Register biometric data with WebAuthn
   const WebAuthnRegistration = async () => {
     // "Generate registration options"
     const resp = await fetch(`/api/registration/generate-registration-options`);
@@ -168,7 +168,7 @@ export const LoginForm: FC = () => {
     });
   };
 
-  //WebAuthn Authentication
+  //Use the registered biometric data to authenticate
   const WebAuthnAuthentication = async () => {
     const resp = await fetch('/api/auth/generate-authentication-options');
     let asseResp;

@@ -2,7 +2,7 @@ import type { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
 const { ENABLE_CONFORMANCE, ENABLE_HTTPS } = process.env;
 
-const isInProduction = false;
+const isInProduction = true;
 let RP_ID;
 
 isInProduction ? (RP_ID = 'mi-pwa-chase.vercel.app') : (RP_ID = 'localhost');
