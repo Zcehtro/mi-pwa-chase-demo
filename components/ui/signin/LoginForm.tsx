@@ -11,12 +11,18 @@ import {
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
-import { WebAuthnModal } from './WebAuthnModal';
+import axios from 'axios';
 
 type Inputs = {
   email: string;
   password: string;
 };
+
+const MakeReq = axios.create({
+  baseURL: 'http://localhost:3000',
+  timeout: 1000,
+  headers: { 'Content-Type': 'application/json' },
+});
 
 export const LoginForm: FC = () => {
   const [webAuthnRegistered, setWebAuthnRegistered] = useState(false);
@@ -78,13 +84,15 @@ export const LoginForm: FC = () => {
   //   }
   // };
 
-  const webauthnRegistration = async () => {
-    const resp = await fetch(`/api/registration/generate-registration-options`);
+  //Register biometric data with WebAuthn
+  const WebAuthnRegistration = async () => {
+    // "Generate registration options"
+    const resp = await MakeReq.get('/api/registration/generate-registration-options');
     //Attestation resp
     let attResp;
 
     try {
-      const opts = await resp.json();
+      const opts = await resp.data;
       console.log('[DEBUG] generate-registration-options', opts);
 
       //Resident key is set to required
@@ -117,15 +125,15 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    const verificationResp = await fetch('/api/registration/verify-registration', {
+    const verificationResp = await MakeReq('/api/registration/verify-registration', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(attResp),
+      data: JSON.stringify(attResp),
     });
 
-    const verificationJSON = await verificationResp.json();
+    const verificationJSON = await verificationResp.data;
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
@@ -144,12 +152,13 @@ export const LoginForm: FC = () => {
     });
   };
 
-  const auth = async () => {
-    const resp = await fetch('/api/auth/generate-authentication-options');
+  //Use the registered biometric data to authenticate
+  const WebAuthnAuthentication = async () => {
+    const resp = await MakeReq.get('/api/auth/generate-authentication-options');
     let asseResp;
 
     try {
-      const opts = await resp.json();
+      const opts = await resp.data;
       console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
 
       asseResp = await startAuthentication(opts);
@@ -164,15 +173,15 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    const verificationResp = await fetch('/api/auth/verify-authentication', {
+    const verificationResp = await MakeReq('/api/auth/verify-authentication', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(asseResp),
+      data: JSON.stringify(asseResp),
     });
 
-    const verificationJSON = await verificationResp.json();
+    const verificationJSON = await verificationResp.data;
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
@@ -193,12 +202,12 @@ export const LoginForm: FC = () => {
 
   const handleSignIn = () => {
     clear();
-    auth();
+    WebAuthnAuthentication();
   };
 
   const handleRegisterWebAuthn = () => {
     clear();
-    webauthnRegistration();
+    WebAuthnRegistration();
   };
 
   useEffect(() => {
