@@ -1,13 +1,24 @@
-import { FC, ReactNode } from "react";
-import Head from "next/head";
-import { BottomNavigator } from "../ui/_shared/BottomNavigator";
-import Box from "@mui/material/Box";
+import { FC, ReactNode, useContext, useEffect } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import Box from '@mui/material/Box';
+import { USERContext } from '../../context/user';
+import { BottomNavigator } from '../ui/_shared/BottomNavigator';
 
 interface Props {
   children: ReactNode;
 }
 
 export const MainLayout: FC<Props> = ({ children }) => {
+  const { isLoggedIn } = useContext(USERContext);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push('/signin');
+    }
+  }, [isLoggedIn]);
+
   return (
     <>
       <Head>
@@ -20,9 +31,13 @@ export const MainLayout: FC<Props> = ({ children }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Box sx={{ minHeight: "100vh" }}>
-        {children}
-        <BottomNavigator />
+      <Box sx={{ minHeight: '100vh' }}>
+        {isLoggedIn && (
+          <>
+            {children}
+            <BottomNavigator />
+          </>
+        )}
       </Box>
     </>
   );

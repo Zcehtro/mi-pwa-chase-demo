@@ -11,36 +11,55 @@ import {
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
-import { WebAuthnModal } from './WebAuthnModal';
-
 type Inputs = {
   email: string;
   password: string;
 };
 
 export const LoginForm: FC = () => {
+  //States Begin
   const [webAuthnRegistered, setWebAuthnRegistered] = useState(false);
   const [LoggedIn, setLoggedIn] = useState(false);
   const [webAuthnMessage, setWebAuthnMessage] = useState({
     status: false,
     message: '',
   });
+  //States End
 
-  const router = useRouter();
+  //React Hook Forms Hook
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
+  const router = useRouter();
+
   const clear = () => {
     setWebAuthnMessage({ status: false, message: '' });
   };
 
+  /* useEffect Hook Calls Begin */
+
+  // "Clear WebAuthn Debug Messages & WebAuthnSupport Log"
   useEffect(() => {
     clear();
+
+    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
+      console.log('[DEBUG] supportsWebAuthn');
+    } else {
+      console.log('[DEBUG] No supportsWebAuthn');
+    }
   }, []);
 
+  // "If WebAuthn is registered and was authenticated successfully"
+  useEffect(() => {
+    if (LoggedIn && webAuthnRegistered) router.push('/');
+  }, [LoggedIn, webAuthnRegistered]);
+
+  /* UseEffect Hook Calls End */
+
+  /*
   // const onSubmit: SubmitHandler<Inputs> = async (data) => {
   //   const { email, password } = data;
 
@@ -77,10 +96,12 @@ export const LoginForm: FC = () => {
   //     console.log(error);
   //   }
   // };
+  */
 
-  const webauthnRegistration = async () => {
+  //WebAuthn Registration
+  const WebAuthnRegistration = async () => {
+    // "Generate registration options"
     const resp = await fetch(`/api/registration/generate-registration-options`);
-    //Attestation resp
     let attResp;
 
     try {
@@ -94,10 +115,10 @@ export const LoginForm: FC = () => {
         credProps: true,
       };
 
-      console.log('[DEBUG] Registration Options', JSON.stringify(opts, null, 2));
-
+      //console.log('[DEBUG] Registration Options', JSON.stringify(opts, null, 2));
+      // "Start the registration of the device"
       attResp = await startRegistration(opts);
-      console.log('[DEBUG] Registration Response', JSON.stringify(attResp, null, 2));
+      //console.log('[DEBUG] Registration Response', JSON.stringify(attResp, null, 2));
     } catch (err: any) {
       let msg;
       if (err.name === 'InvalidStateError') {
@@ -117,6 +138,7 @@ export const LoginForm: FC = () => {
       return;
     }
 
+    // "Begin verification of registration"
     const verificationResp = await fetch('/api/registration/verify-registration', {
       method: 'POST',
       headers: {
@@ -129,6 +151,8 @@ export const LoginForm: FC = () => {
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
+
+    /* If the registration process is positive */
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] Authenticator registered!');
       msg = 'Success! Authenticator registered';
@@ -144,7 +168,8 @@ export const LoginForm: FC = () => {
     });
   };
 
-  const auth = async () => {
+  //WebAuthn Authentication
+  const WebAuthnAuthentication = async () => {
     const resp = await fetch('/api/auth/generate-authentication-options');
     let asseResp;
 
@@ -191,31 +216,23 @@ export const LoginForm: FC = () => {
     });
   };
 
+  /* Handlers Begin */
+
   const handleSignIn = () => {
     clear();
-    auth();
+    WebAuthnAuthentication();
   };
 
   const handleRegisterWebAuthn = () => {
     clear();
-    webauthnRegistration();
+    WebAuthnRegistration();
   };
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
-      console.log('[DEBUG] supportsWebAuthn');
-    } else {
-      console.log('[DEBUG] No supportsWebAuthn');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (LoggedIn && webAuthnRegistered) router.push('/');
-  });
 
   const handleSubmitMock = () => {
     console.log('[DEBUG] call onSubmit: <form onSubmit={handleSubmit(onSubmit)}>');
   };
+
+  /* Handlers End */
 
   return (
     <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>

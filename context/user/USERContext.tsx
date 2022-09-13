@@ -1,6 +1,6 @@
-import { createContext } from "react";
+import { createContext } from 'react';
 
-interface ContextProps {
+export interface ContextProps {
   id: string | null;
   name: string | null;
   surname: string | null;
@@ -11,16 +11,7 @@ interface ContextProps {
   webAuthnEnabled: boolean;
 
   // Methods
-  loginUser: (
-    id: string,
-    name: string,
-    surname: string,
-    email: string,
-    password: string,
-    publicKey: string,
-    isLoggedIn: boolean,
-    webAuthnEnabled: boolean,
-  ) => void;
+  loginUser: (user: ContextProps) => void;
   logoutUser: () => void;
   registerWebauthn: () => void;
 }
