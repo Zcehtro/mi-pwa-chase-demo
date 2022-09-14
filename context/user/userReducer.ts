@@ -10,7 +10,14 @@ export const userReducer = (state: USERState, action: USERActionType): USERState
     case 'LOGIN_USER':
       return {
         ...state,
-        ...action.payload,
+        isLoggedIn: true,
+        id: action.payload.user.id,
+        name: action.payload.user.name,
+        surname: action.payload.user.surname,
+        email: action.payload.user.email,
+        password: action.payload.user.password,
+        publicKey: action.payload.user.publicKey,
+        webAuthnEnabled: action.payload.user.webAuthnEnabled,
       };
     case 'LOGOUT_USER':
       return {

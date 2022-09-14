@@ -1,7 +1,7 @@
 import { FC, PropsWithChildren, useReducer } from 'react';
-import { USERContext, userReducer, ContextProps } from '.';
+import { USERContext, userReducer } from '.';
 
-export interface USERState {
+export interface UserModel {
   id: string | null;
   name: string | null;
   surname: string | null;
@@ -12,7 +12,7 @@ export interface USERState {
   isLoggedIn: boolean;
 }
 
-const USER_INITIAL_STATE: USERState = {
+const USER_INITIAL_STATE: UserModel = {
   id: null,
   name: null,
   surname: null,
@@ -30,18 +30,11 @@ interface Props {
 export const USERProvider: FC<Props> = ({ children }) => {
   const [state, dispatch] = useReducer(userReducer, USER_INITIAL_STATE);
 
-  const loginUser = (user: ContextProps) => {
+  const loginUser = (user: UserModel) => {
     dispatch({
       type: 'LOGIN_USER',
       payload: {
-        id: user.id,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        password: user.password,
-        publicKey: user.publicKey,
-        isLoggedIn: true,
-        webAuthnEnabled: user.webAuthnEnabled,
+        user,
       },
     });
   };

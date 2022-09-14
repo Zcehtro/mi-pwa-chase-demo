@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
+import { USERContext, UserModel } from '../../../context/user';
 
 import {
   browserSupportsWebAuthn,
@@ -11,9 +12,29 @@ import {
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
+import axios from 'axios';
+
 type Inputs = {
   email: string;
   password: string;
+};
+
+const MakeReq = axios.create({
+  baseURL: 'http://localhost:3000',
+  timeout: 1000,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+//!Development purposes only
+const TEST_USER: UserModel = {
+  id: '1',
+  name: 'John',
+  surname: 'Doe',
+  email: 'jhondoe@123.com',
+  password: '123456',
+  publicKey: '123456',
+  isLoggedIn: true,
+  webAuthnEnabled: false,
 };
 
 export const LoginForm: FC = () => {
@@ -26,7 +47,10 @@ export const LoginForm: FC = () => {
   });
   //States End
 
-  //React Hook Forms Hook
+  //User Context
+  const { loginUser, isLoggedIn } = useContext(USERContext);
+
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -39,69 +63,11 @@ export const LoginForm: FC = () => {
     setWebAuthnMessage({ status: false, message: '' });
   };
 
-  /* useEffect Hook Calls Begin */
-
-  // "Clear WebAuthn Debug Messages & WebAuthnSupport Log"
-  useEffect(() => {
-    clear();
-
-    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
-      console.log('[DEBUG] supportsWebAuthn');
-    } else {
-      console.log('[DEBUG] No supportsWebAuthn');
-    }
-  }, []);
-
-  // "If WebAuthn is registered and was authenticated successfully"
-  useEffect(() => {
-    if (LoggedIn && webAuthnRegistered) router.push('/');
-  }, [LoggedIn, webAuthnRegistered]);
-
-  /* UseEffect Hook Calls End */
-
-  /*
-  // const onSubmit: SubmitHandler<Inputs> = async (data) => {
-  //   const { email, password } = data;
-
-  //   try {
-  //     const res = await axios.post(
-  //       'https://pwa-chase-api.vercel.app/api/signin',
-  //       {
-  //         email,
-  //         password
-  //       }
-  //     );
-
-  //     const user = res.data.user;
-
-  //     const webAuthnAvailable = await platformAuthenticatorIsAvailable();
-
-  //     // loginUser(
-  //     //   user._id,
-  //     //   user.name,
-  //     //   user.surname,
-  //     //   user.email,
-  //     //   user.password,
-  //     //   user.publicKey,
-  //     //   true,
-  //     //   user.webAuthnEnabled
-  //     // );
-
-  //     if (!user.webAuthnEnabled && webAuthnAvailable) {
-  //       setWebAuthnModal(true);
-  //     }
-
-  //     //if is webauthn enabled
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-  */
-
-  //Register biometric data with WebAuthn
+  //? Register biometric data with WebAuthn
   const WebAuthnRegistration = async () => {
     // "Generate registration options"
-    const resp = await fetch(`/api/registration/generate-registration-options`);
+    const resp = await fetch('/api/registration/generate-registration-options');
+    //Attestation resp
     let attResp;
 
     try {
@@ -168,7 +134,7 @@ export const LoginForm: FC = () => {
     });
   };
 
-  //Use the registered biometric data to authenticate
+  //? Use the registered biometric data to authenticate
   const WebAuthnAuthentication = async () => {
     const resp = await fetch('/api/auth/generate-authentication-options');
     let asseResp;
@@ -204,7 +170,9 @@ export const LoginForm: FC = () => {
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] User authenticated!');
       msg = 'Success! User authenticated by device.';
-      setLoggedIn(true);
+
+      //? Authenticate User
+      loginUser(TEST_USER);
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
       console.log('[DEBUG] error', msg);
@@ -228,12 +196,26 @@ export const LoginForm: FC = () => {
     WebAuthnRegistration();
   };
 
+  //? UseEffect Hook Calls
+  useEffect(() => {
+    clear();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
+      console.log('[DEBUG] supportsWebAuthn');
+    } else {
+      console.log('[DEBUG] No supportsWebAuthn');
+    }
+
+    if (isLoggedIn) router.push('/');
+  }, [isLoggedIn]);
+
   const handleSubmitMock = () => {
     console.log('[DEBUG] call onSubmit: <form onSubmit={handleSubmit(onSubmit)}>');
   };
 
   /* Handlers End */
-
   return (
     <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
       <CardContent>
