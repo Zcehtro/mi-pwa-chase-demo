@@ -79,16 +79,17 @@ export const LoginForm: FC = () => {
       opts.extensions = {
         credProps: true,
       };
-
+      attResp = await startRegistration(opts);
       //console.log('[DEBUG] Registration Options', JSON.stringify(opts, null, 2));
       // "Start the registration of the device"
-      attResp = await startRegistration(opts);
       //console.log('[DEBUG] Registration Response', JSON.stringify(attResp, null, 2));
     } catch (err: any) {
       let msg;
       if (err.name === 'InvalidStateError') {
         console.error('[DEBUG] Error: Authenticator already registered');
         msg = 'Error: Authenticator already registered';
+        WebAuthnAuthentication();
+        return;
       } else {
         console.error('[DEBUG] Error 1:', err);
         msg = JSON.stringify(err.message);
