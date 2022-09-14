@@ -26,7 +26,7 @@ const MakeReq = axios.create({
 });
 
 //!Development purposes only
-const TEST_USER: UserModel = {
+const TEST_USER = {
   id: '1',
   name: 'John',
   surname: 'Doe',

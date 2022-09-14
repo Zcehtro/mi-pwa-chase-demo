@@ -1,11 +1,16 @@
-import { USERState } from './';
+import { UserModel } from './';
 
 type USERActionType =
-  | { type: 'LOGIN_USER'; payload: USERState }
+  | {
+      type: 'LOGIN_USER';
+      payload: {
+        user: UserModel;
+      };
+    }
   | { type: 'LOGOUT_USER' }
   | { type: 'REGISTER_WEBAUTHN' };
 
-export const userReducer = (state: USERState, action: USERActionType): USERState => {
+export const userReducer = (state: UserModel, action: USERActionType): UserModel => {
   switch (action.type) {
     case 'LOGIN_USER':
       return {
