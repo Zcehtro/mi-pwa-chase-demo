@@ -55,7 +55,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
      */
     authenticatorSelection: {
       userVerification: 'required',
-      residentKey: 'required',
+      residentKey: 'preferred',
     },
     /**
      * Support the two most common algorithms: ES256, and RS256
