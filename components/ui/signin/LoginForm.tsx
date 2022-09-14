@@ -207,7 +207,9 @@ export const LoginForm: FC = () => {
     } else {
       console.log('[DEBUG] No supportsWebAuthn');
     }
+  }, []);
 
+  useEffect(() => {
     if (isLoggedIn) router.push('/');
   }, [isLoggedIn]);
 
