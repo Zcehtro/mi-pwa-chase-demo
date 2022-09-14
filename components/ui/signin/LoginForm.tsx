@@ -74,7 +74,7 @@ export const LoginForm: FC = () => {
       console.log('[DEBUG] generate-registration-options', opts);
 
       //Resident key is set to required
-      opts.authenticatorSelection.residentKey = 'discouraged';
+      opts.authenticatorSelection.residentKey = 'preferred';
       opts.authenticatorSelection.requireResidentKey = true;
       opts.extensions = {
         credProps: true,
