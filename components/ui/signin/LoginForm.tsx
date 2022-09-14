@@ -120,9 +120,10 @@ export const LoginForm: FC = () => {
     /* If the registration process is positive */
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] Authenticator registered!');
-      msg = 'Success! Authenticator registered';
+      msg = '¡Authenticator registered!';
       //Sign in user
       setWebAuthnRegistered(true);
+      loginUser(TEST_USER);
     } else {
       msg = `Something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`;
       console.log('[DEBUG]', msg);
