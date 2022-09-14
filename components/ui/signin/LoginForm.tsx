@@ -50,7 +50,6 @@ export const LoginForm: FC = () => {
   //User Context
   const { loginUser, isLoggedIn } = useContext(USERContext);
 
-  const router = useRouter();
   const {
     register,
     handleSubmit,
