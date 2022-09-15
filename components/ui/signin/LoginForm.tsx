@@ -8,6 +8,7 @@ import {
   browserSupportsWebAuthn,
   startAuthentication,
   startRegistration,
+  platformAuthenticatorIsAvailable,
 } from '@simplewebauthn/browser';
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
@@ -47,7 +48,7 @@ export const LoginForm: FC = () => {
   //States End
 
   //User Context
-  const { loginUser, isLoggedIn } = useContext(USERContext);
+  const { loginUser, logoutUser, isLoggedIn } = useContext(USERContext);
 
   const {
     register,
@@ -85,7 +86,7 @@ export const LoginForm: FC = () => {
     } catch (err: any) {
       let msg;
       if (err.name === 'InvalidStateError') {
-        console.error('[DEBUG] Error: Authenticator already registered');
+        console.error('%c[DEBUG] Error: Authenticator already registered', 'color: red');
         msg = 'Error: Authenticator already registered';
         return;
       } else {
@@ -187,12 +188,40 @@ export const LoginForm: FC = () => {
 
   const handleSignIn = () => {
     clear();
-    WebAuthnAuthentication();
+    platformAuthenticatorIsAvailable().then((available) => {
+      if (available) {
+        WebAuthnAuthentication();
+      } else {
+        setWebAuthnMessage({
+          status: true,
+          message: 'Error: Platform Authenticator is not available',
+        });
+      }
+    });
   };
 
   const handleRegisterWebAuthn = () => {
     clear();
-    WebAuthnRegistration();
+    platformAuthenticatorIsAvailable().then((available) => {
+      if (available) {
+        WebAuthnRegistration();
+      } else {
+        setWebAuthnMessage({
+          status: true,
+          message: 'Error: Platform Authenticator is not available',
+        });
+      }
+    });
+  };
+
+  const handleResetState = () => {
+    clear();
+    logoutUser();
+    if (window !== undefined) {
+      localStorage.clear();
+      sessionStorage.clear();
+      console.log('%c[DEBUG] Application Data Cleared', 'color: red');
+    }
   };
 
   //? UseEffect Hook Calls
@@ -271,6 +300,10 @@ export const LoginForm: FC = () => {
                   Register WebAuthn
                 </Button>
               )}
+
+              <Button variant="text" color="error" fullWidth onClick={handleResetState}>
+                Reset state
+              </Button>
               {webAuthnMessage.status && (
                 <Typography variant="caption" color="primary" textAlign="center" mt={2}>
                   {webAuthnMessage.message}
