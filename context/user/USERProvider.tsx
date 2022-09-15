@@ -12,7 +12,7 @@ export interface UserModel {
   isLoggedIn: boolean;
 }
 
-const USER_INITIAL_STATE: UserModel = {
+export const USER_INITIAL_STATE: UserModel = {
   id: null,
   name: null,
   surname: null,

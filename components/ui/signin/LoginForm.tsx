@@ -40,7 +40,6 @@ const TEST_USER = {
 export const LoginForm: FC = () => {
   //States Begin
   const [webAuthnRegistered, setWebAuthnRegistered] = useState(false);
-  const [LoggedIn, setLoggedIn] = useState(false);
   const [webAuthnMessage, setWebAuthnMessage] = useState({
     status: false,
     message: '',
@@ -88,7 +87,6 @@ export const LoginForm: FC = () => {
       if (err.name === 'InvalidStateError') {
         console.error('[DEBUG] Error: Authenticator already registered');
         msg = 'Error: Authenticator already registered';
-        WebAuthnAuthentication();
         return;
       } else {
         console.error('[DEBUG] Error 1:', err);

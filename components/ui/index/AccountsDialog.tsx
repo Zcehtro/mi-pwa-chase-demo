@@ -9,10 +9,10 @@ import {
   Button,
   Input,
   Skeleton,
-} from "@mui/material";
-import { FC, useContext, useRef, useState } from "react";
-import { USERContext } from "../../../context/user";
-import axios from "axios";
+} from '@mui/material';
+import { FC, useContext, useRef, useState } from 'react';
+import { USERContext } from '../../../context/user';
+import axios from 'axios';
 
 interface Props {
   open: boolean;
@@ -23,11 +23,14 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
   const { logoutUser } = useContext(USERContext);
 
   const handleLogout = () => {
+    if (window !== undefined) {
+      window.location.reload();
+    }
     logoutUser();
   };
 
   return (
-    <Dialog open={open} PaperProps={{ sx: { minWidth: "90vw", p: 2 } }}>
+    <Dialog open={open} PaperProps={{ sx: { minWidth: '90vw', p: 2 } }}>
       {/*Name, account id and email */}
       <Box>
         <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1} color="#555">
@@ -88,35 +91,35 @@ type ImageCardProps = {
 };
 
 const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
-  const API_KEY = "03e799e84c44451a5e217bd19810d4ec";
-  const BASE_URL = "https://api.imgbb.com/1";
+  const API_KEY = '03e799e84c44451a5e217bd19810d4ec';
+  const BASE_URL = 'https://api.imgbb.com/1';
   const imgRef = useRef<HTMLInputElement>(null);
   const [imgSrc, setImgSrc] = useState(image);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async () => {
-    console.log("uploading...");
+    console.log('uploading...');
     setIsLoading(true);
     const req = await axios({
-      method: "POST",
+      method: 'POST',
       url: `${BASE_URL}/upload?key=${API_KEY}`,
       data: {
         image: imgRef.current?.files?.[0],
       },
       headers: {
-        "Content-Type": "multipart/form-data",
+        'Content-Type': 'multipart/form-data',
       },
     });
 
     setImgSrc(req.data.data.url);
-    console.log("Image uploaded");
+    console.log('Image uploaded');
     setIsLoading(false);
   };
 
   return (
-    <Card elevation={3} sx={{ my: "5px", width: "100%" }}>
+    <Card elevation={3} sx={{ my: '5px', width: '100%' }}>
       <CardActionArea>
-        <CardContent sx={{ display: "flex", justifyContent: "space-between" }}>
+        <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Title and updated date */}
           <Box display="flex" flexDirection="column" color="#666">
             <Typography variant="body1" fontSize="12px" fontWeight="bold">
@@ -126,12 +129,12 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
               {updatedAt}
             </Typography>
             <Button variant="text" color="primary" fullWidth>
-              <label htmlFor={title.replace(" ", "-").toLowerCase()}>Upload</label>
+              <label htmlFor={title.replace(' ', '-').toLowerCase()}>Upload</label>
               <input
                 ref={imgRef}
                 onChange={handleUpload}
                 type="file"
-                id={title.replace(" ", "-").toLowerCase()}
+                id={title.replace(' ', '-').toLowerCase()}
                 accept="image/*"
                 hidden
               />
@@ -139,13 +142,13 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
           </Box>
           {/* Image */}
           {isLoading ? (
-            <Skeleton variant="rectangular" width={90} height={70} sx={{ borderRadius: "8px" }} />
+            <Skeleton variant="rectangular" width={90} height={70} sx={{ borderRadius: '8px' }} />
           ) : (
             <CardMedia
               component="img"
               image={imgSrc}
               alt={title}
-              sx={{ width: 90, maxHeight: 70, borderRadius: "8px" }}
+              sx={{ width: 90, maxHeight: 70, borderRadius: '8px' }}
             />
           )}
         </CardContent>

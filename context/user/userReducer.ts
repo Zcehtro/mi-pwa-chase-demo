@@ -1,4 +1,4 @@
-import { UserModel } from './';
+import { UserModel, USER_INITIAL_STATE } from './';
 
 type USERActionType =
   | {
@@ -14,7 +14,6 @@ export const userReducer = (state: UserModel, action: USERActionType): UserModel
   switch (action.type) {
     case 'LOGIN_USER':
       return {
-        ...state,
         isLoggedIn: true,
         id: action.payload.user.id,
         name: action.payload.user.name,
@@ -26,15 +25,7 @@ export const userReducer = (state: UserModel, action: USERActionType): UserModel
       };
     case 'LOGOUT_USER':
       return {
-        ...state,
-        id: null,
-        name: null,
-        surname: null,
-        email: null,
-        password: null,
-        isLoggedIn: false,
-        publicKey: null,
-        webAuthnEnabled: false,
+        ...USER_INITIAL_STATE,
       };
     case 'REGISTER_WEBAUTHN':
       return {
