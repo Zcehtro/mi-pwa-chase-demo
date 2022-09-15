@@ -8,13 +8,14 @@ interface Props {
   title: string;
   description: string;
   icon: any;
+  readTime?: string;
 
   onClick?: (e: any) => void;
 }
 
-export const NotificationCard: FC<Props> = ({ title, description, icon, onClick }) => {
+export const NotificationCard: FC<Props> = ({ title, description, icon, onClick, readTime }) => {
   return (
-    <Card onClick={onClick}>
+    <Card onClick={onClick} sx={{ mb: 2 }}>
       <CardActionArea>
         <CardContent sx={{ paddingY: 3 }}>
           <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1}>
@@ -27,7 +28,7 @@ export const NotificationCard: FC<Props> = ({ title, description, icon, onClick 
             >
               {title}
             </Typography>
-            <Chip label="30 sec read" sx={{ color: '#999' }} size="small" />
+            <Chip label={`${readTime}`} sx={{ color: '#999' }} size="small" />
           </Box>
           <Typography variant="body2" fontSize="13px" color="text.secondary" pl={5}>
             {description}

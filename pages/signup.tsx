@@ -1,7 +1,7 @@
 import type { NextPage } from 'next';
 
 import { Box, Typography } from '@mui/material';
-import { LoginForm } from '../components/ui/signin/LoginForm';
+import { RegistrationForm } from '../components/ui/signin/RegistrationForm';
 
 const Login: NextPage = () => {
   return (
@@ -17,7 +17,7 @@ const Login: NextPage = () => {
         LOGO
       </Typography>
 
-      <LoginForm />
+      <RegistrationForm />
     </Box>
   );
 };

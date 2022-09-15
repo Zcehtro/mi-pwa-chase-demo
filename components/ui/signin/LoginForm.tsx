@@ -1,7 +1,7 @@
 import { FC, useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import { USERContext, UserModel } from '../../../context/user';
 
 import {
@@ -20,27 +20,8 @@ type Inputs = {
   password: string;
 };
 
-const MakeReq = axios.create({
-  baseURL: 'http://localhost:3000',
-  timeout: 1000,
-  headers: { 'Content-Type': 'application/json' },
-});
-
-//!Development purposes only
-const TEST_USER = {
-  id: '1',
-  name: 'John',
-  surname: 'Doe',
-  email: 'jhondoe@123.com',
-  password: '123456',
-  publicKey: '123456',
-  isLoggedIn: true,
-  webAuthnEnabled: false,
-};
-
 export const LoginForm: FC = () => {
   //States Begin
-  const [webAuthnRegistered, setWebAuthnRegistered] = useState(false);
   const [webAuthnMessage, setWebAuthnMessage] = useState({
     status: false,
     message: '',
@@ -62,8 +43,93 @@ export const LoginForm: FC = () => {
     setWebAuthnMessage({ status: false, message: '' });
   };
 
-  //? Register biometric data with WebAuthn
-  const WebAuthnRegistration = async () => {
+  const handleSignIn = () => {};
+
+  //? UseEffect Hook Calls
+  useEffect(() => {
+    clear();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
+      console.log('[DEBUG] supportsWebAuthn');
+    } else {
+      console.log('[DEBUG] No supportsWebAuthn');
+    }
+  }, []);
+
+  useEffect(() => {
+    if (isLoggedIn) router.push('/');
+  }, [isLoggedIn]);
+
+  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
+    let TEST_USER = {
+      id: '1',
+      name: 'John',
+      surname: 'Doe',
+      password: '123456',
+      email: data.email,
+      publicKey: '123456',
+      isLoggedIn: true,
+      webAuthnEnabled: false,
+    };
+    localStorage.setItem('savedEmail', data.email);
+    console.log('[DEBUG] Email saved to localStorage: ' + data.email);
+    loginUser(TEST_USER);
+  };
+  /* Handlers End */
+  return (
+    <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
+      <CardContent>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Enter your email"
+                variant="standard"
+                {...register('email', { required: true })}
+                error={errors.email ? true : false}
+                helperText={errors.email ? 'Email is required' : ''}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Enter your password"
+                variant="standard"
+                type="password"
+                {...register('password', { required: true })}
+                error={errors.password ? true : false}
+                helperText={errors.password ? 'Password is required' : ''}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <Checkbox defaultChecked />
+              <Typography variant="caption" color="primary">
+                Remember me
+              </Typography>
+            </Grid>
+            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
+              <Link href="/forgot-password">
+                <Typography variant="caption" color="primary">
+                  ¿Forgot password?
+                </Typography>
+              </Link>
+            </Grid>
+            <Grid item xs={12}>
+              <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+                Sign In
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+      </CardContent>
+    </Card>
+  );
+};
+
+/* const WebAuthnRegistration = async () => {
     // "Generate registration options"
     const resp = await fetch('/api/registration/generate-registration-options');
     //Attestation resp
@@ -117,7 +183,7 @@ export const LoginForm: FC = () => {
 
     let msg;
 
-    /* If the registration process is positive */
+    //If the registration process is positive
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] Authenticator registered!');
       msg = '¡Authenticator registered!';
@@ -182,137 +248,4 @@ export const LoginForm: FC = () => {
       status: true,
       message: msg,
     });
-  };
-
-  /* Handlers Begin */
-
-  const handleSignIn = () => {
-    clear();
-    platformAuthenticatorIsAvailable().then((available) => {
-      if (available) {
-        WebAuthnAuthentication();
-      } else {
-        setWebAuthnMessage({
-          status: true,
-          message: 'Error: Platform Authenticator is not available',
-        });
-      }
-    });
-  };
-
-  const handleRegisterWebAuthn = () => {
-    clear();
-    platformAuthenticatorIsAvailable().then((available) => {
-      if (available) {
-        WebAuthnRegistration();
-      } else {
-        setWebAuthnMessage({
-          status: true,
-          message: 'Error: Platform Authenticator is not available',
-        });
-      }
-    });
-  };
-
-  const handleResetState = () => {
-    clear();
-    logoutUser();
-    if (window !== undefined) {
-      localStorage.clear();
-      sessionStorage.clear();
-      console.log('%c[DEBUG] Application Data Cleared', 'color: red');
-    }
-  };
-
-  //? UseEffect Hook Calls
-  useEffect(() => {
-    clear();
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
-      console.log('[DEBUG] supportsWebAuthn');
-    } else {
-      console.log('[DEBUG] No supportsWebAuthn');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isLoggedIn) router.push('/');
-  }, [isLoggedIn]);
-
-  const handleSubmitMock = () => {
-    console.log('[DEBUG] call onSubmit: <form onSubmit={handleSubmit(onSubmit)}>');
-  };
-
-  /* Handlers End */
-  return (
-    <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
-      <CardContent>
-        <form onSubmit={() => handleSubmitMock()}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Enter your email"
-                variant="standard"
-                {...register('email', { required: true })}
-                error={errors.email ? true : false}
-                helperText={errors.email ? 'Email is required' : ''}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Enter your password"
-                variant="standard"
-                type="password"
-                {...register('password', { required: true })}
-                error={errors.password ? true : false}
-                helperText={errors.password ? 'Password is required' : ''}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Checkbox defaultChecked />
-              <Typography variant="caption" color="primary">
-                Remember me
-              </Typography>
-            </Grid>
-            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
-              <Link href="/forgot-password">
-                <Typography variant="caption" color="primary">
-                  ¿Forgot password?
-                </Typography>
-              </Link>
-            </Grid>
-            <Grid item xs={12}>
-              <Button fullWidth variant="contained" onClick={handleSignIn} sx={{ mt: 2 }}>
-                Sign In
-              </Button>
-
-              {!webAuthnRegistered && (
-                <Button
-                  fullWidth
-                  variant="contained"
-                  onClick={handleRegisterWebAuthn}
-                  sx={{ my: 2 }}
-                >
-                  Register WebAuthn
-                </Button>
-              )}
-
-              <Button variant="text" color="error" fullWidth onClick={handleResetState}>
-                Reset state
-              </Button>
-              {webAuthnMessage.status && (
-                <Typography variant="caption" color="primary" textAlign="center" mt={2}>
-                  {webAuthnMessage.message}
-                </Typography>
-              )}
-            </Grid>
-          </Grid>
-        </form>
-      </CardContent>
-    </Card>
-  );
-};
+  };*/

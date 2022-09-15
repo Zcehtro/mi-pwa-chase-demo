@@ -1,18 +1,20 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { Box, Drawer, Typography, Button, Accordion, AccordionSummary } from '@mui/material';
-import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faLocationDot, faFingerprint } from '@fortawesome/free-solid-svg-icons';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { bankAccounts } from '../data';
 import { UIContext } from '../context/ui';
 import { USERContext } from '../context/user';
 import { AccountDetailCard } from '../components/ui/index/AccountDetailCard';
+import { RegistrationDialog } from '../components/ui/webauthn/RegistrationDialog';
 import { NotificationCard } from '../components/ui/index/NotificationCard';
 import { PageHeader } from '../components/ui/_shared/PageHeader';
 
 const Home: NextPage = () => {
   const { drawerOpen, toggleDrawer } = useContext(UIContext);
+  const [showBiometricRegistration, setShowBiometricRegistration] = useState(false);
   const { isLoggedIn } = useContext(USERContext);
   const router = useRouter();
 
@@ -29,14 +31,22 @@ const Home: NextPage = () => {
       {/* Page Header */}
       <PageHeader />
       {/* Page Content */}
-      <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2}>
+      <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2} gap={1}>
         {/* Today's Snapshot Card */}
         <Box width="100%" px={3}>
+          <NotificationCard
+            title="Setup biometric authentication"
+            description="You have not registered your biometric login. Please register your biometric login to enjoy a more secure login experience."
+            icon={faFingerprint}
+            onClick={() => setShowBiometricRegistration(true)}
+            readTime="2 mins"
+          />
           <NotificationCard
             title="¿Where i am?"
             description="¿Have you ever wanted to know where you are? Well, now you can!"
             icon={faLocationDot}
             onClick={goToLocation}
+            readTime="30 secs"
           />
         </Box>
 
@@ -173,6 +183,12 @@ const Home: NextPage = () => {
           This feature isn&apos;t available yet.
         </Typography>
       </Drawer>
+
+      {/*Biometric registration modal */}
+      <RegistrationDialog
+        open={showBiometricRegistration}
+        onClose={() => setShowBiometricRegistration(false)}
+      />
     </MainLayout>
   );
 };
