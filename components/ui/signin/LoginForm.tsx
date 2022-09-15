@@ -13,8 +13,6 @@ import {
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
-import axios from 'axios';
-
 type Inputs = {
   email: string;
   password: string;
@@ -26,6 +24,7 @@ export const LoginForm: FC = () => {
     status: false,
     message: '',
   });
+  const [canUseWebAuthn, setCanUseWebAuthn] = useState(false);
   //States End
 
   //User Context
@@ -43,7 +42,66 @@ export const LoginForm: FC = () => {
     setWebAuthnMessage({ status: false, message: '' });
   };
 
-  const handleSignIn = () => {};
+  //? Use the registered biometric data to authenticate
+  const AuthenticateWithBiometrics = async () => {
+    const resp = await fetch('/api/auth/generate-authentication-options');
+    let asseResp;
+
+    try {
+      const opts = await resp.json();
+      console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
+
+      asseResp = await startAuthentication(opts);
+      console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
+    } catch (error: any) {
+      console.error('[DEBUG] error 2:', JSON.stringify(error.message));
+      setWebAuthnMessage({
+        status: true,
+        message: JSON.stringify(error.message),
+      });
+      // throw error;
+      return;
+    }
+
+    const verificationResp = await fetch('/api/auth/verify-authentication', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(asseResp),
+    });
+
+    const verificationJSON = await verificationResp.json();
+    console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
+
+    let msg;
+    if (verificationJSON && verificationJSON.verified) {
+      const email = localStorage.getItem('savedEmail');
+      let TEST_USER = {
+        id: '1',
+        name: 'John',
+        surname: 'Doe',
+        password: '123456',
+        email: email || 'jhon123',
+        publicKey: '123456',
+        isLoggedIn: true,
+        webAuthnEnabled: false,
+      };
+      console.log('[DEBUG] User authenticated!');
+      msg = 'Success! User authenticated by device.';
+
+      //? Authenticate User
+      loginUser(TEST_USER);
+    } else {
+      msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
+      console.log('[DEBUG] error', msg);
+    }
+
+    setWebAuthnMessage({
+      status: true,
+      message: msg,
+    });
+  };
 
   //? UseEffect Hook Calls
   useEffect(() => {
@@ -61,6 +119,18 @@ export const LoginForm: FC = () => {
   useEffect(() => {
     if (isLoggedIn) router.push('/');
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const webAuthnRegistered = localStorage.getItem('webauthn');
+
+      if (webAuthnRegistered) {
+        platformAuthenticatorIsAvailable().then((available) => {
+          available ? setCanUseWebAuthn(true) : setCanUseWebAuthn(false);
+        });
+      }
+    }
+  }, []);
 
   const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
     let TEST_USER = {
@@ -121,6 +191,16 @@ export const LoginForm: FC = () => {
               <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
                 Sign In
               </Button>
+              {canUseWebAuthn && (
+                <Button
+                  fullWidth
+                  variant="contained"
+                  onClick={AuthenticateWithBiometrics}
+                  sx={{ mt: 2 }}
+                >
+                  Use biometrics
+                </Button>
+              )}
             </Grid>
           </Grid>
         </form>

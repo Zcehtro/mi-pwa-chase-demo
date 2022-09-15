@@ -85,7 +85,8 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] Authenticator registered!');
       msg = '¡Authenticator registered!';
-      if (window !== undefined) {
+      if (typeof window !== undefined) {
+        localStorage.setItem('webauthn', 'true');
         window.location.reload();
       }
     } else {
