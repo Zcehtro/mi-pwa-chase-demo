@@ -1,11 +1,6 @@
 import type { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
-const { ENABLE_CONFORMANCE, ENABLE_HTTPS } = process.env;
-
-const isInProduction = false;
-let RP_ID;
-
-isInProduction ? (RP_ID = 'mi-pwa-chase.vercel.app') : (RP_ID = 'localhost');
+const { ENABLE_CONFORMANCE, ENABLE_HTTPS, RP_ID = 'localhost' } = process.env;
 
 interface LoggedInUser {
   id: string;
@@ -23,11 +18,8 @@ export const rpID = RP_ID;
 // to appease TypeScript until we determine the expected origin based on whether or not HTTPS
 // support is enabled)
 
-export let expectedOrigin = '';
+export let expectedOrigin = `https://${rpID}`;
 const port = 3000;
-isInProduction
-  ? (expectedOrigin = `https://${RP_ID}`)
-  : (expectedOrigin = `http://localhost:${port}`);
 /**
  * 2FA and Passwordless WebAuthn flows expect you to be able to uniquely identify the user that
  * performs registration or authentication. The user ID you specify here should be your internal,
