@@ -11,7 +11,7 @@ import {
   Skeleton,
 } from '@mui/material';
 import { FC, useContext, useRef, useState } from 'react';
-import { USERContext } from '../../../context/user';
+import useAuthentication from '../../../hooks/useAuthentication';
 import axios from 'axios';
 
 interface Props {
@@ -20,13 +20,13 @@ interface Props {
 }
 
 export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
-  const { logoutUser } = useContext(USERContext);
+  const { Logout } = useAuthentication();
 
   const handleLogout = () => {
-    if (window !== undefined) {
+    if (typeof window !== undefined) {
       window.location.reload();
     }
-    logoutUser();
+    Logout();
   };
 
   return (
@@ -98,7 +98,7 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async () => {
-    console.log('uploading...');
+    console.log('[DEBUG] Uploading image...');
     setIsLoading(true);
     const req = await axios({
       method: 'POST',
@@ -112,7 +112,7 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
     });
 
     setImgSrc(req.data.data.url);
-    console.log('Image uploaded');
+    console.log('[DEBUG] Image uploaded');
     setIsLoading(false);
   };
 

@@ -3,25 +3,28 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { BottomNavigator } from '../ui/_shared/BottomNavigator';
 import Box from '@mui/material/Box';
-import { USERContext } from '../../context/user';
-
+import useAuthentication from '../../hooks/useAuthentication';
 interface Props {
   children: ReactNode;
 }
 
 export const MainLayout: FC<Props> = ({ children }) => {
-  const { isLoggedIn } = useContext(USERContext);
   const router = useRouter();
+  const { User } = useAuthentication();
 
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!User.isLoggedIn) {
       router.push('/signin');
     }
-  }, [isLoggedIn]);
+  }, [User.isLoggedIn]);
+
+  useEffect(() => {
+    console.log('[DEBUG] User state changed:', User);
+  }, [User]);
 
   return (
     <>
-      {isLoggedIn && (
+      {User.isLoggedIn && (
         <>
           <Head>
             <title>Chase - Demo</title>

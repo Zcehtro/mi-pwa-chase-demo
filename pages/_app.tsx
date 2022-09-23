@@ -4,6 +4,10 @@ import '../styles/transition.css';
 import type { AppProps } from 'next/app';
 import { ThemeProvider } from '@mui/system';
 import { lightTheme } from '../themes';
+//import redux provider
+import { Provider } from 'react-redux';
+import { store } from '../redux/store';
+
 // import { AnimatePresence } from "framer-motion";
 // import { Transition } from "../components/ui/_shared/transitions";
 
@@ -19,13 +23,15 @@ config.autoAddCss = false; /* eslint-disable import/first */
 function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
-    <ThemeProvider theme={lightTheme}>
-      <div className="effect-1">
-        <AnimatePresence mode="wait" initial={false}>
-          <Component {...pageProps} key={asPath} />
-        </AnimatePresence>
-      </div>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={lightTheme}>
+        <div className="effect-1">
+          <AnimatePresence mode="wait" initial={false}>
+            <Component {...pageProps} key={asPath} />
+          </AnimatePresence>
+        </div>
+      </ThemeProvider>
+    </Provider>
   );
 }
 

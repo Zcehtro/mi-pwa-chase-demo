@@ -21,7 +21,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
 
   const WebAuthnRegistration = async () => {
     // "Generate registration options"
-    const resp = await axios.post('/authn/generate-registration-options', {
+    const resp = await axios.post('/registration/generate-registration-options', {
       email: User.email,
     });
     //Attestation resp
@@ -68,7 +68,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
       return;
     }
     // "Begin verification of registration"
-    const verificationResp = await axios.post('/authn/verify-registration', {
+    const verificationResp = await axios.post('/registration/verify-registration', {
       attestation: attResp,
       user: User,
     });

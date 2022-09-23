@@ -2,58 +2,43 @@ import { FC, useEffect, useState, useContext } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { USERContext, UserModel } from '../../../context/user';
+import axios from '../../../libs/axios';
+import useAuthentication from '../../../hooks/useAuthentication';
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
 type Inputs = {
+  name: string;
+  surname: string;
   email: string;
   password: string;
 };
 
-const TEST_USER = {
-  id: '1',
-  name: 'John',
-  surname: 'Doe',
-  email: 'jhondoe@123.com',
-  password: '123456',
-  publicKey: '123456',
-  isLoggedIn: true,
-  webAuthnEnabled: false,
-};
-
 export const RegistrationForm: FC = () => {
+  const [error, setError] = useState<string | null>(null);
+  const { Auth, User } = useAuthentication();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const { loginUser, isLoggedIn } = useContext(USERContext);
   const router = useRouter();
 
-  //UseEffect Hook Calls
   useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/');
-    }
-  }, [isLoggedIn]);
+    User.isLoggedIn && router.push('/');
+  }, [User.isLoggedIn]);
 
-  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-    let TEST_USER = {
-      id: '1',
-      name: 'John',
-      surname: 'Doe',
-      password: '123456',
-      email: data.email,
-      publicKey: '123456',
-      isLoggedIn: true,
-      webAuthnEnabled: false,
-    };
-    localStorage.setItem('savedEmail', data.email);
-    console.log('[DEBUG] Email saved to localStorage: ' + data.email);
-    loginUser(TEST_USER);
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+    try {
+      const req = await axios.post('/signup', data);
+      console.log('[DEBUG] Attempting user registration', req);
+      const { user } = req.data;
+      Auth(user);
+    } catch (error: any) {
+      console.log('[DEBUG] Error during user registration', error);
+      setError(error.message);
+    }
   };
 
   return (
@@ -61,6 +46,26 @@ export const RegistrationForm: FC = () => {
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={1}>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Enter your name"
+                variant="standard"
+                {...register('name', { required: true })}
+                error={errors.name ? true : false}
+                helperText={errors.name ? 'Name is required' : ''}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                fullWidth
+                label="Enter your surname"
+                variant="standard"
+                {...register('surname', { required: true })}
+                error={errors.surname ? true : false}
+                helperText={errors.surname ? 'Surname is required' : ''}
+              />
+            </Grid>
             <Grid item xs={12}>
               <TextField
                 fullWidth
@@ -94,6 +99,13 @@ export const RegistrationForm: FC = () => {
                   ¿Forgot password?
                 </Typography>
               </Link>
+            </Grid>
+            <Grid item xs={12}>
+              {error && (
+                <Typography variant="caption" color="error">
+                  {error}
+                </Typography>
+              )}
             </Grid>
             <Grid item xs={12}>
               <Button fullWidth variant="contained" type="submit" sx={{ my: 2 }}>
