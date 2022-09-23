@@ -1,13 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-
+import base64url from 'base64url';
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
 
-import { inMemoryUserDeviceDB, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { dbUsers } from '../../../database';
+import { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       return getGenerateAuthenticationOptions(req, res);
 
     default:
@@ -21,26 +23,38 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Login (a.k.a. "Authentication")
  */
 const getGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
-  // You need to know the user by this point
-  const user = inMemoryUserDeviceDB[loggedInUserId];
+  // TODO majo: get loggedInUserId from POST request
+
+  const userFromDB: {
+    id: string;
+    username: string;
+    devices: AuthenticatorDevice[];
+    currentChallenge?: string;
+  } = await dbUsers.getUserById(loggedInUserId);
+
+  if (!userFromDB) {
+    return res.status(400).json({ message: `User not register webauthn` });
+  }
 
   const opts: GenerateAuthenticationOptionsOpts = {
     timeout: 60000,
-    allowCredentials: user.devices.map((dev) => ({
-      id: dev.credentialID,
+    allowCredentials: userFromDB.devices.map((dev) => ({
+      id: JSON.parse(JSON.stringify(base64url.toBuffer(dev.credentialID.toString()))),
       type: 'public-key',
       transports: dev.transports,
     })),
     userVerification: 'required',
     rpID,
   };
+
   const options = generateAuthenticationOptions(opts);
 
   /**
    * The server needs to temporarily remember this value for verification, so don't lose it until
    * after you verify an authenticator response.
    */
-  inMemoryUserDeviceDB[loggedInUserId.toString()].currentChallenge = options.challenge;
+
+  await dbUsers.updateUserChallenge(userFromDB, options.challenge);
 
   return res.status(200).json(options);
 };

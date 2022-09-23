@@ -12,12 +12,9 @@ import type {
   AuthenticatorDevice,
 } from '@simplewebauthn/typescript-types';
 
-import {
-  expectedOrigin,
-  inMemoryUserDeviceDB,
-  loggedInUserId,
-  rpID,
-} from '../../../constants/webAuthn';
+import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuthn';
+
+import { dbUsers } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -37,10 +34,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse) => {
   const body: RegistrationCredentialJSON = req.body;
 
-  const user = inMemoryUserDeviceDB[loggedInUserId];
+  // TODO majo: get loggedInUserId
 
-  const expectedChallenge = user.currentChallenge;
-  console.log('[DEBUG] user', user);
+  const userFromDB = await dbUsers.getUserById(loggedInUserId);
+
+  const expectedChallenge = userFromDB?.currentChallenge;
 
   let verification: VerifiedRegistrationResponse;
   try {
@@ -51,7 +49,6 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
       expectedRPID: rpID,
       requireUserVerification: true,
     };
-    console.log('[DEBUG] expectedOrigin', expectedOrigin);
 
     verification = await verifyRegistrationResponse(opts);
   } catch (error) {
@@ -65,7 +62,9 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
   if (verified && registrationInfo) {
     const { credentialPublicKey, credentialID, counter } = registrationInfo;
 
-    const existingDevice = user.devices.find((device) => device.credentialID.equals(credentialID));
+    const existingDevice = userFromDB.devices.find((device) =>
+      device.credentialID.equals(credentialID),
+    );
 
     if (!existingDevice) {
       /**
@@ -77,7 +76,10 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
         counter,
         transports: body.transports,
       };
-      user.devices.push(newDevice);
+
+      userFromDB.devices.push(newDevice);
+
+      await dbUsers.updateUserDevices(userFromDB);
     }
   }
 

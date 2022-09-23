@@ -3,11 +3,13 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { GenerateRegistrationOptionsOpts } from '@simplewebauthn/server';
 
-import { inMemoryUserDeviceDB, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { loggedInUserId, rpID } from '../../../constants/webAuthn';
+
+import { dbUsers } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
-    case 'GET':
+    case 'POST':
       return getGenerateRegistrationOptions(req, res);
 
     default:
@@ -21,7 +23,14 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Registration (a.k.a. "Registration")
  */
 const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = inMemoryUserDeviceDB[loggedInUserId];
+  // TODO majo: get loggedInUserId from POST request
+
+  const user = {
+    id: loggedInUserId,
+    username: `user@${rpID}`,
+    devices: [],
+    currentChallenge: undefined,
+  };
 
   const {
     /**
@@ -55,7 +64,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
      */
     authenticatorSelection: {
       userVerification: 'required',
-      residentKey: 'preferred',
+      residentKey: 'required',
     },
     /**
      * Support the two most common algorithms: ES256, and RS256
@@ -69,7 +78,23 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
    * The server needs to temporarily remember this value for verification, so don't lose it until
    * after you verify an authenticator response.
    */
-  inMemoryUserDeviceDB[loggedInUserId.toString()].currentChallenge = options.challenge;
 
-  return res.status(200).json(options);
+  user.currentChallenge = options.challenge;
+
+  const userFromDB = await dbUsers.getUserById(loggedInUserId);
+  if (userFromDB) {
+    return res.status(400).json({
+      errorType: 'USERNAME_ALREADY_EXITS',
+      message: `User with the username "${user.id}" already exists`,
+    });
+  } else {
+    await dbUsers.addUser({
+      id: user.id,
+      username: user.username,
+      device: user.devices,
+      currentChallenge: user.currentChallenge,
+    });
+
+    return res.status(200).json(options);
+  }
 };

@@ -9,12 +9,9 @@ import type {
 
 import type { AuthenticationCredentialJSON } from '@simplewebauthn/typescript-types';
 
-import {
-  expectedOrigin,
-  inMemoryUserDeviceDB,
-  loggedInUserId,
-  rpID,
-} from '../../../constants/webAuthn';
+import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuthn';
+
+import { dbUsers } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -34,24 +31,30 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiResponse) => {
   const body: AuthenticationCredentialJSON = req.body;
 
-  const user = inMemoryUserDeviceDB[loggedInUserId];
+  // TODO majo: get loggedInUserId from POST body
 
-  const expectedChallenge = user.currentChallenge;
+  const userFromDB = await dbUsers.getUserById(loggedInUserId);
+
+  const expectedChallenge = userFromDB.currentChallenge;
 
   let dbAuthenticator;
   const bodyCredIDBuffer = base64url.toBuffer(body.rawId);
-  // "Query the DB" here for an authenticator matching `credentialID`
 
-  console.log('[DEBUG] user', user);
   // "Search for the authenticator in the user's list of devices"
-  for (const dev of user.devices) {
-    if (dev.credentialID.equals(bodyCredIDBuffer)) {
-      dbAuthenticator = dev;
+  for (const device of userFromDB.devices) {
+    const buffer = Buffer.from(
+      JSON.parse(JSON.stringify(base64url.toBuffer(device.credentialID))).data,
+    );
+    if (buffer.equals(bodyCredIDBuffer)) {
+      dbAuthenticator = {
+        credentialPublicKey: base64url.toBuffer(device.credentialPublicKey),
+        credentialID: base64url.toBuffer(device.credentialID),
+        counter: device.counter,
+        transports: device.transports,
+      };
       break;
     }
   }
-
-  console.log('[DEBUG] dbAuthenticator', dbAuthenticator);
 
   if (!dbAuthenticator) {
     return res.status(400).send({ error: 'Authenticator is not registered with this site' });
@@ -68,8 +71,6 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
       requireUserVerification: true,
     };
     verification = await verifyAuthenticationResponse(opts);
-
-    console.log('[DEBUG] verification', verification);
   } catch (error) {
     const _error = error as Error;
     console.error(_error);
