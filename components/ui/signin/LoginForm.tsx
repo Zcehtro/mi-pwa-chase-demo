@@ -1,17 +1,13 @@
-import { FC, useEffect, useState, useContext } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { USERContext, UserModel } from '../../../context/user';
-
-import {
-  browserSupportsWebAuthn,
-  startAuthentication,
-  startRegistration,
-  platformAuthenticatorIsAvailable,
-} from '@simplewebauthn/browser';
-
+import { startAuthentication, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
+import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useAuthentication from '../../../hooks/useAuthentication';
+import axios from '../../../libs/axios';
 
 type Inputs = {
   email: string;
@@ -19,193 +15,149 @@ type Inputs = {
 };
 
 export const LoginForm: FC = () => {
-  //States Begin
-  const [webAuthnMessage, setWebAuthnMessage] = useState({
-    status: false,
-    message: '',
-  });
-  const [canUseWebAuthn, setCanUseWebAuthn] = useState(false);
-  //States End
+  const { User, Auth } = useAuthentication();
 
-  //User Context
-  const { loginUser, logoutUser, isLoggedIn } = useContext(USERContext);
-
+  const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Inputs>();
 
-  const router = useRouter();
+  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+    const req = await axios.post('/api/signin', data);
 
-  const clear = () => {
-    setWebAuthnMessage({ status: false, message: '' });
+    const { user } = req.data;
+
+    if (user) {
+      Auth(user);
+      console.log('[DEBUG] Auth():', User);
+    } else {
+      console.log('[DEBUG] AxiosReq: User was not found in database');
+    }
   };
 
-  //? Use the registered biometric data to authenticate
   const AuthenticateWithBiometrics = async () => {
-    const resp = await fetch('/api/auth/generate-authentication-options');
+    const resp = await axios.post('/authn/generate-authentication-options', {
+      email: User.email,
+    });
     let asseResp;
 
     try {
-      const opts = await resp.json();
+      const opts = await resp.data;
       console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
 
+      //! FAIL HERE
       asseResp = await startAuthentication(opts);
       console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
     } catch (error: any) {
-      console.error('[DEBUG] error 2:', JSON.stringify(error.message));
-      setWebAuthnMessage({
-        status: true,
-        message: JSON.stringify(error.message),
-      });
+      console.error('[DEBUG] startAuthentication() Fail:', JSON.stringify(error.message));
       // throw error;
       return;
     }
 
-    const verificationResp = await fetch('/api/auth/verify-authentication', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(asseResp),
+    const verificationResp = await axios.post('/authn/verify-authentication', {
+      attestation: JSON.stringify(asseResp),
+      email: User.email,
     });
 
-    const verificationJSON = await verificationResp.json();
+    const verificationJSON = await verificationResp.data;
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
     if (verificationJSON && verificationJSON.verified) {
-      const email = localStorage.getItem('savedEmail');
-      let TEST_USER = {
-        id: '1',
-        name: 'John',
-        surname: 'Doe',
-        password: '123456',
-        email: email || 'jhon123',
-        publicKey: '123456',
-        isLoggedIn: true,
-        webAuthnEnabled: false,
-      };
       console.log('[DEBUG] User authenticated!');
-      msg = 'Success! User authenticated by device.';
 
       //? Authenticate User
-      loginUser(TEST_USER);
+      const req = await axios.post('/api/user', {
+        email: User.email,
+      });
+
+      const { user } = req.data;
+
+      if (user) {
+        Auth(user);
+        console.log('[DEBUG] User Authenticated:', User);
+      } else {
+        console.log('[DEBUG] AxiosReq: User was not found in database');
+      }
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
       console.log('[DEBUG] error', msg);
     }
-
-    setWebAuthnMessage({
-      status: true,
-      message: msg,
-    });
   };
 
-  //? UseEffect Hook Calls
   useEffect(() => {
-    clear();
-  }, []);
+    if (User.isLoggedIn) router.push('/');
+  }, [User.isLoggedIn]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined' && browserSupportsWebAuthn()) {
-      console.log('[DEBUG] supportsWebAuthn');
-    } else {
-      console.log('[DEBUG] No supportsWebAuthn');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (isLoggedIn) router.push('/');
-  }, [isLoggedIn]);
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const webAuthnRegistered = localStorage.getItem('webauthn');
-
-      if (webAuthnRegistered) {
-        platformAuthenticatorIsAvailable().then((available) => {
-          available ? setCanUseWebAuthn(true) : setCanUseWebAuthn(false);
-        });
-      }
-    }
-  }, []);
-
-  const onSubmit: SubmitHandler<Inputs> = (data: Inputs) => {
-    let TEST_USER = {
-      id: '1',
-      name: 'John',
-      surname: 'Doe',
-      password: '123456',
-      email: data.email,
-      publicKey: '123456',
-      isLoggedIn: true,
-      webAuthnEnabled: false,
-    };
-    localStorage.setItem('savedEmail', data.email);
-    console.log('[DEBUG] Email saved to localStorage: ' + data.email);
-    loginUser(TEST_USER);
-  };
   /* Handlers End */
   return (
-    <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
-      <CardContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <Grid container spacing={1}>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Enter your email"
-                variant="standard"
-                {...register('email', { required: true })}
-                error={errors.email ? true : false}
-                helperText={errors.email ? 'Email is required' : ''}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                fullWidth
-                label="Enter your password"
-                variant="standard"
-                type="password"
-                {...register('password', { required: true })}
-                error={errors.password ? true : false}
-                helperText={errors.password ? 'Password is required' : ''}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <Checkbox defaultChecked />
-              <Typography variant="caption" color="primary">
-                Remember me
-              </Typography>
-            </Grid>
-            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
-              <Link href="/forgot-password">
-                <Typography variant="caption" color="primary">
-                  ¿Forgot password?
-                </Typography>
-              </Link>
-            </Grid>
-            <Grid item xs={12}>
-              <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
-                Sign In
-              </Button>
-              {canUseWebAuthn && (
-                <Button
-                  fullWidth
-                  variant="contained"
-                  onClick={AuthenticateWithBiometrics}
-                  sx={{ mt: 2 }}
-                >
-                  Use biometrics
-                </Button>
-              )}
-            </Grid>
-          </Grid>
-        </form>
-      </CardContent>
-    </Card>
+    <>
+      {!User.isLoggedIn && (
+        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <Grid container spacing={1}>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Enter your email"
+                    variant="standard"
+                    {...register('email', { required: true })}
+                    error={errors.email ? true : false}
+                    helperText={errors.email ? 'Email is required' : ''}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    fullWidth
+                    label="Enter your password"
+                    variant="standard"
+                    type="password"
+                    {...register('password', { required: true })}
+                    error={errors.password ? true : false}
+                    helperText={errors.password ? 'Password is required' : ''}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <Checkbox defaultChecked />
+                  <Typography variant="caption" color="primary">
+                    Remember me
+                  </Typography>
+                </Grid>
+                <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
+                  <Link href="/forgot-password">
+                    <Typography variant="caption" color="primary">
+                      ¿Forgot password?
+                    </Typography>
+                  </Link>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+                    Sign In
+                  </Button>
+                  {
+                    // WebAuthn
+                    User.webAuthnEnabled && (
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        onClick={AuthenticateWithBiometrics}
+                        startIcon={<FontAwesomeIcon icon={faFingerprint} />}
+                        sx={{ mt: 2 }}
+                      >
+                        with biometrics
+                      </Button>
+                    )
+                  }
+                </Grid>
+              </Grid>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+    </>
   );
 };
 

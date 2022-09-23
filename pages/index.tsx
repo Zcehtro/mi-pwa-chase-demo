@@ -1,26 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Box, Drawer, Typography, Button, Accordion, AccordionSummary } from '@mui/material';
+import { Box, Drawer, Typography, Button, Accordion, AccordionSummary, Chip } from '@mui/material';
+import { CheckCircle } from '@mui/icons-material';
 import { faLocationDot, faFingerprint } from '@fortawesome/free-solid-svg-icons';
 import { MainLayout } from '../components/layouts/MainLayout';
 import { bankAccounts } from '../data';
-import { UIContext } from '../context/ui';
-import { USERContext } from '../context/user';
 import { AccountDetailCard } from '../components/ui/index/AccountDetailCard';
 import { RegistrationDialog } from '../components/ui/webauthn/RegistrationDialog';
 import { NotificationCard } from '../components/ui/index/NotificationCard';
 import { PageHeader } from '../components/ui/_shared/PageHeader';
+import useAuthentication from '../hooks/useAuthentication';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Home: NextPage = () => {
-  const { drawerOpen, toggleDrawer } = useContext(UIContext);
   const [showBiometricRegistration, setShowBiometricRegistration] = useState(false);
-  const { isLoggedIn } = useContext(USERContext);
   const router = useRouter();
-
-  const toggleDrawerVisibility = (e: any) => {
-    toggleDrawer(!drawerOpen);
-  };
+  const { User } = useAuthentication();
 
   const goToLocation = (e: any) => {
     router.push('/location');
@@ -32,15 +28,26 @@ const Home: NextPage = () => {
       <PageHeader />
       {/* Page Content */}
       <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2} gap={1}>
+        {User.webAuthnEnabled && (
+          <Chip
+            label="This device is registered for biometric authentication"
+            icon={<CheckCircle />}
+            size="medium"
+            color="primary"
+            sx={{ my: 2 }}
+          />
+        )}
         {/* Today's Snapshot Card */}
         <Box width="100%" px={3}>
-          <NotificationCard
-            title="Setup biometric authentication"
-            description="You have not registered your biometric login. Please register your biometric login to enjoy a more secure login experience."
-            icon={faFingerprint}
-            onClick={() => setShowBiometricRegistration(true)}
-            readTime="2 mins"
-          />
+          {!User.webAuthnEnabled && (
+            <NotificationCard
+              title="Setup biometric authentication"
+              description="You have not registered your biometric authentication yet. Please register for a better authentication experience."
+              icon={faFingerprint}
+              onClick={() => setShowBiometricRegistration(true)}
+              readTime="1 mins"
+            />
+          )}
           <NotificationCard
             title="¿Where i am?"
             description="¿Have you ever wanted to know where you are? Well, now you can!"
@@ -101,7 +108,7 @@ const Home: NextPage = () => {
 
             {/*Bank Sub-account Card */}
             {bankAccounts.map((account) => (
-              <AccountDetailCard key={account._id} {...account} onClick={toggleDrawerVisibility} />
+              <AccountDetailCard key={account._id} {...account} />
             ))}
           </Accordion>
 
@@ -159,31 +166,6 @@ const Home: NextPage = () => {
           </Box>
         </Box>
       </Box>
-      {/*Basic drawer placeholder */}
-      <Drawer anchor="bottom" open={drawerOpen} onClose={toggleDrawerVisibility}>
-        <Typography
-          variant="h6"
-          fontSize="16px"
-          fontWeight="bold"
-          color="#555"
-          textAlign="center"
-          sx={{ mt: 2, px: 2 }}
-        >
-          You&apos;re looking a placeholder because this feature is not yet implemented.
-        </Typography>
-        <Typography variant="subtitle1" fontSize="13px" color="#999" textAlign="center">
-          Maybe you can add your bank account details here later.
-        </Typography>
-        <Box display="flex" justifyContent="center" mt={2}>
-          <Button variant="contained" color="primary" disabled>
-            Add Bank Account
-          </Button>
-        </Box>
-        <Typography variant="caption" color="#999" textAlign="center" mb={2}>
-          This feature isn&apos;t available yet.
-        </Typography>
-      </Drawer>
-
       {/*Biometric registration modal */}
       <RegistrationDialog
         open={showBiometricRegistration}

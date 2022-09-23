@@ -1,20 +1,10 @@
-import {
-  Dialog,
-  Box,
-  Typography,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-  Card,
-  Button,
-  Input,
-  Skeleton,
-} from '@mui/material';
-import { FC, useContext, useRef, useState } from 'react';
-import { USERContext } from '../../../context/user';
+import { Dialog, Box, Typography, Button } from '@mui/material';
+import { FC, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
 import { startRegistration } from '@simplewebauthn/browser';
+import useAuthentication from '../../../hooks/useAuthentication';
+import axios from '../../../libs/axios';
 
 interface Props {
   open: boolean;
@@ -22,6 +12,8 @@ interface Props {
 }
 
 export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
+  const { User, EnableWebAuthn } = useAuthentication();
+  const [success, setSuccess] = useState<boolean>(false);
   const [webAuthnMessage, setWebAuthnMessage] = useState({
     status: false,
     message: '',
@@ -29,12 +21,14 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
 
   const WebAuthnRegistration = async () => {
     // "Generate registration options"
-    const resp = await fetch('/api/registration/generate-registration-options');
+    const resp = await axios.post('/authn/generate-registration-options', {
+      email: User.email,
+    });
     //Attestation resp
     let attResp;
 
     try {
-      const opts = await resp.json();
+      const opts = await resp.data;
       console.log('[DEBUG] generate-registration-options', opts);
 
       //Resident key is set to required
@@ -43,6 +37,12 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
       opts.extensions = {
         credProps: true,
       };
+
+      //Set the user data
+      opts.user.id = User.email;
+      opts.user.name = User.email;
+      opts.user.displayName = User.email;
+
       attResp = await startRegistration(opts);
       //console.log('[DEBUG] Registration Options', JSON.stringify(opts, null, 2));
       // "Start the registration of the device"
@@ -52,6 +52,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
       if (err.name === 'InvalidStateError') {
         console.error('%c[DEBUG] Error: Authenticator already registered', 'color: red');
         msg = 'Error: Authenticator already registered';
+        setSuccess(true);
         return;
       } else {
         console.error('[DEBUG] Error 1:', err);
@@ -66,29 +67,27 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
       });
       return;
     }
-
     // "Begin verification of registration"
-    const verificationResp = await fetch('/api/registration/verify-registration', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(attResp),
+    const verificationResp = await axios.post('/authn/verify-registration', {
+      attestation: attResp,
+      user: User,
     });
 
-    const verificationJSON = await verificationResp.json();
+    const verificationJSON = await verificationResp.data;
     console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
+    setWebAuthnMessage({
+      status: true,
+      message: `Server Response: ${JSON.stringify(verificationJSON, null, 2)}`,
+    });
 
     let msg;
 
     //If the registration process is positive
     if (verificationJSON && verificationJSON.verified) {
       console.log('[DEBUG] Authenticator registered!');
-      msg = '¡Authenticator registered!';
-      if (typeof window !== undefined) {
-        localStorage.setItem('webauthn', 'true');
-        window.location.reload();
-      }
+      msg = '¡Success!';
+      EnableWebAuthn();
+      setSuccess(true);
     } else {
       msg = `Something went wrong! Response: <pre>${JSON.stringify(verificationJSON)}</pre>`;
       console.log('[DEBUG]', msg);
@@ -100,7 +99,9 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
   };
 
   const handleRegistration = () => {
-    WebAuthnRegistration();
+    if (typeof window !== undefined) {
+      WebAuthnRegistration();
+    }
   };
 
   return (
@@ -123,7 +124,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
             use it to make payments and other transactions.
           </Typography>
           {webAuthnMessage.status && (
-            <Typography variant="body1" fontSize="13px" mb={5} color="red">
+            <Typography variant="body1" fontSize="13px" mb={5} color="#555">
               {webAuthnMessage.message}
             </Typography>
           )}
@@ -134,9 +135,15 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
       <Box display="flex" flexDirection="column" justifyContent="flex-end" mt={5}>
         <Box display="flex" alignItems="center" justifyContent="space-between" gap={1} mb={1}>
           {/*Save button*/}
-          <Button variant="text" color="primary" fullWidth onClick={handleRegistration}>
-            Continue
-          </Button>
+          {!success ? (
+            <Button variant="text" color="primary" fullWidth onClick={handleRegistration}>
+              Continue
+            </Button>
+          ) : (
+            <Button variant="text" color="success" fullWidth onClick={onClose}>
+              Success
+            </Button>
+          )}
         </Box>
       </Box>
     </Dialog>
