@@ -2,7 +2,7 @@ import type { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
 const { ENABLE_CONFORMANCE, ENABLE_HTTPS, RP_ID = 'localhost' } = process.env;
 
-interface LoggedInUser {
+export interface LoggedInUser {
   id: string;
   username: string;
   devices: AuthenticatorDevice[];

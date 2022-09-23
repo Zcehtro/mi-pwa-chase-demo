@@ -12,7 +12,7 @@ import type {
   AuthenticatorDevice,
 } from '@simplewebauthn/typescript-types';
 
-import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { expectedOrigin, LoggedInUser, loggedInUserId, rpID } from '../../../constants/webAuthn';
 
 import { dbUsers } from '../../../database';
 
@@ -36,7 +36,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
 
   // TODO majo: get loggedInUserId
 
-  const userFromDB = await dbUsers.getUserById(loggedInUserId);
+  const userFromDB: LoggedInUser = await dbUsers.getUserById(loggedInUserId);
 
   const expectedChallenge = userFromDB?.currentChallenge;
 

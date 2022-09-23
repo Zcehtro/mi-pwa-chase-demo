@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { GenerateRegistrationOptionsOpts } from '@simplewebauthn/server';
 
-import { loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { LoggedInUser, loggedInUserId, rpID } from '../../../constants/webAuthn';
 
 import { dbUsers } from '../../../database';
 
@@ -25,7 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   // TODO majo: get loggedInUserId from POST request
 
-  const user = {
+  const user: LoggedInUser = {
     id: loggedInUserId,
     username: `user@${rpID}`,
     devices: [],

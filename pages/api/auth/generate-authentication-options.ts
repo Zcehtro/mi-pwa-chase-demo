@@ -3,9 +3,8 @@ import base64url from 'base64url';
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
 
-import { loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { LoggedInUser, loggedInUserId, rpID } from '../../../constants/webAuthn';
 import { dbUsers } from '../../../database';
-import { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -25,12 +24,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   // TODO majo: get loggedInUserId from POST request
 
-  const userFromDB: {
-    id: string;
-    username: string;
-    devices: AuthenticatorDevice[];
-    currentChallenge?: string;
-  } = await dbUsers.getUserById(loggedInUserId);
+  const userFromDB: LoggedInUser = await dbUsers.getUserById(loggedInUserId);
 
   if (!userFromDB) {
     return res.status(400).json({ message: `User not register webauthn` });
