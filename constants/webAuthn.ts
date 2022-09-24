@@ -1,6 +1,6 @@
 import type { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
-const { ENABLE_CONFORMANCE, ENABLE_HTTPS, RP_ID = 'localhost' } = process.env;
+const { ENABLE_CONFORMANCE, ENABLE_HTTPS, RP_ID } = process.env; // TODO Stefano: add RP_ID a variables de entorno en Vercel para deploys en producción y preview
 
 export interface LoggedInUser {
   id: string;
@@ -18,7 +18,7 @@ export const rpID = RP_ID;
 // to appease TypeScript until we determine the expected origin based on whether or not HTTPS
 // support is enabled)
 
-export let expectedOrigin = `https://${rpID}`;
+export let expectedOrigin = `https://${rpID}`; // TODO Stefano: revisar utilización de HTTPS en development y production, y configurar código apropiadamente
 const port = 3000;
 /**
  * 2FA and Passwordless WebAuthn flows expect you to be able to uniquely identify the user that

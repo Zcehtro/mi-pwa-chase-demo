@@ -1,13 +1,15 @@
-import { FC, useEffect, useState, useContext } from 'react';
+import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from '../../../libs/axios';
+// import axios from '../../../libs/axios';
+import axios from 'axios';
+
 import useAuthentication from '../../../hooks/useAuthentication';
 
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
-type Inputs = {
+type RegistrationInputs = {
   name: string;
   surname: string;
   email: string;
@@ -21,7 +23,7 @@ export const RegistrationForm: FC = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<Inputs>();
+  } = useForm<RegistrationInputs>();
 
   const router = useRouter();
 
@@ -29,9 +31,10 @@ export const RegistrationForm: FC = () => {
     User.isLoggedIn && router.push('/');
   }, [User.isLoggedIn]);
 
-  const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+  const onSubmit: SubmitHandler<RegistrationInputs> = async (data: RegistrationInputs) => {
     try {
-      const req = await axios.post('/signup', data);
+      console.log(`[DEBUG] data: ${JSON.stringify(data)}`);
+      const req = await axios.post('/api/signup', data);
       console.log('[DEBUG] Attempting user registration', req);
       const { user } = req.data;
       Auth(user);
