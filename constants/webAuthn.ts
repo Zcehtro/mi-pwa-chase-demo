@@ -31,7 +31,7 @@ const port = 3000;
  */
 export const loggedInUserId = 'internalUserId';
 
-export const inMemoryUserDeviceDB: { [loggedInUserId: string]: LoggedInUser } = {
+export const inMemoryUserDeviceDB: { [loggedInUserId: string]: UserInterface } = {
   [loggedInUserId]: {
     id: loggedInUserId,
     username: `user@${rpID}`,
