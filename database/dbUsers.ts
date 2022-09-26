@@ -13,6 +13,18 @@ export const getUserById = async (id: string): Promise<any> => {
   return JSON.parse(JSON.stringify(user));
 };
 
+export const getUserByEmail = async (email: string): Promise<any> => {
+  await db.connect();
+  const user = await User.findOne({ email }).lean();
+  await db.disconnect();
+
+  if (!user) {
+    return null;
+  }
+
+  return JSON.parse(JSON.stringify(user));
+};
+
 export const addUser = async (user: any): Promise<any> => {
   await db.connect();
   const userRes = await User.create(user);
@@ -31,7 +43,7 @@ export const updateUserDevices = async (user: any): Promise<any> => {
 
     const userToUpdate = await User.findOneAndUpdate(
       { id: user.id },
-      { devices: [...user.devices] }
+      { devices: [...user.devices] },
     );
 
     await db.disconnect();
@@ -44,17 +56,11 @@ export const updateUserDevices = async (user: any): Promise<any> => {
   }
 };
 
-export const updateUserChallenge = async (
-  user: any,
-  currentChallenge: String
-): Promise<any> => {
+export const updateUserChallenge = async (user: any, currentChallenge: String): Promise<any> => {
   try {
     await db.connect();
 
-    const userToUpdate = await User.findOneAndUpdate(
-      { id: user.id },
-      { currentChallenge }
-    );
+    const userToUpdate = await User.findOneAndUpdate({ id: user.id }, { currentChallenge });
 
     await db.disconnect();
     return JSON.parse(JSON.stringify(userToUpdate));

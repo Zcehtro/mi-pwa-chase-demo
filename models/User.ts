@@ -2,10 +2,11 @@ import mongoose, { Schema, model } from 'mongoose';
 
 const userSchema = new Schema(
   {
-    id: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
+    name: { type: String, required: true },
+    surname: { type: String, required: true },
     password: { type: String, required: true },
-    currentChallenge: { type: String, required: true },
+    currentChallenge: { type: String },
     devices: { type: Array, default: [] },
   },
   {
@@ -13,6 +14,4 @@ const userSchema = new Schema(
   },
 );
 
-const User = mongoose.models.User || model('User', userSchema);
-
-export default User;
+export const User = mongoose.models.User || mongoose.model('User', userSchema);

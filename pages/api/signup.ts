@@ -1,6 +1,7 @@
 import { SignalCellular1BarSharp } from '@mui/icons-material';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { User } from '../../models';
+import { connect, disconnect } from '../../database/db';
 
 export type UserEntry = {
   name: string;
@@ -8,7 +9,7 @@ export type UserEntry = {
   email: string;
   password: string;
   devices: string[];
-}
+};
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -30,12 +31,12 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!name || !surname || !email || !password) {
       return res.status(400).json({ message: 'Please fill all the fields' });
     }
+    //Connect to database
+    connect();
 
-    console.log(`[DEBUG] user in try/catch`); // ! Llegamos hasta acá
     //Handle if the user already exists
-    const user = await User.findOne({ email });
-    console.log(`[DEBUG] user`, user); // ! No llegamos aquí aún... base de datos está vacía... ?
-    if (user) return res.json({ message: 'User already exists' });
+    const dbuser = await User.findOne({ email });
+    if (dbuser) return res.json({ message: 'User already exists' });
 
     //Parse the password to prevent errors
     const parsedPassword = password.toString();
@@ -43,6 +44,9 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
     //Create a new user
     const newUser = new User({ name, surname, email, password: parsedPassword });
     await newUser.save();
+
+    //Disconnect from database
+    disconnect();
 
     //If the user is successfully created.
     return res.json({ message: 'User created', user: newUser });

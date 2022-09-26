@@ -2,7 +2,7 @@ import type { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
 const { ENABLE_CONFORMANCE, ENABLE_HTTPS, RP_ID } = process.env; // TODO Stefano: add RP_ID a variables de entorno en Vercel para deploys en producción y preview
 
-export interface LoggedInUser {
+export interface UserInterface {
   id: string;
   username: string;
   devices: AuthenticatorDevice[];
@@ -13,7 +13,8 @@ export interface LoggedInUser {
  * RP ID represents the "scope" of websites on which a authenticator should be usable. The Origin
  * represents the expected URL from which registration or authentication occurs.
  */
-export const rpID = RP_ID;
+type rpID = string;
+export const rpID: rpID = RP_ID || 'localhost';
 // This value is set at the bottom of page as part of server initialization (the empty string is
 // to appease TypeScript until we determine the expected origin based on whether or not HTTPS
 // support is enabled)

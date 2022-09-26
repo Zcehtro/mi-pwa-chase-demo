@@ -38,7 +38,7 @@ export const LoginForm: FC = () => {
   };
 
   const AuthenticateWithBiometrics = async () => {
-    const resp = await axios.post('/auth/generate-authentication-options', {
+    const resp = await axios.post('/api/auth/generate-authentication-options', {
       email: User.email,
     });
     let asseResp;
@@ -56,7 +56,7 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    const verificationResp = await axios.post('/auth/verify-authentication', {
+    const verificationResp = await axios.post('/api/auth/verify-authentication', {
       attestation: JSON.stringify(asseResp),
       email: User.email,
     });

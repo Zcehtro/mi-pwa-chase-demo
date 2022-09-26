@@ -12,7 +12,10 @@ import type {
   AuthenticatorDevice,
 } from '@simplewebauthn/typescript-types';
 
-import { expectedOrigin, LoggedInUser, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuthn';
+
+import { connect, disconnect } from '../../../database/db';
+import { User } from '../../../models';
 
 import { dbUsers } from '../../../database';
 
@@ -32,11 +35,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Registration (a.k.a. "Registration")
  */
 const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse) => {
-  const body: RegistrationCredentialJSON = req.body;
+  const { attestation, user } = req.body;
+  const body = attestation as RegistrationCredentialJSON;
 
-  // TODO majo: get loggedInUserId
-
-  const userFromDB: LoggedInUser = await dbUsers.getUserById(loggedInUserId);
+  connect();
+  const userFromDB = await User.findOne({ email: user.email });
 
   const expectedChallenge = userFromDB?.currentChallenge;
 
@@ -45,7 +48,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
     const opts: VerifyRegistrationResponseOpts = {
       credential: body,
       expectedChallenge: `${expectedChallenge}`,
-      expectedOrigin,
+      expectedOrigin: 'http://localhost:3000',
       expectedRPID: rpID,
       requireUserVerification: true,
     };
@@ -62,7 +65,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
   if (verified && registrationInfo) {
     const { credentialPublicKey, credentialID, counter } = registrationInfo;
 
-    const existingDevice = userFromDB.devices.find((device) =>
+    const existingDevice = userFromDB.devices.find((device: any) =>
       device.credentialID.equals(credentialID),
     );
 
@@ -78,8 +81,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
       };
 
       userFromDB.devices.push(newDevice);
-
-      await dbUsers.updateUserDevices(userFromDB);
+      await userFromDB.save();
     }
   }
 

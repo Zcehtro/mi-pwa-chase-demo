@@ -2,8 +2,7 @@ import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
-// import axios from '../../../libs/axios';
-import axios from 'axios';
+import axios from '../../../libs/axios';
 
 import useAuthentication from '../../../hooks/useAuthentication';
 
@@ -35,8 +34,7 @@ export const RegistrationForm: FC = () => {
     try {
       console.log(`[DEBUG] data: ${JSON.stringify(data)}`);
       const req = await axios.post('/api/signup', data);
-      console.log('[DEBUG] Attempting user registration', req);
-      const { user } = req.data;
+      const { user } = await req.data;
       Auth(user);
     } catch (error: any) {
       console.log('[DEBUG] Error during user registration', error);

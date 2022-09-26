@@ -3,9 +3,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { GenerateRegistrationOptionsOpts } from '@simplewebauthn/server';
 
-import { LoggedInUser, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { UserInterface, rpID } from '../../../constants/webAuthn';
 
-import { dbUsers } from '../../../database';
+import { connect, disconnect } from '../../../database/db';
+import { User } from '../../../models';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -23,28 +24,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Registration (a.k.a. "Registration")
  */
 const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
-  // TODO majo: get loggedInUserId from POST request
+  const { email } = req.body;
 
-  const user: LoggedInUser = {
-    id: loggedInUserId,
-    username: `user@${rpID}`,
-    devices: [],
-    currentChallenge: undefined,
-  };
+  //get the user
 
-  const {
-    /**
-     * The username can be a human-readable name, email, etc... as it is intended only for display.
-     */
-    username,
-    devices,
-  } = user;
+  connect();
+
+  const dbuser = await User.findOne({ email });
+
+  if (!dbuser) return res.json({ message: 'User does not exist' });
 
   const opts: GenerateRegistrationOptionsOpts = {
     rpName: 'SimpleWebAuthn Example',
     rpID,
-    userID: loggedInUserId,
-    userName: username,
+    userID: dbuser.email,
+    userName: `${dbuser.name} ${dbuser.surname}`,
     timeout: 60000,
     attestationType: 'none',
     /**
@@ -53,7 +47,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
      * the browser if it's asked to perform registration when one of these ID's already resides
      * on it.
      */
-    excludeCredentials: devices.map((dev) => ({
+    excludeCredentials: dbuser.devices.map((dev: any) => ({
       id: dev.credentialID,
       type: 'public-key',
       transports: dev.transports,
@@ -79,22 +73,8 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
    * after you verify an authenticator response.
    */
 
-  user.currentChallenge = options.challenge;
+  dbuser.currentChallenge = options.challenge;
+  await dbuser.save();
 
-  const userFromDB = await dbUsers.getUserById(loggedInUserId);
-  if (userFromDB) {
-    return res.status(400).json({
-      errorType: 'USERNAME_ALREADY_EXITS',
-      message: `User with the username "${user.id}" already exists`,
-    });
-  } else {
-    await dbUsers.addUser({
-      id: user.id,
-      username: user.username,
-      device: user.devices,
-      currentChallenge: user.currentChallenge,
-    });
-
-    return res.status(200).json(options);
-  }
+  return res.status(200).json(options);
 };
