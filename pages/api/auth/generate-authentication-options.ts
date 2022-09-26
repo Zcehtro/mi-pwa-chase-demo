@@ -3,13 +3,17 @@ import base64url from 'base64url';
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
 
-import { LoggedInUser, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { loggedInUserId, rpID } from '../../../constants/webAuthn';
+
+import { connect, disconnect } from '../../../database/db';
+import { User } from '../../../models';
+
 import { dbUsers } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
-      return getGenerateAuthenticationOptions(req, res);
+      return postGenerateAuthenticationOptions(req, res);
 
     default:
       return res.status(400).json({
@@ -21,10 +25,11 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 /**
  * Login (a.k.a. "Authentication")
  */
-const getGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
-  // TODO majo: get loggedInUserId from POST request
+const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { email } = req.body;
 
-  const userFromDB: LoggedInUser = await dbUsers.getUserById(loggedInUserId);
+  connect();
+  const userFromDB = await User.findOne({ email });
 
   if (!userFromDB) {
     return res.status(400).json({ message: `User not register webauthn` });
@@ -32,10 +37,10 @@ const getGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextAp
 
   const opts: GenerateAuthenticationOptionsOpts = {
     timeout: 60000,
-    allowCredentials: userFromDB.devices.map((dev) => ({
-      id: JSON.parse(JSON.stringify(base64url.toBuffer(dev.credentialID.toString()))),
+    allowCredentials: userFromDB.devices.map((dev: any) => ({
+      id: base64url.toBuffer(dev.credentialID),
       type: 'public-key',
-      transports: dev.transports,
+      transports: ['internal'],
     })),
     userVerification: 'required',
     rpID,

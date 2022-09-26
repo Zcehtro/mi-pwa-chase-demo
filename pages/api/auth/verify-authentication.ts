@@ -10,6 +10,8 @@ import type {
 import type { AuthenticationCredentialJSON } from '@simplewebauthn/typescript-types';
 
 import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { connect, disconnect } from '../../../database/db';
+import { User } from '../../../models';
 
 import { dbUsers } from '../../../database';
 
@@ -29,11 +31,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Login (a.k.a. "Authentication")
  */
 const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiResponse) => {
-  const body: AuthenticationCredentialJSON = req.body;
+  const { attestation, email } = req.body;
+  const body = attestation as AuthenticationCredentialJSON;
 
   // TODO majo: get loggedInUserId from POST body
 
-  const userFromDB = await dbUsers.getUserById(loggedInUserId);
+  connect();
+  const userFromDB = await User.findOne({ email });
+
+  if (!userFromDB) return res.status(400).send({ error: 'User not found' });
 
   const expectedChallenge = userFromDB.currentChallenge;
 
@@ -57,7 +63,7 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
   }
 
   if (!dbAuthenticator) {
-    return res.status(400).send({ error: 'Authenticator is not registered with this site' });
+    return res.status(400).send({ error: 'Authenticator is not registered with this site' }); //! Req return this error
   }
 
   let verification: VerifiedAuthenticationResponse;

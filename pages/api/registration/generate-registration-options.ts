@@ -50,7 +50,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
     excludeCredentials: dbuser.devices.map((dev: any) => ({
       id: dev.credentialID,
       type: 'public-key',
-      transports: dev.transports,
+      transports: ['internal'],
     })),
     /**
      * The optional authenticatorSelection property allows for specifying more constraints around
@@ -75,6 +75,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
 
   dbuser.currentChallenge = options.challenge;
   await dbuser.save();
+  disconnect();
 
   return res.status(200).json(options);
 };

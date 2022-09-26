@@ -57,7 +57,7 @@ export const LoginForm: FC = () => {
     }
 
     const verificationResp = await axios.post('/api/auth/verify-authentication', {
-      attestation: JSON.stringify(asseResp),
+      attestation: asseResp,
       email: User.email,
     });
 
