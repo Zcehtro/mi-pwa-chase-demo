@@ -38,8 +38,6 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
   const { attestation, user } = req.body;
   const body = attestation as RegistrationCredentialJSON;
 
-  // connect();
-  // const userFromDB = await User.findOne({ email: user.email });
   const userFromDB = await dbUsers.getUserById(user.email);
 
   const expectedChallenge = userFromDB?.currentChallenge;

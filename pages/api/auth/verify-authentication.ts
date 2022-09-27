@@ -34,11 +34,6 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
   const { attestation, email } = req.body;
   const body = attestation as AuthenticationCredentialJSON;
 
-  // TODO majo: get loggedInUserId from POST body
-
-  // connect();
-  // const userFromDB = await User.findOne({ email });
-
   const userFromDB = await dbUsers.getUserById(email);
 
   if (!userFromDB) {

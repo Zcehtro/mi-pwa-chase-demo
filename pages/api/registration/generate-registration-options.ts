@@ -27,12 +27,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
 
-  // get the user
-
-  // connect();
-
-  // const dbuser = await User.findOne({ email });
-
   const user = {
     id: email,
     username: `${email}@${rpID}`,

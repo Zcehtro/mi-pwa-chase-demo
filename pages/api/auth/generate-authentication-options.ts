@@ -28,9 +28,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
 
-  // connect();
-  // const userFromDB = await User.findOne({ email });
-
   const userFromDB = await dbUsers.getUserById(email);
 
   if (!userFromDB) {
