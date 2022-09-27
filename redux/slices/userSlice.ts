@@ -4,10 +4,8 @@ const initialState = {
   user: {
     name: null,
     email: null,
-    currentChallenge: null,
     isLoggedIn: false,
     webAuthnEnabled: false,
-    devices: [],
   },
 };
 

@@ -1,9 +1,12 @@
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { Box, Drawer, Typography, Button, Accordion, AccordionSummary, Chip } from '@mui/material';
+
+import { Box, Typography, Accordion, AccordionSummary, Chip } from '@mui/material';
+
 import { CheckCircle } from '@mui/icons-material';
 import { faLocationDot, faFingerprint } from '@fortawesome/free-solid-svg-icons';
+
 import { MainLayout } from '../components/layouts/MainLayout';
 import { bankAccounts } from '../data';
 import { AccountDetailCard } from '../components/ui/index/AccountDetailCard';
@@ -11,22 +14,26 @@ import { RegistrationDialog } from '../components/ui/webauthn/RegistrationDialog
 import { NotificationCard } from '../components/ui/index/NotificationCard';
 import { PageHeader } from '../components/ui/_shared/PageHeader';
 import useAuthentication from '../hooks/useAuthentication';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Home: NextPage = () => {
   const [showBiometricRegistration, setShowBiometricRegistration] = useState(false);
+
+  const [webAuthnEnabled, setWebAuthnEnabled] = useState(false);
+
   const router = useRouter();
   const { User } = useAuthentication();
 
-  const goToLocation = (e: any) => {
+  const goToLocation = () => {
     router.push('/location');
   };
+
+  useEffect(() => setWebAuthnEnabled(User.webAuthnEnabled), [User]);
 
   return (
     <MainLayout>
       <PageHeader />
       <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2} gap={1}>
-        {User.webAuthnEnabled && (
+        {webAuthnEnabled && (
           <Chip
             label="This device is registered for biometric authentication"
             icon={<CheckCircle />}
@@ -35,9 +42,8 @@ const Home: NextPage = () => {
             sx={{ my: 2 }}
           />
         )}
-        {/* Today's Snapshot Card */}
         <Box width="100%" px={3}>
-          {!User.webAuthnEnabled && (
+          {!webAuthnEnabled && (
             <NotificationCard
               title="Setup biometric authentication"
               description="You have not registered your biometric authentication yet. Please register for a better authentication experience."

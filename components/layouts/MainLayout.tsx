@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const MainLayout: FC<Props> = ({ children }) => {
-  // TODO esto esta haciendo lo de Hydratation fail
+  // Trabajar asi causa lo del hidratation error
   // const router = useRouter();
   // const { User } = useAuthentication();
 

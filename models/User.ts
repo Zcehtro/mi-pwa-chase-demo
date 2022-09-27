@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 
 const userSchema = new Schema(
   {
@@ -6,6 +6,7 @@ const userSchema = new Schema(
     name: { type: String, required: true },
     surname: { type: String, required: true },
     password: { type: String, required: true },
+    webAuthnEnabled: { type: Boolean, default: false },
   },
   {
     timestamps: true,

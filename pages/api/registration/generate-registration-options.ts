@@ -97,6 +97,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
       device: user.devices,
       currentChallenge: user.currentChallenge,
     });
+    await dbUsers.updateUserWebauthnEnable(user);
   }
   return res.status(200).json(options);
 };
