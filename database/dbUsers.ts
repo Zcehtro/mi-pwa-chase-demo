@@ -1,21 +1,10 @@
 import { db } from './';
+import UserWebAuthn from '../models/UserWebAuthn';
 import { User } from '../models';
 
 export const getUserById = async (id: string): Promise<any> => {
   await db.connect();
-  const user = await User.findOne({ id }).lean();
-  await db.disconnect();
-
-  if (!user) {
-    return null;
-  }
-
-  return JSON.parse(JSON.stringify(user));
-};
-
-export const getUserByEmail = async (email: string): Promise<any> => {
-  await db.connect();
-  const user = await User.findOne({ email }).lean();
+  const user = await UserWebAuthn.findOne({ id }).lean();
   await db.disconnect();
 
   if (!user) {
@@ -27,7 +16,7 @@ export const getUserByEmail = async (email: string): Promise<any> => {
 
 export const addUser = async (user: any): Promise<any> => {
   await db.connect();
-  const userRes = await User.create(user);
+  const userRes = await UserWebAuthn.create(user);
   await db.disconnect();
 
   if (!userRes) {
@@ -41,7 +30,7 @@ export const updateUserDevices = async (user: any): Promise<any> => {
   try {
     await db.connect();
 
-    const userToUpdate = await User.findOneAndUpdate(
+    const userToUpdate = await UserWebAuthn.findOneAndUpdate(
       { id: user.id },
       { devices: [...user.devices] },
     );
@@ -60,7 +49,7 @@ export const updateUserChallenge = async (user: any, currentChallenge: String): 
   try {
     await db.connect();
 
-    const userToUpdate = await User.findOneAndUpdate({ id: user.id }, { currentChallenge });
+    const userToUpdate = await UserWebAuthn.findOneAndUpdate({ id: user.id }, { currentChallenge });
 
     await db.disconnect();
     return JSON.parse(JSON.stringify(userToUpdate));
@@ -70,4 +59,16 @@ export const updateUserChallenge = async (user: any, currentChallenge: String): 
 
     return { message: error };
   }
+};
+
+export const getUserByEmail = async (email: string): Promise<any> => {
+  await db.connect();
+  const user = await User.findOne({ email }).lean();
+  await db.disconnect();
+
+  if (!user) {
+    return null;
+  }
+
+  return JSON.parse(JSON.stringify(user));
 };

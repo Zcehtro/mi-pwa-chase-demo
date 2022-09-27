@@ -1,8 +1,33 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Deployed project
-This project was deployed using vercel hosting, you can access following the link below
-[Project Demo - Vercel](https://magenta-innova-pwa-chase-demo.vercel.app/)
+## Development
+
+1. clone the repo
+2. yarn install
+3. copy `.env.local.example` and name it `.env`
+4. yarn dev
+
+## Database
+
+To run locally the project we need to run Docker with Mongo image to have our database:
+
+```
+docker-compose up -d
+```
+
+- -d, means **detached**
+
+## Configure environment variables
+
+Rename file **.env.template** to **.env**
+
+- MongoDB URL Local:
+
+```
+MONGO_URL=mongodb://localhost:27017/simplewebauthndb
+```
+
+You can also use Mongo Compass and connect with MONGO_URL.
 
 ## Getting Started
 

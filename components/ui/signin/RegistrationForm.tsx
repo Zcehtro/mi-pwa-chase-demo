@@ -18,6 +18,7 @@ type RegistrationInputs = {
 export const RegistrationForm: FC = () => {
   const [error, setError] = useState<string | null>(null);
   const { Auth, User } = useAuthentication();
+
   const {
     register,
     handleSubmit,

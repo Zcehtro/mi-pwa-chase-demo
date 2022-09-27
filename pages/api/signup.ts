@@ -36,7 +36,9 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
 
     //Handle if the user already exists
     const dbuser = await User.findOne({ email });
-    if (dbuser) return res.json({ message: 'User already exists' });
+    if (dbuser) {
+      return res.json({ message: 'User already exists' });
+    }
 
     //Parse the password to prevent errors
     const parsedPassword = password.toString();

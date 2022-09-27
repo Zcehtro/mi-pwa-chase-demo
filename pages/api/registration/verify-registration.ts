@@ -38,8 +38,9 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
   const { attestation, user } = req.body;
   const body = attestation as RegistrationCredentialJSON;
 
-  connect();
-  const userFromDB = await User.findOne({ email: user.email });
+  // connect();
+  // const userFromDB = await User.findOne({ email: user.email });
+  const userFromDB = await dbUsers.getUserById(user.email);
 
   const expectedChallenge = userFromDB?.currentChallenge;
 
@@ -48,7 +49,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
     const opts: VerifyRegistrationResponseOpts = {
       credential: body,
       expectedChallenge: `${expectedChallenge}`,
-      expectedOrigin: 'http://localhost:3000',
+      expectedOrigin,
       expectedRPID: rpID,
       requireUserVerification: true,
     };
@@ -81,7 +82,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
       };
 
       userFromDB.devices.push(newDevice);
-      await userFromDB.save();
+      await dbUsers.updateUserDevices(userFromDB);
     }
   }
 

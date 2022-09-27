@@ -17,7 +17,10 @@ type Inputs = {
 export const LoginForm: FC = () => {
   const { User, Auth } = useAuthentication();
 
+  console.log('[DEBUG] User', User);
+
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
@@ -73,7 +76,7 @@ export const LoginForm: FC = () => {
         email: User.email,
       });
 
-      const { user } = req.data;
+      const user = req.data;
 
       if (user) {
         Auth(user);
@@ -88,7 +91,9 @@ export const LoginForm: FC = () => {
   };
 
   useEffect(() => {
-    if (User.isLoggedIn) router.push('/');
+    if (User.isLoggedIn) {
+      router.push('/');
+    }
   }, [User.isLoggedIn]);
 
   /* Handlers End */

@@ -46,3 +46,6 @@ symLinks.ps1
 /public/sw.js
 /public/sw.js.map
 public/workbox*
+
+mongo
+.env
