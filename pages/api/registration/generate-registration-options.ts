@@ -7,6 +7,7 @@ import { UserInterface, rpID } from '../../../constants/webAuthn';
 
 import { connect, disconnect } from '../../../database/db';
 import { User } from '../../../models';
+import { dbUsers } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -26,19 +27,26 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
 
-  //get the user
+  const user = {
+    id: email,
+    username: `${email}@${rpID}`,
+    devices: [],
+    currentChallenge: "",
+  };
 
-  connect();
-
-  const dbuser = await User.findOne({ email });
-
-  if (!dbuser) return res.json({ message: 'User does not exist' });
+  const {
+    /**
+     * The username can be a human-readable name, email, etc... as it is intended only for display.
+     */
+    username,
+    devices,
+  } = user;
 
   const opts: GenerateRegistrationOptionsOpts = {
     rpName: 'SimpleWebAuthn Example',
     rpID,
-    userID: dbuser.email,
-    userName: `${dbuser.name} ${dbuser.surname}`,
+    userID: email,
+    userName: username,
     timeout: 60000,
     attestationType: 'none',
     /**
@@ -47,10 +55,10 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
      * the browser if it's asked to perform registration when one of these ID's already resides
      * on it.
      */
-    excludeCredentials: dbuser.devices.map((dev: any) => ({
+    excludeCredentials: devices.map((dev: any) => ({
       id: dev.credentialID,
       type: 'public-key',
-      transports: ['internal'],
+      transports: dev.transports,
     })),
     /**
      * The optional authenticatorSelection property allows for specifying more constraints around
@@ -73,9 +81,23 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
    * after you verify an authenticator response.
    */
 
-  dbuser.currentChallenge = options.challenge;
-  await dbuser.save();
-  disconnect();
+  user.currentChallenge = options.challenge;
 
+  const userFromDB = await dbUsers.getUserById(email);
+
+  if (userFromDB) {
+    return res.status(400).json({
+      errorType: 'USERNAME_ALREADY_EXITS',
+      message: `User with the username "${user.id}" already exists`,
+    });
+  } else {
+    await dbUsers.addUser({
+      id: user.id,
+      username: user.username,
+      device: user.devices,
+      currentChallenge: user.currentChallenge,
+    });
+    await dbUsers.updateUserWebauthnEnable(user);
+  }
   return res.status(200).json(options);
 };

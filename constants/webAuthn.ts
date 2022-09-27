@@ -20,8 +20,10 @@ export const rpID: rpID = RP_ID;
 // to appease TypeScript until we determine the expected origin based on whether or not HTTPS
 // support is enabled)
 
+const port = 3000;
 export let expectedOrigin =
-  process.env.NODE_ENV === 'development' ? `http://${rpID}` : `https://${rpID}`;
+  process.env.NODE_ENV === 'development' ? `http://${rpID}:${port}` : `https://${rpID}:${port}`;
+
 /**
  * 2FA and Passwordless WebAuthn flows expect you to be able to uniquely identify the user that
  * performs registration or authentication. The user ID you specify here should be your internal,

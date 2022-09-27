@@ -28,19 +28,25 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
 
-  connect();
-  const userFromDB = await User.findOne({ email });
+  const userFromDB = await dbUsers.getUserById(email);
 
   if (!userFromDB) {
     return res.status(400).json({ message: `User not register webauthn` });
   }
 
+  // if (!userFromDB) {
+  //   return res.status(400).json({
+  //     errorType: 'USERNAME_NOT_REGISTERED',
+  //     message: `User with the username "${loggedInUserId}" not register webauthn`
+  //   });
+  // }
+
   const opts: GenerateAuthenticationOptionsOpts = {
     timeout: 60000,
     allowCredentials: userFromDB.devices.map((dev: any) => ({
-      id: base64url.toBuffer(dev.credentialID),
+      id: JSON.parse(JSON.stringify(base64url.toBuffer(dev.credentialID))),
       type: 'public-key',
-      transports: ['internal'],
+      transports: dev.transports,
     })),
     userVerification: 'required',
     rpID,

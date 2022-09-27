@@ -34,12 +34,11 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
   const { attestation, email } = req.body;
   const body = attestation as AuthenticationCredentialJSON;
 
-  // TODO majo: get loggedInUserId from POST body
+  const userFromDB = await dbUsers.getUserById(email);
 
-  connect();
-  const userFromDB = await User.findOne({ email });
-
-  if (!userFromDB) return res.status(400).send({ error: 'User not found' });
+  if (!userFromDB) {
+    return res.status(400).send({ error: 'User not found' });
+  }
 
   const expectedChallenge = userFromDB.currentChallenge;
 
