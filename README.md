@@ -1,70 +1,86 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# PWA-Chase-Demo
+
+The main goal of this project is to test and integrate the following technologies/funcionalities:
+
+- **PWA (Progressive Web App)** on desktop and mobile
+- **WebAuthn (Web Authentication)**
+- MongoDB
+- Mongoose
+- Next.js
+- React Query
+- TypeScript
+- Material UI
+- React Hook Form
+- React Geolocated
+- Redux Toolkit
+- Framer Motion
+
+This project was created using [Next.js](https://nextjs.org/) bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## TODO
 
-- Pulir los flujos
-- Varios devices por user
-- Probar PWA en iOS y Android
-- Pulir el README para levantar el proyecto
+[View issue tracker.](https://github.com/Zcehtro/mi-pwa-chase-demo/issues)
 
 ## Development
 
-1. clone the repo
+1. Clone the repo
 2. yarn install
-3. copy `.env.local.example` and name it `.env`
+3. Copy `.env.local.example` and rename it `.env.development.local`
 4. yarn dev
 
 ## Database
 
-To run locally the project we need to run Docker with Mongo image to have our database:
+The database is a [MongoDB](https://www.mongodb.com/) database, and is handled by the code using the ODM (Object-Document Mapper) [Mongoose](https://mongoosejs.com/).
 
+
+## Configure .env files
+
+The project can be configured to run services locally or remotely, according to the values set in the .env files.
+
+### Development
+
+Configure the file `.env.development.local` with the following values:
+
+```bash
+# node
+NODE_ENV=development
+
+# WebAuthn
+RP_ID=localhost
+
+# Mongo
+MONGO_URL=mongodb://localhost:27017/pwa-chase-demo
 ```
+
+### Production
+
+You can set up the environment variables in the hosting service you use with the values of your production environment. For MongoDB, you can use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+
+Alternatively, you can configure the file `.env.production.local` to use the external services on your production build and run the code locally on your computer.
+
+Remember to run `yarn build` and then `yarn start` to produce and run the production build.
+
+Set up the `.env.production.local` file with the following values:
+
+```bash
+# node
+NODE_ENV=production
+
+# WebAuthn
+RP_ID=www.your-deployed-domain.com
+
+# Mongo
+MONGO_URL=mongodb+srv://your-mongo-address-on-mongodbatlas-and-with-user-password/?any-additional-options
+```
+
+## Docker
+
+Alternatively, the project can be run locally using Docker. The Docker install script is supplied in the repo. To run locally the project we need to run Docker with Mongo image to have our database:
+
+```bash
 docker-compose up -d
 ```
 
 - -d, means **detached**
 
-## Configure environment variables
-
-Rename file **.env.template** to **.env**
-
-- MongoDB URL Local:
-
-```
-MONGO_URL=mongodb://localhost:27017/simplewebauthndb
-```
-
-You can also use Mongo Compass and connect with MONGO_URL.
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+You will still need to configure the `.env` file to use the local database. It is best to use the same settings described above for the development environment.
