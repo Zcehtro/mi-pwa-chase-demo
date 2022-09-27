@@ -31,7 +31,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
     id: email,
     username: `${email}@${rpID}`,
     devices: [],
-    currentChallenge: undefined,
+    currentChallenge: "",
   };
 
   const {
