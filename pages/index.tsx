@@ -24,9 +24,7 @@ const Home: NextPage = () => {
 
   return (
     <MainLayout>
-      {/* Page Header */}
       <PageHeader />
-      {/* Page Content */}
       <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2} gap={1}>
         {User.webAuthnEnabled && (
           <Chip
@@ -166,7 +164,6 @@ const Home: NextPage = () => {
           </Box>
         </Box>
       </Box>
-      {/*Biometric registration modal */}
       <RegistrationDialog
         open={showBiometricRegistration}
         onClose={() => setShowBiometricRegistration(false)}

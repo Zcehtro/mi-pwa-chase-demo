@@ -1,3 +1,8 @@
+import { FC, useRef, useState } from 'react';
+import Router from 'next/router';
+
+import axios from 'axios';
+
 import {
   Dialog,
   Box,
@@ -10,9 +15,8 @@ import {
   Input,
   Skeleton,
 } from '@mui/material';
-import { FC, useContext, useRef, useState } from 'react';
+
 import useAuthentication from '../../../hooks/useAuthentication';
-import axios from 'axios';
 
 interface Props {
   open: boolean;
@@ -23,10 +27,8 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
   const { Logout } = useAuthentication();
 
   const handleLogout = () => {
-    if (typeof window !== undefined) {
-      window.location.reload();
-    }
     Logout();
+    Router.push('/signin');
   };
 
   return (
@@ -35,7 +37,7 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
       <Box>
         <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1} color="#555">
           <Typography variant="body1" fontSize="20px">
-            <strong>Jhon Doe</strong>
+            <strong>John Doe</strong>
           </Typography>
           <Typography variant="body1" fontSize="13px" mt="3px">
             #184263
