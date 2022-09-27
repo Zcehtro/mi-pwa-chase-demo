@@ -1,6 +1,6 @@
 import type { AuthenticatorDevice } from '@simplewebauthn/typescript-types';
 
-const { ENABLE_CONFORMANCE, ENABLE_HTTPS, RP_ID } = process.env; // TODO Stefano: add RP_ID a variables de entorno en Vercel para deploys en producción y preview
+const { RP_ID } = process.env;
 
 export interface UserInterface {
   id: string;
@@ -13,14 +13,15 @@ export interface UserInterface {
  * RP ID represents the "scope" of websites on which a authenticator should be usable. The Origin
  * represents the expected URL from which registration or authentication occurs.
  */
-type rpID = string;
-export const rpID: rpID = RP_ID || 'localhost';
+type rpID = string | undefined;
+export const rpID: rpID = RP_ID;
+// export const rpID: rpID = RP_ID || 'localhost';
 // This value is set at the bottom of page as part of server initialization (the empty string is
 // to appease TypeScript until we determine the expected origin based on whether or not HTTPS
 // support is enabled)
 
-export let expectedOrigin = `https://${rpID}`; // TODO Stefano: revisar utilización de HTTPS en development y production, y configurar código apropiadamente
-const port = 3000;
+export let expectedOrigin =
+  process.env.NODE_ENV === 'development' ? `http://${rpID}` : `https://${rpID}`;
 /**
  * 2FA and Passwordless WebAuthn flows expect you to be able to uniquely identify the user that
  * performs registration or authentication. The user ID you specify here should be your internal,
