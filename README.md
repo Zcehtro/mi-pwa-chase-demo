@@ -1,5 +1,14 @@
 # PWA-Chase-Demo
 
+- [PWA-Chase-Demo](#pwa-chase-demo)
+  - [TODO](#todo)
+  - [Development](#development)
+  - [Database](#database)
+  - [Configure .env files](#configure-env-files)
+    - [Development Environment](#development-environment)
+    - [Production Environment](#production-environment)
+  - [Docker](#docker)
+
 The main goal of this project is to test and integrate the following technologies/funcionalities:
 
 - **PWA (Progressive Web App)** on desktop and mobile
@@ -32,12 +41,11 @@ This project was created using [Next.js](https://nextjs.org/) bootstrapped with 
 
 The database is a [MongoDB](https://www.mongodb.com/) database, and is handled by the code using the ODM (Object-Document Mapper) [Mongoose](https://mongoosejs.com/).
 
-
 ## Configure .env files
 
 The project can be configured to run services locally or remotely, according to the values set in the .env files.
 
-### Development
+### Development Environment
 
 Configure the file `.env.development.local` with the following values:
 
@@ -52,7 +60,7 @@ RP_ID=localhost
 MONGO_URL=mongodb://localhost:27017/pwa-chase-demo
 ```
 
-### Production
+### Production Environment
 
 You can set up the environment variables in the hosting service you use with the values of your production environment. For MongoDB, you can use [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
 
