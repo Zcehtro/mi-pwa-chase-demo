@@ -21,7 +21,6 @@ export const LoginForm: FC = () => {
   const [webAuthnEnabled, setWebAuthnEnabled] = useState(false);
 
   const router = useRouter();
-  console.log('[DEBUG] User', User);
 
   const {
     register,
