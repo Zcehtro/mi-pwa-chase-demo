@@ -13,8 +13,8 @@ export interface UserInterface {
  * RP ID represents the "scope" of websites on which a authenticator should be usable. The Origin
  * represents the expected URL from which registration or authentication occurs.
  */
-type rpID = string | undefined;
-export const rpID: rpID = RP_ID;
+type rpID = string;
+export const rpID: rpID = RP_ID || '';
 // export const rpID: rpID = RP_ID || 'localhost';
 // This value is set at the bottom of page as part of server initialization (the empty string is
 // to appease TypeScript until we determine the expected origin based on whether or not HTTPS
