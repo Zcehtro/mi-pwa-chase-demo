@@ -33,6 +33,12 @@ export const LoginForm: FC = () => {
     setWebAuthnEnabled(User.webAuthnEnabled);
   }, [User]);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/');
+    }
+  }, [isLoggedIn]);
+
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     const req = await axios.post('/api/signin', data);
 
@@ -95,12 +101,6 @@ export const LoginForm: FC = () => {
       console.log('[DEBUG] error', msg);
     }
   };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/');
-    }
-  }, [isLoggedIn]);
 
   return (
     <>
