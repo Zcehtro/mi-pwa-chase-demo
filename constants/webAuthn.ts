@@ -22,7 +22,7 @@ export const rpID: rpID = RP_ID || '';
 
 const port = 3000;
 export let expectedOrigin =
-  process.env.NODE_ENV === 'development' ? `http://${rpID}:${port}` : `https://${rpID}:${port}`;
+  process.env.NODE_ENV === 'development' ? `http://${rpID}:${port}` : `https://${rpID}`;
 
 /**
  * 2FA and Passwordless WebAuthn flows expect you to be able to uniquely identify the user that
