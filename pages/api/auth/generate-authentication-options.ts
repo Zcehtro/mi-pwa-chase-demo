@@ -24,11 +24,15 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  */
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.body;
+  console.log(`[DEBUG] postGenerateAuthenticationOptions, id: ${id}`);
 
   const userWebAuthnFromDB = await dbUsersWebAuthn.getUserById(id);
-
+  console.log(`[DEBUG] postGenerateAuthenticationOptions, userWebAuthnFromDB: ${JSON.stringify(userWebAuthnFromDB)}`);
+  
   if (!userWebAuthnFromDB) {
-    return res.status(400).json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
+    return res
+      .status(400)
+      .json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
   }
 
   // if (!userFromDB) {

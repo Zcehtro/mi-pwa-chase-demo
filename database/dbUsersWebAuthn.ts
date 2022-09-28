@@ -3,10 +3,13 @@ import { UserWebAuthn } from '../models';
 
 export const getUserById = async (id: string): Promise<any> => {
   await db.connect();
+  console.log(`[DEBUG] getUserById, id: ${id}`);
+  
   const user = await UserWebAuthn.findOne({ id }).lean();
   await db.disconnect();
 
   if (!user) {
+    console.log(`[DEBUG] getUserById, user not found`);
     return null;
   }
 
