@@ -5,10 +5,7 @@ import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
 
 import { loggedInUserId, rpID } from '../../../constants/webAuthn';
 
-import { connect, disconnect } from '../../../database/db';
-import { User } from '../../../models';
-
-import { dbUsers } from '../../../database';
+import { dbUsersWebAuthn } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -27,11 +24,13 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  */
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
+  console.log(`[DEBUG] email: ${email}`);
 
-  const userFromDB = await dbUsers.getUserById(email);
+  const userWebAuthnFromDB = await dbUsersWebAuthn.getUserById(email);
+  console.log(`[DEBUG] userFromDB: ${JSON.stringify(userWebAuthnFromDB)}`);
 
-  if (!userFromDB) {
-    return res.status(400).json({ message: `User not register webauthn` });
+  if (!userWebAuthnFromDB) {
+    return res.status(400).json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
   }
 
   // if (!userFromDB) {
@@ -43,7 +42,7 @@ const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextA
 
   const opts: GenerateAuthenticationOptionsOpts = {
     timeout: 60000,
-    allowCredentials: userFromDB.devices.map((dev: any) => ({
+    allowCredentials: userWebAuthnFromDB.devices.map((dev: any) => ({
       id: JSON.parse(JSON.stringify(base64url.toBuffer(dev.credentialID))),
       type: 'public-key',
       transports: dev.transports,
@@ -59,7 +58,7 @@ const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextA
    * after you verify an authenticator response.
    */
 
-  await dbUsers.updateUserChallenge(userFromDB, options.challenge);
+  await dbUsersWebAuthn.updateUserChallenge(userWebAuthnFromDB, options.challenge);
 
   return res.status(200).json(options);
 };

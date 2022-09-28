@@ -17,7 +17,7 @@ import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuth
 import { connect, disconnect } from '../../../database/db';
 import { User } from '../../../models';
 
-import { dbUsers } from '../../../database';
+import { dbUsers, dbUsersWebAuthn } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -38,7 +38,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
   const { attestation, user } = req.body;
   const body = attestation as RegistrationCredentialJSON;
 
-  const userFromDB = await dbUsers.getUserById(user.email);
+  const userFromDB = await dbUsersWebAuthn.getUserById(user.email);
 
   const expectedChallenge = userFromDB?.currentChallenge;
 
@@ -80,7 +80,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
       };
 
       userFromDB.devices.push(newDevice);
-      await dbUsers.updateUserDevices(userFromDB);
+      await dbUsersWebAuthn.updateUserDevices(userFromDB);
     }
   }
 
