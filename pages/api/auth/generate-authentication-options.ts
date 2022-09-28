@@ -26,9 +26,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Login (a.k.a. "Authentication")
  */
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
+  const { id } = req.body;
 
-  const userFromDB = await dbUsers.getUserById(email);
+  const userFromDB = await dbUsers.getUserById(id);
 
   if (!userFromDB) {
     return res.status(400).json({ message: `User not register webauthn` });
