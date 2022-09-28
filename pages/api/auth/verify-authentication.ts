@@ -31,10 +31,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  * Login (a.k.a. "Authentication")
  */
 const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { attestation, email } = req.body;
+  const { attestation, id } = req.body;
   const body = attestation as AuthenticationCredentialJSON;
 
-  const userFromDB = await dbUsersWebAuthn.getUserById(email);
+  const userFromDB = await dbUsersWebAuthn.getUserById(id);
 
   if (!userFromDB) {
     return res.status(400).send({ error: 'User not found' });
