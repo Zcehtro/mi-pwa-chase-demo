@@ -1,4 +1,4 @@
-import { Dialog, Box, Typography, Button } from '@mui/material';
+import { Dialog, Box, Typography, Button, Grid } from '@mui/material';
 import { FC, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
@@ -136,9 +136,20 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
         <Box display="flex" alignItems="center" justifyContent="space-between" gap={1} mb={1}>
           {/*Save button*/}
           {!success ? (
-            <Button variant="text" color="primary" fullWidth onClick={handleRegistration}>
-              Continue
-            </Button>
+            <>
+              <Grid container>
+                <Grid item xs={12} md={6}>
+                  <Button variant="text" color="primary" fullWidth onClick={handleRegistration}>
+                    Continue
+                  </Button>
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <Button variant="text" color="warning" fullWidth onClick={onClose}>
+                    Close
+                  </Button>
+                </Grid>
+              </Grid>
+            </>
           ) : (
             <Button variant="text" color="success" fullWidth onClick={onClose}>
               Success
