@@ -3,7 +3,7 @@ import base64url from 'base64url';
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
 import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
 
-import { loggedInUserId, rpID } from '../../../constants/webAuthn';
+import { rpID } from '../../../constants/webAuthn';
 
 import { dbUsersWebAuthn } from '../../../database';
 
@@ -25,7 +25,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.body;
 
-  const userFromDB = await dbUsers.getUserById(id);
+  const userWebAuthnFromDB = await dbUsersWebAuthn.getUserById(id);
 
   if (!userWebAuthnFromDB) {
     return res.status(400).json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
