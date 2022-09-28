@@ -84,7 +84,7 @@ export const LoginForm: FC = () => {
       //! IN SCREEN DEBUG
       setError({
         status: true,
-        message: `catch block:87 -> ${JSON.stringify(error, null, 2)}`,
+        message: `catch block:87 -> ${JSON.stringify(error.message)}`,
       });
       // throw error;
       return;
