@@ -32,13 +32,11 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
       return res.status(400).json({ message: 'Please fill all the fields' });
     }
     //Connect to database
-    connect();
+    await connect();
 
     //Handle if the user already exists
     const dbuser = await User.findOne({ email });
-    if (dbuser) {
-      return res.json({ message: 'User already exists' });
-    }
+    if (dbuser) return res.json({ message: 'User already exists' });
 
     //Parse the password to prevent errors
     const parsedPassword = password.toString();
@@ -48,7 +46,7 @@ const Signup = async (req: NextApiRequest, res: NextApiResponse) => {
     await newUser.save();
 
     //Disconnect from database
-    disconnect();
+    await disconnect();
 
     //If the user is successfully created.
     return res.json({ message: 'User created', user: newUser });

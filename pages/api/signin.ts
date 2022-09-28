@@ -29,7 +29,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     //Connect to database
-    connect();
+    await connect();
     //Handle if the user already exists
     const dbuser = await User.findOne({ email });
     if (!dbuser) return res.json({ message: 'User does not exist' });
@@ -41,7 +41,7 @@ const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
     if (dbuser.password !== parsedPassword) return res.json({ message: 'Wrong password' });
 
     //Disconnect from database
-    disconnect();
+    await disconnect();
 
     //If the user is successfully logged in.
     return res.json({ message: 'User logged in', user: dbuser });

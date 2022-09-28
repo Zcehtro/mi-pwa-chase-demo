@@ -1,9 +1,8 @@
 import { FC, ReactNode, useContext, useEffect } from 'react';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { BottomNavigator } from '../ui/_shared/BottomNavigator';
+import ProtectionLayout from './ProtectionLayout';
 import Box from '@mui/material/Box';
-import useAuthentication from '../../hooks/useAuthentication';
 interface Props {
   children: ReactNode;
 }
@@ -36,8 +35,10 @@ export const MainLayout: FC<Props> = ({ children }) => {
       </Head>
 
       <Box sx={{ minHeight: '100vh' }}>
-        {children}
-        <BottomNavigator />
+        <ProtectionLayout>
+          {children}
+          <BottomNavigator />
+        </ProtectionLayout>
       </Box>
     </>
   );

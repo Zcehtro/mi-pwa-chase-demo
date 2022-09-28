@@ -33,6 +33,12 @@ export const LoginForm: FC = () => {
     setWebAuthnEnabled(User.webAuthnEnabled);
   }, [User]);
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/');
+    }
+  }, [isLoggedIn]);
+
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     const req = await axios.post('/api/signin', data);
 
@@ -56,7 +62,6 @@ export const LoginForm: FC = () => {
       const opts = await resp.data;
       console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
 
-      //! FAIL HERE
       asseResp = await startAuthentication(opts);
       console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
     } catch (error: any) {
@@ -96,12 +101,6 @@ export const LoginForm: FC = () => {
       console.log('[DEBUG] error', msg);
     }
   };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      router.push('/');
-    }
-  }, [isLoggedIn]);
 
   return (
     <>
