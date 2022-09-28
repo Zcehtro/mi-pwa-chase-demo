@@ -19,6 +19,10 @@ export const LoginForm: FC = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [webAuthnEnabled, setWebAuthnEnabled] = useState(false);
+  const [error, setError] = useState({
+    status: false,
+    message: '',
+  });
 
   const router = useRouter();
 
@@ -62,6 +66,11 @@ export const LoginForm: FC = () => {
       });
     } catch (error) {
       console.log('[DEBUG] AuthenticateWithBiometrics, resp error:', error);
+      //! IN SCREEN DEBUG
+      setError({
+        status: true,
+        message: `catch block:72 -> ${JSON.stringify(error, null, 2)}`,
+      });
     }
 
     try {
@@ -72,6 +81,11 @@ export const LoginForm: FC = () => {
       console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
     } catch (error: any) {
       console.error('[DEBUG] startAuthentication() Fail:', JSON.stringify(error.message));
+      //! IN SCREEN DEBUG
+      setError({
+        status: true,
+        message: `catch block:87 -> ${JSON.stringify(error, null, 2)}`,
+      });
       // throw error;
       return;
     }
@@ -101,10 +115,20 @@ export const LoginForm: FC = () => {
         router.push('/');
       } else {
         console.log('[DEBUG] AxiosReq: User was not found in database');
+        //! IN SCREEN DEBUG
+        setError({
+          status: true,
+          message: 'User was not found in database',
+        });
       }
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
       console.log('[DEBUG] error', msg);
+      //! IN SCREEN DEBUG
+      setError({
+        status: true,
+        message: msg,
+      });
     }
   };
 
@@ -164,6 +188,13 @@ export const LoginForm: FC = () => {
                     >
                       with biometrics
                     </Button>
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  {error.status && (
+                    <Typography variant="caption" fontSize="10px" color="error">
+                      {error.message}
+                    </Typography>
                   )}
                 </Grid>
               </Grid>
