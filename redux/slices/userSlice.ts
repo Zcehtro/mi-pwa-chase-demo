@@ -19,7 +19,10 @@ const userSlice = createSlice({
       state.user.isLoggedIn = true;
     },
     logout: (state) => {
-      state.user = initialState.user;
+      state.user.isLoggedIn = false;
+      state.user.name = null;
+      state.user.email = null;
+      state.user.devices = [];
     },
     enableWebAuthn: (state) => {
       state.user.webAuthnEnabled = true;
