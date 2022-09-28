@@ -7,12 +7,12 @@ interface Props {
 }
 
 const ProtectionLayout: FC<Props> = ({ children }) => {
-  const [isLogged, setIsLogged] = useState(false);
-
-  const router = useRouter();
-
   const { User } = useAuthentication();
   const { isLoggedIn } = User;
+
+  const [isLogged, setIsLogged] = useState(isLoggedIn);
+
+  const router = useRouter();
 
   useEffect(() => {
     setIsLogged(isLoggedIn);
