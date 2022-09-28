@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   user: {
     name: null,
+    surname: null,
     email: null,
     isLoggedIn: false,
     webAuthnEnabled: false,
@@ -15,13 +16,18 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     authenticate: (state, action) => {
-      state.user = action.payload;
+      const { name, surname, email, webAuthnEnabled, devices } = action.payload;
+      state.user.name = name;
+      state.user.surname = surname;
+      state.user.email = email;
       state.user.isLoggedIn = true;
+      state.user.webAuthnEnabled = webAuthnEnabled;
+      state.user.devices = devices;
     },
     logout: (state) => {
       state.user.isLoggedIn = false;
       state.user.name = null;
-      state.user.email = null;
+      state.user.surname = null;
       state.user.devices = [];
     },
     enableWebAuthn: (state) => {
