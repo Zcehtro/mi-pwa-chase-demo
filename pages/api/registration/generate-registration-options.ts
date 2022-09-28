@@ -3,11 +3,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { GenerateRegistrationOptionsOpts } from '@simplewebauthn/server';
 
-import { UserInterface, rpID } from '../../../constants/webAuthn';
+import { rpID } from '../../../constants/webAuthn';
 
-import { connect, disconnect } from '../../../database/db';
-import { User } from '../../../models';
-import { dbUsers } from '../../../database';
+import { dbUsers, dbUsersWebAuthn } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -31,7 +29,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
     id: email,
     username: `${email}@${rpID}`,
     devices: [],
-    currentChallenge: "",
+    currentChallenge: '',
   };
 
   const {
@@ -83,7 +81,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
 
   user.currentChallenge = options.challenge;
 
-  const userFromDB = await dbUsers.getUserById(email);
+  const userFromDB = await dbUsersWebAuthn.getUserById(email);
 
   if (userFromDB) {
     return res.status(400).json({
@@ -91,7 +89,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
       message: `User with the username "${user.id}" already exists`,
     });
   } else {
-    await dbUsers.addUser({
+    await dbUsersWebAuthn.addUser({
       id: user.id,
       username: user.username,
       device: user.devices,

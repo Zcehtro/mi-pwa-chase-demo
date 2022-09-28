@@ -12,6 +12,4 @@ const userSchema = new Schema(
   },
 );
 
-const UserWebAuthn = mongoose.models.UserWebAuthn || model('UserWebAuthn', userSchema);
-
-export default UserWebAuthn;
+export const UserWebAuthn = mongoose.models.UserWebAuthn || model('UserWebAuthn', userSchema);

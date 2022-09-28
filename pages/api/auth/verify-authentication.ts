@@ -13,7 +13,7 @@ import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuth
 import { connect, disconnect } from '../../../database/db';
 import { User } from '../../../models';
 
-import { dbUsers } from '../../../database';
+import { dbUsers, dbUsersWebAuthn } from '../../../database';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
@@ -34,7 +34,7 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
   const { attestation, email } = req.body;
   const body = attestation as AuthenticationCredentialJSON;
 
-  const userFromDB = await dbUsers.getUserById(email);
+  const userFromDB = await dbUsersWebAuthn.getUserById(email);
 
   if (!userFromDB) {
     return res.status(400).send({ error: 'User not found' });
