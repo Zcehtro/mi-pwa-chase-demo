@@ -32,13 +32,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
     currentChallenge: '',
   };
 
-  const {
-    /**
-     * The username can be a human-readable name, email, etc... as it is intended only for display.
-     */
-    username,
-    devices,
-  } = user;
+  const { username, devices } = user;
 
   const opts: GenerateRegistrationOptionsOpts = {
     rpName: 'SimpleWebAuthn Example',
@@ -56,7 +50,7 @@ const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiR
     excludeCredentials: devices.map((dev: any) => ({
       id: dev.credentialID,
       type: 'public-key',
-      transports: dev.transports,
+      transports: ['internal'],
     })),
     /**
      * The optional authenticatorSelection property allows for specifying more constraints around
