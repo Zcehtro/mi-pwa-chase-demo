@@ -64,25 +64,19 @@ export const LoginForm: FC = () => {
       resp = await axios.post('/api/auth/generate-authentication-options', {
         id: User.email,
       });
+
+      asseResp = await startAuthentication(resp.data, false);
+      //! IN SCREEN DEBUG
+      setError({
+        status: true,
+        message: `assertion response -> ${JSON.stringify(asseResp, null, 2)}`,
+      });
     } catch (error) {
       //! IN SCREEN DEBUG
       setError({
         status: true,
         message: `catch block:72 -> ${JSON.stringify(error, null, 2)}`,
       });
-    }
-
-    try {
-      const opts = resp.data;
-      asseResp = await startAuthentication(opts, false);
-    } catch (error: any) {
-      //! IN SCREEN DEBUG
-      setError({
-        status: true,
-        message: `catch block:87 -> ${JSON.stringify(error.message)}`,
-      });
-      // throw error;
-      return;
     }
 
     const verificationResp = await axios.post('/api/auth/verify-authentication', {
