@@ -55,7 +55,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
     verification = await verifyRegistrationResponse(opts);
   } catch (error) {
     const _error = error as Error;
-    console.error('[ERROR]', _error);
+    console.log('[ERROR]', _error);
     return res.status(400).send({ error: _error.message });
   }
 

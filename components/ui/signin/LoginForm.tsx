@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { startAuthentication, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
+import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types';
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -74,13 +75,14 @@ export const LoginForm: FC = () => {
     }
 
     try {
-      const opts = await resp.data;
+      const opts = resp.data as PublicKeyCredentialCreationOptionsJSON;
       console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
 
       asseResp = await startAuthentication(opts);
       console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
     } catch (error: any) {
-      console.error('[DEBUG] startAuthentication() Fail:', JSON.stringify(error.message));
+      //!
+      console.log('[DEBUG] startAuthentication() Fail:', JSON.stringify(error.message));
       //! IN SCREEN DEBUG
       setError({
         status: true,

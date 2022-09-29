@@ -4,7 +4,7 @@ import { UserWebAuthn } from '../models';
 export const getUserById = async (id: string): Promise<any> => {
   await db.connect();
   console.log(`[DEBUG] getUserById, id: ${id}`);
-  
+
   const user = await UserWebAuthn.findOne({ id }).lean();
   await db.disconnect();
 
@@ -41,7 +41,7 @@ export const updateUserDevices = async (user: any): Promise<any> => {
     return JSON.parse(JSON.stringify(userToUpdate));
   } catch (error: any) {
     await db.disconnect();
-    console.error('[ERROR] error', error);
+    console.log('[ERROR] error', error);
 
     return { message: error };
   }
@@ -57,7 +57,7 @@ export const updateUserChallenge = async (user: any, currentChallenge: String): 
     return JSON.parse(JSON.stringify(userToUpdate));
   } catch (error: any) {
     await db.disconnect();
-    console.error('[ERROR] error', error);
+    console.log('[ERROR] error', error);
 
     return { message: error };
   }

@@ -78,7 +78,7 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
     verification = await verifyAuthenticationResponse(opts);
   } catch (error) {
     const _error = error as Error;
-    console.error(_error);
+    console.log(_error);
     return res.status(400).send({ error: _error.message });
   }
 

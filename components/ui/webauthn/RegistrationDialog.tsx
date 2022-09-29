@@ -50,12 +50,12 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
     } catch (err: any) {
       let msg;
       if (err.name === 'InvalidStateError') {
-        console.error('%c[DEBUG] Error: Authenticator already registered', 'color: red');
+        console.log('%c[DEBUG] Error: Authenticator already registered', 'color: red');
         msg = 'Error: Authenticator already registered';
         setSuccess(true);
         return;
       } else {
-        console.error('[DEBUG] Error 1:', err);
+        console.log('[DEBUG] Error 1:', err);
         msg = JSON.stringify(err.message);
       }
 

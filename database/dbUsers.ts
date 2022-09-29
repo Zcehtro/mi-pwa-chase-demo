@@ -11,7 +11,7 @@ export const updateUserWebauthnEnable = async (user: any): Promise<any> => {
     return JSON.parse(JSON.stringify(userToUpdate));
   } catch (error: any) {
     await db.disconnect();
-    console.error('[ERROR] error', error);
+    console.log('[ERROR] error', error);
 
     return { message: error };
   }
