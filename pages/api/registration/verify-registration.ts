@@ -76,7 +76,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
         credentialPublicKey,
         credentialID,
         counter,
-        transports: body.transports,
+        transports: ['internal'],
       };
 
       userFromDB.devices.push(newDevice);

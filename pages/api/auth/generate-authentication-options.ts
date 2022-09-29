@@ -27,8 +27,12 @@ const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextA
   console.log(`[DEBUG] postGenerateAuthenticationOptions, id: ${id}`);
 
   const userWebAuthnFromDB = await dbUsersWebAuthn.getUserById(id);
-  console.log(`[DEBUG] postGenerateAuthenticationOptions, userWebAuthnFromDB: ${JSON.stringify(userWebAuthnFromDB)}`);
-  
+  console.log(
+    `[DEBUG] postGenerateAuthenticationOptions, userWebAuthnFromDB: ${JSON.stringify(
+      userWebAuthnFromDB,
+    )}`,
+  );
+
   if (!userWebAuthnFromDB) {
     return res
       .status(400)

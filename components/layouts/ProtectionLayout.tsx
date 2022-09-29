@@ -7,24 +7,24 @@ interface Props {
 }
 
 const ProtectionLayout: FC<Props> = ({ children }) => {
+  const [isMounted, setIsMounted] = useState(false);
   const { User } = useAuthentication();
   const { isLoggedIn } = User;
-
-  const [isLogged, setIsLogged] = useState(isLoggedIn);
 
   const router = useRouter();
 
   useEffect(() => {
-    setIsLogged(isLoggedIn);
-  }, [isLoggedIn]);
+    setIsMounted(true);
+  }, []);
 
-  useEffect(() => {
-    if (!isLogged) {
-      router.push('/signin');
-    }
-  }, [isLogged]);
+  if (!isMounted) return null;
 
-  return <>{isLogged ? children : null}</>;
+  if (!isLoggedIn) {
+    router.push('/signin');
+    return null;
+  }
+
+  return <>{children}</>;
 };
 
 export default ProtectionLayout;
