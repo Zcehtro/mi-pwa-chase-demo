@@ -64,19 +64,30 @@ export const LoginForm: FC = () => {
       resp = await axios.post('/api/auth/generate-authentication-options', {
         id: User.email,
       });
-
-      asseResp = await startAuthentication(resp.data, false);
-      //! IN SCREEN DEBUG
-      setError({
-        status: true,
-        message: `assertion response -> ${JSON.stringify(asseResp, null, 2)}`,
-      });
     } catch (error) {
+      console.log('[DEBUG] AuthenticateWithBiometrics, resp error:', error);
       //! IN SCREEN DEBUG
       setError({
         status: true,
         message: `catch block:72 -> ${JSON.stringify(error, null, 2)}`,
       });
+    }
+
+    try {
+      const opts = await resp.data;
+      console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
+
+      asseResp = await startAuthentication(opts);
+      console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
+    } catch (error: any) {
+      console.error('[DEBUG] startAuthentication() Fail:', JSON.stringify(error.message));
+      //! IN SCREEN DEBUG
+      setError({
+        status: true,
+        message: `catch block:87 -> ${JSON.stringify(error.message)}`,
+      });
+      // throw error;
+      return;
     }
 
     const verificationResp = await axios.post('/api/auth/verify-authentication', {
@@ -85,9 +96,12 @@ export const LoginForm: FC = () => {
     });
 
     const verificationJSON = await verificationResp.data;
+    console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
 
     let msg;
     if (verificationJSON && verificationJSON.verified) {
+      console.log('[DEBUG] User authenticated!');
+
       //? Authenticate User
       const req = await axios.post('/api/user', {
         email: User.email,
@@ -97,8 +111,10 @@ export const LoginForm: FC = () => {
 
       if (user) {
         Auth(user);
+        console.log('[DEBUG] User Authenticated:', User);
         router.push('/');
       } else {
+        console.log('[DEBUG] AxiosReq: User was not found in database');
         //! IN SCREEN DEBUG
         setError({
           status: true,
@@ -107,6 +123,7 @@ export const LoginForm: FC = () => {
       }
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
+      console.log('[DEBUG] error', msg);
       //! IN SCREEN DEBUG
       setError({
         status: true,
