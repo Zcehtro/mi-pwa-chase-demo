@@ -73,9 +73,8 @@ export const LoginForm: FC = () => {
     }
 
     try {
-      const opts = await resp.data;
-
-      asseResp = await startAuthentication(opts);
+      const opts = resp.data;
+      asseResp = await startAuthentication(opts, false);
     } catch (error: any) {
       //! IN SCREEN DEBUG
       setError({
