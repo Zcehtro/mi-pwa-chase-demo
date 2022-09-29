@@ -3,18 +3,7 @@ import Router from 'next/router';
 
 import axios from 'axios';
 
-import {
-  Dialog,
-  Box,
-  Typography,
-  CardContent,
-  CardMedia,
-  CardActionArea,
-  Card,
-  Button,
-  Input,
-  Skeleton,
-} from '@mui/material';
+import { Dialog, Box, Typography, CardMedia, Button, Skeleton, Paper } from '@mui/material';
 
 import useAuthentication from '../../../hooks/useAuthentication';
 
@@ -119,42 +108,42 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
   };
 
   return (
-    <Card elevation={3} sx={{ my: '5px', width: '100%' }}>
-      <CardActionArea>
-        <CardContent sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          {/* Title and updated date */}
-          <Box display="flex" flexDirection="column" color="#666">
-            <Typography variant="body1" fontSize="12px" fontWeight="bold">
-              {title}
-            </Typography>
-            <Typography variant="body1" fontSize="12px">
-              {updatedAt}
-            </Typography>
-            <Button variant="text" color="primary" fullWidth>
-              <label htmlFor={title.replace(' ', '-').toLowerCase()}>Upload</label>
-              <input
-                ref={imgRef}
-                onChange={handleUpload}
-                type="file"
-                id={title.replace(' ', '-').toLowerCase()}
-                accept="image/*"
-                hidden
-              />
-            </Button>
-          </Box>
-          {/* Image */}
-          {isLoading ? (
-            <Skeleton variant="rectangular" width={90} height={70} sx={{ borderRadius: '8px' }} />
-          ) : (
-            <CardMedia
-              component="img"
-              image={imgSrc}
-              alt={title}
-              sx={{ width: 90, maxHeight: 70, borderRadius: '8px' }}
+    <Paper elevation={3} sx={{ my: '5px', width: '100%' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
+        {/* Title and updated date */}
+        <Box display="flex" flexDirection="column" color="#666">
+          <Typography variant="body1" fontSize="12px" fontWeight="bold">
+            {title}
+          </Typography>
+          <Typography variant="body1" fontSize="12px">
+            {updatedAt}
+          </Typography>
+          <Button variant="text" color="primary" fullWidth>
+            <label htmlFor={title.replace(' ', '-').toLowerCase()} style={{ cursor: 'pointer' }}>
+              Upload
+            </label>
+            <input
+              ref={imgRef}
+              onChange={handleUpload}
+              type="file"
+              id={title.replace(' ', '-').toLowerCase()}
+              accept="image/*"
+              hidden
             />
-          )}
-        </CardContent>
-      </CardActionArea>
-    </Card>
+          </Button>
+        </Box>
+        {/* Image */}
+        {isLoading ? (
+          <Skeleton variant="rectangular" width={90} height={70} sx={{ borderRadius: '8px' }} />
+        ) : (
+          <CardMedia
+            component="img"
+            image={imgSrc}
+            alt={title}
+            sx={{ width: 90, maxHeight: 70, borderRadius: '8px' }}
+          />
+        )}
+      </Box>
+    </Paper>
   );
 };
