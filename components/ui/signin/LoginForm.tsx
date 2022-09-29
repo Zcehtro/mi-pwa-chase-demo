@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { startAuthentication, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
+import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types';
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -64,8 +65,8 @@ export const LoginForm: FC = () => {
       resp = await axios.post('/api/auth/generate-authentication-options', {
         id: User.email,
       });
-
-      asseResp = await startAuthentication(resp.data, false);
+      let options = resp.data as PublicKeyCredentialCreationOptionsJSON;
+      asseResp = await startAuthentication(options, false);
       //! IN SCREEN DEBUG
       setError({
         status: true,
