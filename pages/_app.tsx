@@ -2,6 +2,7 @@ import '../styles/globals.css';
 import '../styles/transition.css';
 
 import type { AppProps } from 'next/app';
+import { Suspense } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { lightTheme } from '../themes';
 //import redux provider
@@ -23,15 +24,17 @@ config.autoAddCss = false; /* eslint-disable import/first */
 function MyApp({ Component, pageProps }: AppProps) {
   const { asPath } = useRouter();
   return (
-    <Provider store={store}>
-      <ThemeProvider theme={lightTheme}>
-        <div className="effect-1">
-          <AnimatePresence mode="wait" initial={false}>
-            <Component {...pageProps} key={asPath} />
-          </AnimatePresence>
-        </div>
-      </ThemeProvider>
-    </Provider>
+    <Suspense fallback={<div>Loading...</div>}>
+      <Provider store={store}>
+        <ThemeProvider theme={lightTheme}>
+          <div className="effect-1">
+            <AnimatePresence mode="wait" initial={false}>
+              <Component {...pageProps} key={asPath} />
+            </AnimatePresence>
+          </div>
+        </ThemeProvider>
+      </Provider>
+    </Suspense>
   );
 }
 
