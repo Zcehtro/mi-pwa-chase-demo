@@ -33,16 +33,16 @@ const Home: NextPage = () => {
     <MainLayout>
       <PageHeader />
       <Box width="100%" display="flex" flexDirection="column" alignItems="center" mt={2} gap={1}>
-        {webAuthnEnabled && (
-          <Chip
-            label="This device is registered for biometric authentication"
-            icon={<CheckCircle />}
-            size="medium"
-            color="primary"
-            sx={{ my: 2 }}
-          />
-        )}
         <Box width="100%" px={3}>
+          {webAuthnEnabled && (
+            <Chip
+              label="This device is registered for biometric authentication"
+              icon={<CheckCircle />}
+              size="medium"
+              color="primary"
+              sx={{ mb: 2, width: '100%' }}
+            />
+          )}
           {!webAuthnEnabled && (
             <NotificationCard
               title="Setup biometric authentication"
@@ -76,7 +76,7 @@ const Home: NextPage = () => {
               justifyContent: 'flex-start',
               bgcolor: '#F3FAFF',
               borderRadius: 2,
-              border: '1px solid rgb(0, 110, 215, 0.6)',
+              border: '1px solid rgb(0, 110, 215, 0.5)',
               mb: 1,
             }}
           >
