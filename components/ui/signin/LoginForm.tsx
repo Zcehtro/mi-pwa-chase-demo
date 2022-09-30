@@ -2,9 +2,18 @@ import { FC, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { startAuthentication, platformAuthenticatorIsAvailable } from '@simplewebauthn/browser';
+import { startAuthentication } from '@simplewebauthn/browser';
 import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types';
-import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Checkbox,
+  Grid,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuthentication from '../../../hooks/useAuthentication';
@@ -16,10 +25,11 @@ type Inputs = {
 };
 
 export const LoginForm: FC = () => {
-  const { User, Auth } = useAuthentication();
+  const { User, Auth, Logout } = useAuthentication();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [webAuthnEnabled, setWebAuthnEnabled] = useState(false);
+  const [userName, setUserName] = useState(null);
   const [error, setError] = useState({
     status: false,
     message: '',
@@ -36,6 +46,7 @@ export const LoginForm: FC = () => {
   useEffect(() => {
     setIsLoggedIn(User.isLoggedIn);
     setWebAuthnEnabled(User.webAuthnEnabled);
+    setUserName(User.name);
   }, [User]);
 
   useEffect(() => {
@@ -134,23 +145,57 @@ export const LoginForm: FC = () => {
     }
   };
 
+  const handleLogout = () => {
+    Logout();
+    console.log('[DEBUG] Logout():', User);
+  };
+
   return (
     <>
       {!isLoggedIn && (
-        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
+        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 2, borderRadius: '10px' }}>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={1}>
                 <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    label="Enter your email"
-                    variant="standard"
-                    {...register('email', { required: true })}
-                    error={errors.email ? true : false}
-                    helperText={errors.email ? 'Email is required' : ''}
-                  />
+                  {userName && (
+                    <Box>
+                      <Typography color="primary" variant="h5" align="center">
+                        Hello {userName}, welcome back!
+                      </Typography>
+                      <Box justifyContent="center">
+                        <Typography display="inline" align="center" style={{ fontSize: '0.8rem' }}>
+                          Not you? Click
+                        </Typography>
+                        <Typography
+                          display="inline"
+                          color="primary"
+                          align="center"
+                          style={{ fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
+                          onClick={() => handleLogout()}
+                        >
+                          {' '}
+                          here{' '}
+                        </Typography>
+                        <Typography display="inline" align="center" style={{ fontSize: '0.8rem' }}>
+                          to log in with your email and password.
+                        </Typography>
+                      </Box>
+                    </Box>
+                  )}
                 </Grid>
+                {!userName && (
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      label="Enter your email"
+                      variant="standard"
+                      {...register('email', { required: true })}
+                      error={errors.email ? true : false}
+                      helperText={errors.email ? 'Email is required' : ''}
+                    />
+                  </Grid>
+                )}
                 <Grid item xs={12}>
                   <TextField
                     fullWidth
@@ -179,7 +224,12 @@ export const LoginForm: FC = () => {
                   <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
                     Sign In
                   </Button>
-
+                  {!userName && (
+                    <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
+                      Don't have an account? Click <Link href="/signup">HERE</Link> to Sign Up and
+                      open an account!
+                    </Typography>
+                  )}
                   {webAuthnEnabled && (
                     <Button
                       fullWidth
