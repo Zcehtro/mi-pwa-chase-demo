@@ -1,9 +1,9 @@
-import { FC, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { startAuthentication } from '@simplewebauthn/browser';
-import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types';
+import { FC, useEffect, useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { startAuthentication } from "@simplewebauthn/browser";
+import type { PublicKeyCredentialCreationOptionsJSON } from "@simplewebauthn/typescript-types";
 import {
   Box,
   Button,
@@ -13,11 +13,11 @@ import {
   Grid,
   TextField,
   Typography,
-} from '@mui/material';
-import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useAuthentication from '../../../hooks/useAuthentication';
-import axios from '../../../libs/axios';
+} from "@mui/material";
+import { faFingerprint } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import useAuthentication from "../../../hooks/useAuthentication";
+import axios from "../../../libs/axios";
 
 type Inputs = {
   email: string;
@@ -32,7 +32,7 @@ export const LoginForm: FC = () => {
   const [userName, setUserName] = useState(null);
   const [error, setError] = useState({
     status: false,
-    message: '',
+    message: "",
   });
   const [pressedLogOut, setPressedLogOut] = useState(false);
 
@@ -52,7 +52,7 @@ export const LoginForm: FC = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.push('/');
+      router.push("/");
     }
   }, [isLoggedIn]);
 
@@ -65,15 +65,15 @@ export const LoginForm: FC = () => {
   }, [pressedLogOut]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-    const req = await axios.post('/api/signin', data);
+    const req = await axios.post("/api/signin", data);
 
     const { user } = req.data;
 
     if (user) {
       Auth(user);
-      console.log('[DEBUG] Auth():', User);
+      console.log("[DEBUG] Auth():", User);
     } else {
-      console.log('[DEBUG] AxiosReq: User was not found in database');
+      console.log("[DEBUG] AxiosReq: User was not found in database");
     }
   };
 
@@ -82,11 +82,11 @@ export const LoginForm: FC = () => {
     let asseResp;
 
     try {
-      resp = await axios.post('/api/auth/generate-authentication-options', {
+      resp = await axios.post("/api/auth/generate-authentication-options", {
         id: User.email,
       });
     } catch (error) {
-      console.log('[DEBUG] AuthenticateWithBiometrics, resp error:', error);
+      console.log("[DEBUG] AuthenticateWithBiometrics, resp error:", error);
       //! IN SCREEN DEBUG
       setError({
         status: true,
@@ -96,13 +96,13 @@ export const LoginForm: FC = () => {
 
     try {
       const opts = resp.data as PublicKeyCredentialCreationOptionsJSON;
-      console.log('[DEBUG] Authentication Options', JSON.stringify(opts, null, 2));
+      console.log("[DEBUG] Authentication Options", JSON.stringify(opts, null, 2));
 
       asseResp = await startAuthentication(opts);
-      console.log('[DEBUG] Authentication Response', JSON.stringify(asseResp, null, 2));
+      console.log("[DEBUG] Authentication Response", JSON.stringify(asseResp, null, 2));
     } catch (error: any) {
       //!
-      console.log('[DEBUG] startAuthentication() Fail:', JSON.stringify(error.message));
+      console.log("[DEBUG] startAuthentication() Fail:", JSON.stringify(error.message));
       //! IN SCREEN DEBUG
       setError({
         status: true,
@@ -112,20 +112,20 @@ export const LoginForm: FC = () => {
       return;
     }
 
-    const verificationResp = await axios.post('/api/auth/verify-authentication', {
+    const verificationResp = await axios.post("/api/auth/verify-authentication", {
       attestation: asseResp,
       id: User.email,
     });
 
     const verificationJSON = await verificationResp.data;
-    console.log('[DEBUG] Server Response', JSON.stringify(verificationJSON, null, 2));
+    console.log("[DEBUG] Server Response", JSON.stringify(verificationJSON, null, 2));
 
     let msg;
     if (verificationJSON && verificationJSON.verified) {
-      console.log('[DEBUG] User authenticated!');
+      console.log("[DEBUG] User authenticated!");
 
       //? Authenticate User
-      const req = await axios.post('/api/user', {
+      const req = await axios.post("/api/user", {
         email: User.email,
       });
 
@@ -133,19 +133,19 @@ export const LoginForm: FC = () => {
 
       if (user) {
         Auth(user);
-        console.log('[DEBUG] User Authenticated:', User);
-        router.push('/');
+        console.log("[DEBUG] User Authenticated:", User);
+        router.push("/");
       } else {
-        console.log('[DEBUG] AxiosReq: User was not found in database');
+        console.log("[DEBUG] AxiosReq: User was not found in database");
         //! IN SCREEN DEBUG
         setError({
           status: true,
-          message: 'User was not found in database',
+          message: "User was not found in database",
         });
       }
     } else {
       msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
-      console.log('[DEBUG] error', msg);
+      console.log("[DEBUG] error", msg);
       //! IN SCREEN DEBUG
       setError({
         status: true,
@@ -156,7 +156,7 @@ export const LoginForm: FC = () => {
 
   const handleLogout = () => {
     Logout();
-    console.log('[DEBUG] Logout():', User);
+    console.log("[DEBUG] Logout():", User);
   };
 
   const handlePressedLogOut = () => {
@@ -166,7 +166,7 @@ export const LoginForm: FC = () => {
   return (
     <>
       {!isLoggedIn && (
-        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 2, borderRadius: '10px' }}>
+        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 2, borderRadius: "10px" }}>
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={1}>
@@ -175,14 +175,15 @@ export const LoginForm: FC = () => {
                     <Box textAlign="center">
                       <Box>
                         <Typography display="inline" color="primary" variant="h5">
-                          Hello{' '}
+                          Hello
                         </Typography>
                         <Typography
                           display="inline"
                           color="primary"
                           variant="h5"
-                          style={{ fontWeight: 'bold' }}
+                          style={{ fontWeight: "bold" }}
                         >
+                          {" "}
                           {userName}
                         </Typography>
                         <Typography display="inline" color="primary" variant="h5">
@@ -190,19 +191,19 @@ export const LoginForm: FC = () => {
                         </Typography>
                       </Box>
                       <Box>
-                        <Typography display="inline" style={{ fontSize: '0.8rem' }}>
+                        <Typography display="inline" style={{ fontSize: "0.8rem" }}>
                           Not you? Click
                         </Typography>
                         <Typography
                           display="inline"
                           color="primary"
-                          style={{ fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
+                          style={{ fontSize: "0.8rem", cursor: "pointer", fontWeight: "bold" }}
                           onClick={() => handleLogout()}
                         >
-                          {' '}
-                          here{' '}
+                          {" "}
+                          here{" "}
                         </Typography>
-                        <Typography display="inline" style={{ fontSize: '0.8rem' }}>
+                        <Typography display="inline" style={{ fontSize: "0.8rem" }}>
                           to log in with your email and password.
                         </Typography>
                       </Box>
@@ -215,9 +216,9 @@ export const LoginForm: FC = () => {
                       fullWidth
                       label="Enter your email"
                       variant="standard"
-                      {...register('email', { required: true })}
+                      {...register("email", { required: true })}
                       error={errors.email ? true : false}
-                      helperText={errors.email ? 'Email is required' : ''}
+                      helperText={errors.email ? "Email is required" : ""}
                     />
                   </Grid>
                 )}
@@ -227,9 +228,9 @@ export const LoginForm: FC = () => {
                     label="Enter your password"
                     variant="standard"
                     type="password"
-                    {...register('password', { required: true })}
+                    {...register("password", { required: true })}
                     error={errors.password ? true : false}
-                    helperText={errors.password ? 'Password is required' : ''}
+                    helperText={errors.password ? "Password is required" : ""}
                   />
                 </Grid>
                 <Grid item xs={6}>
@@ -250,10 +251,20 @@ export const LoginForm: FC = () => {
                     Sign In
                   </Button>
                   {!userName && (
-                    <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
-                      Don't have an account? Click <Link href="/signup">HERE</Link> to Sign Up and
-                      open an account!
-                    </Typography>
+                    <Box>
+                      <Typography mt={2} align="center" style={{ fontSize: "0.9rem" }}>
+                        Dont have an account? Click{" "}
+                      </Typography>
+                      <Link href="/signup">
+                        <Typography mt={2} align="center" style={{ fontSize: "0.9rem" }}>
+                          HERE
+                        </Typography>
+                      </Link>
+                      <Typography mt={2} align="center" style={{ fontSize: "0.9rem" }}>
+                        {" "}
+                        to Sign Up and open an account!
+                      </Typography>
+                    </Box>
                   )}
                   {webAuthnEnabled && (
                     <Button
@@ -290,7 +301,7 @@ export const LoginForm: FC = () => {
                       >
                         Confirm Log out
                       </Button>
-                      <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
+                      <Typography mt={2} align="center" style={{ fontSize: "0.9rem" }}>
                         After logging out, you will have to enter your email and password again.
                       </Typography>
                     </Box>
