@@ -34,6 +34,7 @@ export const LoginForm: FC = () => {
     status: false,
     message: '',
   });
+  const [pressedLogOut, setPressedLogOut] = useState(false);
 
   const router = useRouter();
 
@@ -54,6 +55,14 @@ export const LoginForm: FC = () => {
       router.push('/');
     }
   }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (pressedLogOut) {
+      setTimeout(() => {
+        setPressedLogOut(false);
+      }, 4000);
+    }
+  }, [pressedLogOut]);
 
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
     const req = await axios.post('/api/signin', data);
@@ -150,6 +159,10 @@ export const LoginForm: FC = () => {
     console.log('[DEBUG] Logout():', User);
   };
 
+  const handlePressedLogOut = () => {
+    setPressedLogOut(true);
+  };
+
   return (
     <>
       {!isLoggedIn && (
@@ -159,25 +172,37 @@ export const LoginForm: FC = () => {
               <Grid container spacing={1}>
                 <Grid item xs={12}>
                   {userName && (
-                    <Box>
-                      <Typography color="primary" variant="h5" align="center">
-                        Hello {userName}, welcome back!
-                      </Typography>
-                      <Box justifyContent="center">
-                        <Typography display="inline" align="center" style={{ fontSize: '0.8rem' }}>
+                    <Box textAlign="center">
+                      <Box>
+                        <Typography display="inline" color="primary" variant="h5">
+                          Hello{' '}
+                        </Typography>
+                        <Typography
+                          display="inline"
+                          color="primary"
+                          variant="h5"
+                          style={{ fontWeight: 'bold' }}
+                        >
+                          {userName}
+                        </Typography>
+                        <Typography display="inline" color="primary" variant="h5">
+                          , welcome back!
+                        </Typography>
+                      </Box>
+                      <Box>
+                        <Typography display="inline" style={{ fontSize: '0.8rem' }}>
                           Not you? Click
                         </Typography>
                         <Typography
                           display="inline"
                           color="primary"
-                          align="center"
                           style={{ fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
                           onClick={() => handleLogout()}
                         >
                           {' '}
                           here{' '}
                         </Typography>
-                        <Typography display="inline" align="center" style={{ fontSize: '0.8rem' }}>
+                        <Typography display="inline" style={{ fontSize: '0.8rem' }}>
                           to log in with your email and password.
                         </Typography>
                       </Box>
@@ -240,6 +265,35 @@ export const LoginForm: FC = () => {
                     >
                       with biometrics
                     </Button>
+                  )}
+                  {userName && !pressedLogOut && (
+                    <Box>
+                      <Button
+                        fullWidth
+                        color="primary"
+                        variant="contained"
+                        onClick={() => handlePressedLogOut()}
+                        sx={{ mt: 2 }}
+                      >
+                        Log out
+                      </Button>
+                    </Box>
+                  )}
+                  {userName && pressedLogOut && (
+                    <Box>
+                      <Button
+                        fullWidth
+                        color="error"
+                        variant="contained"
+                        onClick={() => handleLogout()}
+                        sx={{ mt: 2 }}
+                      >
+                        Confirm Log out
+                      </Button>
+                      <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
+                        After logging out, you will have to enter your email and password again.
+                      </Typography>
+                    </Box>
                   )}
                 </Grid>
                 <Grid item xs={12}>
