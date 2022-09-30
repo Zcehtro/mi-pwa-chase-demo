@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { authenticate, logout, enableWebAuthn } from '../redux/slices/userSlice';
+import { authenticate, logout, enableWebAuthn, closeSession } from '../redux/slices/userSlice';
 
 export default function useAuthentication() {
   const dispatch = useDispatch();
@@ -21,5 +21,10 @@ export default function useAuthentication() {
     console.log('[DEBUG] [useAuthentication] enableWebAuthn()');
   };
 
-  return { User, Auth, EnableWebAuthn, Logout };
+  const CloseSession = () => {
+    dispatch(closeSession());
+    console.log('[DEBUG] [useAuthentication] closeSession()');
+  };
+
+  return { User, Auth, EnableWebAuthn, Logout, CloseSession };
 }

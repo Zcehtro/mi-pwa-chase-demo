@@ -25,17 +25,17 @@ const userSlice = createSlice({
       state.user.devices = devices;
     },
     logout: (state) => {
-      state.user.isLoggedIn = false;
-      state.user.name = null;
-      state.user.surname = null;
-      state.user.devices = [];
+      state.user = initialState.user;
     },
     enableWebAuthn: (state) => {
       state.user.webAuthnEnabled = true;
     },
+    closeSession: (state) => {
+      state.user.isLoggedIn = false;
+    },
   },
 });
 
-export const { authenticate, logout, enableWebAuthn } = userSlice.actions;
+export const { authenticate, logout, enableWebAuthn, closeSession } = userSlice.actions;
 
 export default userSlice.reducer;
