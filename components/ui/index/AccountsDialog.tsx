@@ -13,10 +13,10 @@ interface Props {
 }
 
 export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
-  const { Logout } = useAuthentication();
+  const { CloseSession } = useAuthentication();
 
-  const handleLogout = () => {
-    Logout();
+  const handleCloseSession = () => {
+    CloseSession();
     Router.push('/signin');
   };
 
@@ -60,9 +60,9 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
       {/* Actions buttons */}
       <Box display="flex" flexDirection="column" justifyContent="flex-end" mt={2}>
         <Box display="flex" alignItems="center" justifyContent="space-between" gap={1} mb={1}>
-          {/*Logout button*/}
-          <Button variant="text" color="error" onClick={handleLogout} fullWidth>
-            Logout
+          {/*Close Session button*/}
+          <Button variant="text" color="error" onClick={handleCloseSession} fullWidth>
+            Close Session
           </Button>
           {/*Save button*/}
           <Button variant="text" color="primary" fullWidth onClick={onClose}>
