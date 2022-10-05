@@ -197,7 +197,7 @@ export const LoginForm: FC = () => {
                 <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
                   <Link href="/forgot-password">
                     <Typography variant="caption" color="primary">
-                      ¿Forgot password?
+                      Forgot password?
                     </Typography>
                   </Link>
                 </Grid>

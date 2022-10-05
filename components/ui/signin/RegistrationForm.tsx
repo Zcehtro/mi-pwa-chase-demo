@@ -100,13 +100,6 @@ export const RegistrationForm: FC = () => {
                 Remember me
               </Typography>
             </Grid>
-            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
-              <Link href="/forgot-password">
-                <Typography variant="caption" color="primary">
-                  ¿Forgot password?
-                </Typography>
-              </Link>
-            </Grid>
             <Grid item xs={12}>
               {error && (
                 <Typography variant="caption" color="error">
@@ -116,7 +109,7 @@ export const RegistrationForm: FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Button fullWidth variant="contained" type="submit" sx={{ my: 2 }}>
-                Register
+                Register and Log In
               </Button>
             </Grid>
           </Grid>
