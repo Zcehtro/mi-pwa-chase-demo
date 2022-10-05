@@ -1,189 +1,164 @@
-import { FC, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { startAuthentication } from '@simplewebauthn/browser';
-import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Checkbox,
-  Grid,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useAuthentication from '../../../hooks/useAuthentication';
-import axios from '../../../libs/axios';
+/*React and Next imports*/ import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { FC, useEffect, useState } from 'react'
+/* Dependencies */
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { startAuthentication } from '@simplewebauthn/browser'
+import axios from '../../../libs/axios'
+/* Custom Hooks */
+import useAuthentication from '../../../hooks/useAuthentication'
+/* Types */
+import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types'
+/* UI and Components */
+import { faFingerprint } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Box, Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material'
 
+//? Input Type
 type Inputs = {
-  email: string;
-  password: string;
-};
+  email: string
+  password: string
+}
 
 export const LoginForm: FC = () => {
-  const { User, Auth, Logout } = useAuthentication();
+  // Hooks
+  const { User, Auth, Logout } = useAuthentication()
+  const router = useRouter()
+  // prettier-ignore
+  const { register, handleSubmit, formState: { errors } } = useForm<Inputs>()
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [webAuthnEnabled, setWebAuthnEnabled] = useState(false);
-  const [userName, setUserName] = useState(null);
-  const [error, setError] = useState({
-    status: false,
-    message: '',
-  });
-  const [pressedLogOut, setPressedLogOut] = useState(false);
+  // States
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [webAuthnEnabled, setWebAuthnEnabled] = useState(false)
+  const [userName, setUserName] = useState<string | null>(null)
+  const [error, setError] = useState({ status: false, message: '' })
+  const [pressedLogOut, setPressedLogOut] = useState(false)
 
-  const router = useRouter();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<Inputs>();
-
+  //* useEffect Section
   useEffect(() => {
-    setIsLoggedIn(User.isLoggedIn);
-    setWebAuthnEnabled(User.webAuthnEnabled);
-    setUserName(User.name);
-  }, [User]);
+    setIsLoggedIn(User.isLoggedIn)
+    setWebAuthnEnabled(User.webAuthnEnabled)
+    setUserName(User.name)
+  }, [User])
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.push('/');
+      router.push('/')
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn])
 
   useEffect(() => {
     if (pressedLogOut) {
       setTimeout(() => {
-        setPressedLogOut(false);
-      }, 4000);
+        setPressedLogOut(false)
+      }, 4000)
     }
-  }, [pressedLogOut]);
+  }, [pressedLogOut])
+  //* useEffect Section end
 
+  //? Submit Handler
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-    const req = await axios.post('/api/signin', data);
+    const req = await axios.post('/api/signin', data)
 
-    const { user } = req.data;
+    const { user } = req.data
 
-    if (user) Auth(user);
-  };
+    if (user) Auth(user)
+  }
 
+  //? WebAuthn Handler
   const AuthenticateWithBiometrics = async () => {
-    let resp: any;
-    let asseResp;
+    let resp: any
+    let asseResp
 
     try {
       resp = await axios.post('/api/auth/generate-authentication-options', {
         id: User.email,
-      });
+      })
     } catch (error) {
       setError({
         status: true,
         message: `catch block:72 -> ${JSON.stringify(error, null, 2)}`,
-      });
+      })
     }
 
     try {
-      const opts = resp.data as PublicKeyCredentialCreationOptionsJSON;
+      const opts = resp.data as PublicKeyCredentialCreationOptionsJSON
 
-      asseResp = await startAuthentication(opts);
+      asseResp = await startAuthentication(opts)
     } catch (error: any) {
       setError({
         status: true,
         message: `catch block:87 -> ${JSON.stringify(error.message)}`,
-      });
-      return;
+      })
+      return
     }
 
     const verificationResp = await axios.post('/api/auth/verify-authentication', {
       attestation: asseResp,
       id: User.email,
-    });
+    })
 
-    const verificationJSON = await verificationResp.data;
+    const verificationJSON = await verificationResp.data
 
-    let msg;
+    let msg
     if (verificationJSON && verificationJSON.verified) {
       const req = await axios.post('/api/user', {
         email: User.email,
-      });
+      })
 
-      const user = req.data;
+      const user = req.data
 
       if (user) {
-        Auth(user);
-        router.push('/');
+        Auth(user)
+        router.push('/')
       } else {
         setError({
           status: true,
           message: 'User was not found in database',
-        });
+        })
       }
     } else {
-      msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
+      msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`
       setError({
         status: true,
         message: msg,
-      });
+      })
     }
-  };
+  }
 
+  //? Logout Handler
   const handleLogout = () => {
-    Logout();
-  };
+    Logout()
+  }
 
   const handlePressedLogOut = () => {
-    setPressedLogOut(true);
-  };
+    setPressedLogOut(true)
+  }
 
   return (
     <>
       {!isLoggedIn && (
-        <Card sx={{ maxWidth: 350, mt: 5, paddingY: 2, borderRadius: '10px' }}>
+        <Card
+          sx={{
+            maxWidth: 350,
+            mt: 5,
+            paddingY: 2,
+            borderRadius: '10px',
+          }}
+        >
           <CardContent>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid container spacing={1}>
                 <Grid item xs={12}>
                   {userName && (
-                    <Box textAlign="center">
-                      <Box>
-                        <Typography display="inline" color="primary" variant="h5">
-                          Hello
-                        </Typography>
-                        <Typography
-                          display="inline"
-                          color="primary"
-                          variant="h5"
-                          style={{ fontWeight: 'bold' }}
-                        >
-                          {' '}
-                          {userName}
-                        </Typography>
-                        <Typography display="inline" color="primary" variant="h5">
-                          , welcome back!
-                        </Typography>
-                      </Box>
-                      <Box>
-                        <Typography display="inline" style={{ fontSize: '0.8rem' }}>
-                          Not you? Click
-                        </Typography>
-                        <Typography
-                          display="inline"
-                          color="primary"
-                          style={{ fontSize: '0.8rem', cursor: 'pointer', fontWeight: 'bold' }}
-                          onClick={() => handleLogout()}
-                        >
-                          {' '}
-                          here{' '}
-                        </Typography>
-                        <Typography display="inline" style={{ fontSize: '0.8rem' }}>
-                          to log in with your email and password.
-                        </Typography>
-                      </Box>
+                    <Box textAlign="center" mb={3}>
+                      <Typography display="inline" fontWeight="bold" color="#666" variant="h6">
+                        Hello&nbsp;{userName.charAt(0).toUpperCase() + userName.slice(1)}
+                      </Typography>
+                      <Typography display="inline" color="#666" variant="body1" fontSize="22px">
+                        <br />
+                        Welcome back!
+                      </Typography>
                     </Box>
                   )}
                 </Grid>
@@ -192,8 +167,10 @@ export const LoginForm: FC = () => {
                     <TextField
                       fullWidth
                       label="Enter your email"
-                      variant="standard"
-                      {...register('email', { required: true })}
+                      variant="outlined"
+                      {...register('email', {
+                        required: true,
+                      })}
                       error={errors.email ? true : false}
                       helperText={errors.email ? 'Email is required' : ''}
                     />
@@ -203,9 +180,11 @@ export const LoginForm: FC = () => {
                   <TextField
                     fullWidth
                     label="Enter your password"
-                    variant="standard"
+                    variant="outlined"
                     type="password"
-                    {...register('password', { required: true })}
+                    {...register('password', {
+                      required: true,
+                    })}
                     error={errors.password ? true : false}
                     helperText={errors.password ? 'Password is required' : ''}
                   />
@@ -224,27 +203,28 @@ export const LoginForm: FC = () => {
                   </Link>
                 </Grid>
                 <Grid item xs={12}>
-                  <Button fullWidth variant="contained" type="submit" sx={{ mt: 2 }}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    type="submit"
+                    sx={{
+                      mt: 2,
+                    }}
+                  >
                     Sign In
                   </Button>
                   {!userName && (
-                    <Box textAlign="center" mt={1}>
-                      <Typography mt={2} display="inline" style={{ fontSize: '0.9rem' }}>
-                        Dont have an account? Click{' '}
+                    <Box textAlign="center" mt={2}>
+                      <Typography display="inline" variant="caption" color="#999">
+                        Not registered yet?&nbsp;
                       </Typography>
-                      <Link href="/signup">
-                        <Typography
-                          mt={2}
-                          display="inline"
-                          color="primary"
-                          style={{ fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}
-                        >
-                          HERE
+                      <Link href="/signup" passHref>
+                        <Typography display="inline" color="primary" fontWeight="bold" variant="caption">
+                          Click here&nbsp;
                         </Typography>
                       </Link>
-                      <Typography mt={2} display="inline" style={{ fontSize: '0.9rem' }}>
-                        {' '}
-                        to Sign Up and open an account!
+                      <Typography display="inline" variant="caption" color="#999">
+                        to create an account
                       </Typography>
                     </Box>
                   )}
@@ -254,37 +234,33 @@ export const LoginForm: FC = () => {
                       variant="contained"
                       onClick={AuthenticateWithBiometrics}
                       startIcon={<FontAwesomeIcon icon={faFingerprint} />}
-                      sx={{ mt: 2 }}
+                      sx={{
+                        mt: 2,
+                      }}
                     >
                       with biometrics
                     </Button>
                   )}
                   {userName && !pressedLogOut && (
-                    <Box>
-                      <Button
-                        fullWidth
-                        color="primary"
-                        variant="contained"
-                        onClick={() => handlePressedLogOut()}
-                        sx={{ mt: 2 }}
-                      >
-                        Log out
-                      </Button>
+                    <Box textAlign="center" mt={2}>
+                      <Typography display="inline" variant="caption" color="#999">
+                        Not you?&nbsp;
+                      </Typography>
+                      <Typography display="inline" color="primary" fontWeight="bold" variant="caption" onClick={() => handlePressedLogOut()}>
+                        Click here&nbsp;
+                      </Typography>
+                      <Typography display="inline" variant="caption" color="#999">
+                        to log in with your email and password.
+                      </Typography>
                     </Box>
                   )}
                   {userName && pressedLogOut && (
                     <Box>
-                      <Button
-                        fullWidth
-                        color="error"
-                        variant="contained"
-                        onClick={() => handleLogout()}
-                        sx={{ mt: 2 }}
-                      >
-                        Confirm Log out
+                      <Button fullWidth color="error" variant="text" onClick={() => handleLogout()} sx={{ mt: 2 }}>
+                        yes, log me out
                       </Button>
-                      <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
-                        After logging out, you will have to enter your email and password again.
+                      <Typography variant="caption" color="#999" textAlign="center" mt={2}>
+                        After logging out, you will have to enter your <strong>email</strong> and <strong>password</strong> again.
                       </Typography>
                     </Box>
                   )}
@@ -302,5 +278,5 @@ export const LoginForm: FC = () => {
         </Card>
       )}
     </>
-  );
-};
+  )
+}

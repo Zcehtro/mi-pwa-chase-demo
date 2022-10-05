@@ -1,46 +1,46 @@
-import { FC, useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from '../../../libs/axios';
+import { FC, useEffect, useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import axios from '../../../libs/axios'
 
-import useAuthentication from '../../../hooks/useAuthentication';
+import useAuthentication from '../../../hooks/useAuthentication'
 
-import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
+import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material'
 
 type RegistrationInputs = {
-  name: string;
-  surname: string;
-  email: string;
-  password: string;
-};
+  name: string
+  surname: string
+  email: string
+  password: string
+}
 
 export const RegistrationForm: FC = () => {
-  const [error, setError] = useState<string | null>(null);
-  const { Auth, User } = useAuthentication();
+  const [error, setError] = useState<string | null>(null)
+  const { Auth, User } = useAuthentication()
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegistrationInputs>();
+  } = useForm<RegistrationInputs>()
 
-  const router = useRouter();
+  const router = useRouter()
 
   useEffect(() => {
-    User.isLoggedIn && router.push('/');
-  }, [User.isLoggedIn]);
+    User.isLoggedIn && router.push('/')
+  }, [User.isLoggedIn])
 
   const onSubmit: SubmitHandler<RegistrationInputs> = async (data: RegistrationInputs) => {
     try {
-      const req = await axios.post('/api/signup', data);
+      const req = await axios.post('/api/signup', data)
 
-      const { user } = await req.data;
-      Auth(user);
+      const { user } = await req.data
+      Auth(user)
     } catch (error: any) {
-      setError(error.message);
+      setError(error.message)
     }
-  };
+  }
 
   return (
     <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
@@ -50,8 +50,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Enter your name"
-                variant="standard"
+                label="First name"
+                variant="outlined"
                 {...register('name', { required: true })}
                 error={errors.name ? true : false}
                 helperText={errors.name ? 'Name is required' : ''}
@@ -60,8 +60,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Enter your surname"
-                variant="standard"
+                label="Last name"
+                variant="outlined"
                 {...register('surname', { required: true })}
                 error={errors.surname ? true : false}
                 helperText={errors.surname ? 'Surname is required' : ''}
@@ -70,8 +70,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Enter your email"
-                variant="standard"
+                label="E-mail"
+                variant="outlined"
                 {...register('email', { required: true })}
                 error={errors.email ? true : false}
                 helperText={errors.email ? 'Email is required' : ''}
@@ -80,8 +80,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Enter your password"
-                variant="standard"
+                label="Password"
+                variant="outlined"
                 type="password"
                 {...register('password', { required: true })}
                 error={errors.password ? true : false}
@@ -117,5 +117,5 @@ export const RegistrationForm: FC = () => {
         </form>
       </CardContent>
     </Card>
-  );
-};
+  )
+}
