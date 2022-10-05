@@ -2,7 +2,11 @@
 
 - [PWA-Chase-Demo](#pwa-chase-demo)
   - [TODO](#todo)
-  - [Development](#development)
+  - [Requirements and install instructions](#requirements-and-install-instructions)
+    - [Requirements](#requirements)
+    - [Installation: general settings](#installation-general-settings)
+    - [Installation: development environment](#installation-development-environment)
+    - [Installation: production environment](#installation-production-environment)
   - [Database](#database)
   - [Configure .env files](#configure-env-files)
     - [Development Environment](#development-environment)
@@ -16,7 +20,6 @@ The main goal of this project is to test and integrate the following technologie
 - MongoDB
 - Mongoose
 - Next.js
-- React Query
 - TypeScript
 - Material UI
 - React Hook Form
@@ -28,18 +31,47 @@ This project was created using [Next.js](https://nextjs.org/) bootstrapped with 
 
 ## TODO
 
-[View issue tracker.](https://github.com/Zcehtro/mi-pwa-chase-demo/issues)
+- [ ] Add recognition for multiple devices per user
 
-## Development
+For all tasks, open and closed, view the [issue tracker](https://github.com/Zcehtro/mi-pwa-chase-demo/issues).
 
-1. Clone the repo
-2. yarn install
-3. Copy `.env.local.example` and rename it `.env.development.local`
-4. yarn dev
+## Requirements and install instructions
+
+### Requirements
+
+- Git
+- Node.js
+- Yarn
+- MongoDB
+- Docker (optional, in case MongoDB is not installed)
+
+### Installation: general settings
+
+1. Clone the repo with git or your preferred method.
+2. Install all repo dependencies with yarn by typing `yarn install` in the terminal.
+3. (Optional) In case you want to use Docker to run MongoDB locally, read the instructions [here](README.md#docker).
+
+### Installation: development environment
+
+To work on the project, after following the [Installation: general settings](README.md#installation-general-settings) instructions, follow these steps:
+
+1. Copy `.env.local.example` and rename it `.env.development.local`
+2. Configure the `.env.development.local` file with your settings according to the instructions [below](README.md#configure-env-files).
+3. Run the project in development environment by typing `yarn dev` in the terminal.
+
+### Installation: production environment
+
+If you want to build a production version of the project, after following the [Installation: general settings](README.md#installation-general-settings) instructions, follow these steps:
+
+1. Copy `.env.local.example` and rename it `.env.production.local`
+2. Configure the `.env.production.local` file with your settings according to the instructions [below](README.md#configure-env-files).
+3. Type `yarn build` and then `yarn start` in the terminal.
 
 ## Database
 
-The database is a [MongoDB](https://www.mongodb.com/) database, and is handled by the code using the ODM (Object-Document Mapper) [Mongoose](https://mongoosejs.com/).
+The database is a [MongoDB](https://www.mongodb.com/) database, and is handled by the ODM (Object-Document Mapper) [Mongoose](https://mongoosejs.com/).
+
+If you don't have it installed, follow the [install instructions here](README.md#requirements-and-install-instructions) to install it or use Docker.
 
 ## Configure .env files
 
