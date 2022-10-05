@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Widget } from "./Widget";
-import { userWidgets, availableWidgets } from "../../../data";
-import { AccountsDialog } from "../index/AccountsDialog";
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Widget } from './Widget';
+import { userWidgets, availableWidgets } from '../../../data';
+import { AccountsDialog } from '../index/AccountsDialog';
 import {
   Box,
   IconButton,
@@ -11,13 +11,13 @@ import {
   CardActionArea,
   CardContent,
   Drawer,
-} from "@mui/material";
+} from '@mui/material';
 import {
   faComments,
   faUser,
   faCheckCircle,
   faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
 export const PageHeader = () => {
   const [widgetList, setWidgetList] = useState(availableWidgets);
@@ -43,7 +43,6 @@ export const PageHeader = () => {
       flexDirection="column"
       p={2}
     >
-      {/*Top Icons */}
       <Box
         width="100%"
         maxWidth="600px"
@@ -58,13 +57,11 @@ export const PageHeader = () => {
           <FontAwesomeIcon icon={faUser} color="#fff" />
         </IconButton>
       </Box>
-      {/* Welcome Text */}
       <Box width="100%" maxWidth="600px" mt={2}>
         <Typography variant="body1" fontSize="13px" fontWeight="thin">
           Good morning | August 18, 2022
         </Typography>
       </Box>
-      {/* Widgets Container */}
       <Box
         width="100%"
         maxWidth="600px"
@@ -73,22 +70,16 @@ export const PageHeader = () => {
         justifyContent="flex-start"
         flexWrap="wrap"
       >
-        {userWidgets.map(widget => (
+        {userWidgets.map((widget) => (
           <Widget key={widget._id} {...widget} />
         ))}
-        <Widget
-          add
-          label="Add"
-          onClick={handleAddWidget}
-          zIndex={showWidgetList ? 1000 : 1}
-        />
+        <Widget add label="Add" onClick={handleAddWidget} zIndex={showWidgetList ? 1000 : 1} />
       </Box>
-      {/* Add Widget Drawer */}
       <Drawer
         anchor="bottom"
         open={showWidgetList}
         onClose={() => setShowWidgetList(false)}
-        PaperProps={{ sx: { backgroundColor: "transparent" } }}
+        PaperProps={{ sx: { backgroundColor: 'transparent' } }}
       >
         <Box
           width="100%"
@@ -98,15 +89,9 @@ export const PageHeader = () => {
           py={3}
           pl={2}
           bgcolor="primary.main"
-          sx={{ bgcolor: "rgba(0,94,184,0.75)" }}
+          sx={{ bgcolor: 'rgba(0,94,184,0.75)' }}
         >
-          {/* Equipped Widgets on edit */}
-          <Typography
-            variant="h6"
-            fontSize="16px"
-            fontWeight="bold"
-            color="primary.contrastText"
-          >
+          <Typography variant="h6" fontSize="16px" fontWeight="bold" color="primary.contrastText">
             Your widgets
           </Typography>
           <Box
@@ -117,73 +102,47 @@ export const PageHeader = () => {
             justifyContent="flex-start"
             mb={5}
           >
-            {userWidgets.map(widget => (
+            {userWidgets.map((widget) => (
               <Widget key={widget._id} {...widget} size="small" />
             ))}
           </Box>
-          <Typography
-            variant="h6"
-            fontSize="16px"
-            fontWeight="bold"
-            color="primary.contrastText"
-          >
-            {" "}
-            Available widgets{" "}
+          <Typography variant="h6" fontSize="16px" fontWeight="bold" color="primary.contrastText">
+            {' '}
+            Available widgets{' '}
           </Typography>
-          <Box
-            width="100%"
-            maxWidth="600px"
-            display="flex"
-            flexWrap="wrap"
-            justifyContent="center"
-          >
-            {availableWidgets.map(widget => (
+          <Box width="100%" maxWidth="600px" display="flex" flexWrap="wrap" justifyContent="center">
+            {availableWidgets.map((widget) => (
               <Widget key={widget._id} {...widget} add />
             ))}
           </Box>
         </Box>
       </Drawer>
 
-      {/* Last movement card */}
-
-      <Card sx={{ my: "2px", backgroundColor: "rgba(255,255,255,0.2)" }}>
+      <Card sx={{ my: '2px', backgroundColor: 'rgba(255,255,255,0.2)' }}>
         <CardActionArea>
           <CardContent
             sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
               gap: 1,
             }}
           >
-            {/* Movement card icon */}
             <FontAwesomeIcon icon={faCheckCircle} color="#77DD77" size="2x" />
-            <Box sx={{ whiteSpace: "nowrap" }}>
+            <Box sx={{ whiteSpace: 'nowrap' }}>
               <Typography variant="body1" fontSize="12px" color="#eaeaea">
                 Successfully sent <b>$1.000,00</b> to <b>John Doe</b>
               </Typography>
-              <Typography
-                variant="body2"
-                fontSize="11px"
-                color="rgba(255,255,255,0.4)"
-              >
+              <Typography variant="body2" fontSize="11px" color="rgba(255,255,255,0.4)">
                 See details
               </Typography>
             </Box>
-            <FontAwesomeIcon
-              icon={faChevronRight}
-              color="rgba(255,255,255, 0.5)"
-              size="1x"
-            />
+            <FontAwesomeIcon icon={faChevronRight} color="rgba(255,255,255, 0.5)" size="1x" />
           </CardContent>
         </CardActionArea>
       </Card>
 
-      {/* Accounts Dialog */}
-      <AccountsDialog
-        open={showAccounts}
-        onClose={() => setShowAccounts(false)}
-      />
+      <AccountsDialog open={showAccounts} onClose={() => setShowAccounts(false)} />
     </Box>
   );
 };

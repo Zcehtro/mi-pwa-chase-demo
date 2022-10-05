@@ -24,29 +24,21 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 }
 
 const Signin = async (req: NextApiRequest, res: NextApiResponse) => {
-  //Signup
   const { email, password } = req.body;
 
   try {
-    //Connect to database
     await connect();
-    //Handle if the user already exists
     const dbuser = await User.findOne({ email });
     if (!dbuser) return res.json({ message: 'User does not exist' });
 
-    //Parse the password to prevent errors
     const parsedPassword = password.toString();
 
-    //Check if the password is correct
     if (dbuser.password !== parsedPassword) return res.json({ message: 'Wrong password' });
 
-    //Disconnect from database
     await disconnect();
 
-    //If the user is successfully logged in.
     return res.json({ message: 'User logged in', user: dbuser });
   } catch (error: any) {
-    //Catch return
     return res.status(500).json({ message: error.message });
   }
 };

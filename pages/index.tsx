@@ -61,14 +61,11 @@ const Home: NextPage = () => {
           />
         </Box>
 
-        {/* Main Content */}
         <Box width="100%" display="flex" flexDirection="column" gap={2} p={3}>
-          {/* Title */}
           <Typography variant="h5" fontWeight="bold" sx={{ color: '#555' }}>
             Accounts
           </Typography>
 
-          {/* Overview */}
           <Accordion
             sx={{
               display: 'flex',
@@ -80,7 +77,6 @@ const Home: NextPage = () => {
               mb: 1,
             }}
           >
-            {/* Overview title */}
             <AccordionSummary>
               <Typography
                 variant="subtitle1"
@@ -92,7 +88,6 @@ const Home: NextPage = () => {
               </Typography>
             </AccordionSummary>
 
-            {/* Bank Account Card */}
             <Box
               display="flex"
               flexDirection="row"
@@ -110,13 +105,11 @@ const Home: NextPage = () => {
               </Typography>
             </Box>
 
-            {/*Bank Sub-account Card */}
             {bankAccounts.map((account) => (
               <AccountDetailCard key={account._id} {...account} />
             ))}
           </Accordion>
 
-          {/* Movements */}
           <Box
             display="flex"
             flexDirection="column"
@@ -127,7 +120,6 @@ const Home: NextPage = () => {
               mb: 1,
             }}
           >
-            {/* Movements title */}
             <Box p={2}>
               <Typography
                 variant="subtitle1"
@@ -142,7 +134,6 @@ const Home: NextPage = () => {
               </Typography>
             </Box>
           </Box>
-          {/* Auto-debit */}
           <Box
             display="flex"
             flexDirection="column"
@@ -153,7 +144,6 @@ const Home: NextPage = () => {
               mb: 1,
             }}
           >
-            {/* Movements title */}
             <Box p={2}>
               <Typography
                 variant="subtitle1"

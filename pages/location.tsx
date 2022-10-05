@@ -21,7 +21,6 @@ const Location: NextPage = () => {
     <MainLayout>
       <PageHeader />
       <Box display="flex" flexDirection="column" gap={2} p={3}>
-        {/* back to home */}
         <Box display="flex" justifyContent="flex-start" maxWidth="30vw">
           <Link href="/" passHref>
             <Chip color="info" label="Home" icon={<FontAwesomeIcon icon={faChevronLeft} />} />

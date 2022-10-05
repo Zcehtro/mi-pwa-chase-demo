@@ -22,7 +22,6 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
 
   return (
     <Dialog open={open} PaperProps={{ sx: { minWidth: '90vw', p: 2 } }}>
-      {/*Name, account id and email */}
       <Box>
         <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1} color="#555">
           <Typography variant="body1" fontSize="20px">
@@ -36,7 +35,6 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
           somemail@domain.com
         </Typography>
       </Box>
-      {/* ID Images Title */}
       <Typography variant="h5" fontSize="15px" fontWeight="bold" color="#555" mt={2}>
         ID Images
       </Typography>
@@ -44,7 +42,6 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
         The uploaded images are used to verify your identity, please consider to upload at least one
         image.
       </Typography>
-      {/* ID Images Wrapper */}
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="flex-start">
         <ImageCard
           image="https://upload.wikimedia.org/wikipedia/commons/f/fe/C%C3%A9dula_de_Identidad_electr%C3%B3nica_de_Uruguay_-_Frente.jpg"
@@ -57,14 +54,11 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
           updatedAt="29/08/2022 13:08"
         />
       </Box>
-      {/* Actions buttons */}
       <Box display="flex" flexDirection="column" justifyContent="flex-end" mt={2}>
         <Box display="flex" alignItems="center" justifyContent="space-between" gap={1} mb={1}>
-          {/*Close Session button*/}
           <Button variant="text" color="error" onClick={handleCloseSession} fullWidth>
             Close Session
           </Button>
-          {/*Save button*/}
           <Button variant="text" color="primary" fullWidth onClick={onClose}>
             Save
           </Button>
@@ -89,7 +83,6 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleUpload = async () => {
-    console.log('[DEBUG] Uploading image...');
     setIsLoading(true);
     const req = await axios({
       method: 'POST',
@@ -103,14 +96,12 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
     });
 
     setImgSrc(req.data.data.url);
-    console.log('[DEBUG] Image uploaded');
     setIsLoading(false);
   };
 
   return (
     <Paper elevation={3} sx={{ my: '5px', width: '100%' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', padding: '16px' }}>
-        {/* Title and updated date */}
         <Box display="flex" flexDirection="column" color="#666">
           <Typography variant="body1" fontSize="12px" fontWeight="bold">
             {title}
@@ -132,7 +123,6 @@ const ImageCard: FC<ImageCardProps> = ({ title, updatedAt, image }) => {
             />
           </Button>
         </Box>
-        {/* Image */}
         {isLoading ? (
           <Skeleton variant="rectangular" width={90} height={70} sx={{ borderRadius: '8px' }} />
         ) : (

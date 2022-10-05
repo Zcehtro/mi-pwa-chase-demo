@@ -45,7 +45,6 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
   let dbAuthenticator;
   const bodyCredIDBuffer = base64url.toBuffer(body.rawId);
 
-  // "Search for the authenticator in the user's list of devices"
   for (const device of userFromDB.devices) {
     const buffer = Buffer.from(
       JSON.parse(JSON.stringify(base64url.toBuffer(device.credentialID))).data,
@@ -62,7 +61,7 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
   }
 
   if (!dbAuthenticator) {
-    return res.status(400).send({ error: 'Authenticator is not registered with this site' }); //! Req return this error
+    return res.status(400).send({ error: 'Authenticator is not registered with this site' });
   }
 
   let verification: VerifiedAuthenticationResponse;
@@ -78,14 +77,12 @@ const postVerifyAuthentication = async (req: NextApiRequest, res: NextApiRespons
     verification = await verifyAuthenticationResponse(opts);
   } catch (error) {
     const _error = error as Error;
-    console.log(_error);
     return res.status(400).send({ error: _error.message });
   }
 
   const { verified, authenticationInfo } = verification;
 
   if (verified) {
-    // Update the authenticator's counter in the DB to the newest count in the authentication
     dbAuthenticator.counter = authenticationInfo.newCounter;
   }
 

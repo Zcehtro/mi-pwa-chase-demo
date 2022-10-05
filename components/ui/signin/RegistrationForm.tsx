@@ -33,15 +33,11 @@ export const RegistrationForm: FC = () => {
 
   const onSubmit: SubmitHandler<RegistrationInputs> = async (data: RegistrationInputs) => {
     try {
-      console.log('[DEBUG] RegistrationForm: onSubmit():', data);
-
       const req = await axios.post('/api/signup', data);
-      console.log('[DEBUG] RegistrationForm: onSubmit(): req:', req);
 
       const { user } = await req.data;
       Auth(user);
     } catch (error: any) {
-      console.log('[DEBUG] Error during user registration', error);
       setError(error.message);
     }
   };
