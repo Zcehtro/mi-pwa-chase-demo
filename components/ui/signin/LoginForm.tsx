@@ -228,16 +228,21 @@ export const LoginForm: FC = () => {
                     Sign In
                   </Button>
                   {!userName && (
-                    <Box>
-                      <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
+                    <Box textAlign="center" mt={1}>
+                      <Typography mt={2} display="inline" style={{ fontSize: '0.9rem' }}>
                         Dont have an account? Click{' '}
                       </Typography>
                       <Link href="/signup">
-                        <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
+                        <Typography
+                          mt={2}
+                          display="inline"
+                          color="primary"
+                          style={{ fontWeight: 'bold', fontSize: '0.9rem', cursor: 'pointer' }}
+                        >
                           HERE
                         </Typography>
                       </Link>
-                      <Typography mt={2} align="center" style={{ fontSize: '0.9rem' }}>
+                      <Typography mt={2} display="inline" style={{ fontSize: '0.9rem' }}>
                         {' '}
                         to Sign Up and open an account!
                       </Typography>
