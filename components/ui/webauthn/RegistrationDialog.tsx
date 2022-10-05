@@ -1,10 +1,13 @@
-import { Dialog, Box, Typography, Button, Grid } from '@mui/material';
+/* Next and React imports */
 import { FC, useRef, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
+/* Dependencies */
 import { startRegistration } from '@simplewebauthn/browser';
 import useAuthentication from '../../../hooks/useAuthentication';
 import axios from '../../../libs/axios';
+/* UI and Components */
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
+import { Dialog, Box, Typography, Button, Grid } from '@mui/material';
 
 interface Props {
   open: boolean;
@@ -12,13 +15,15 @@ interface Props {
 }
 
 export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
+  // Hooks
   const { User, EnableWebAuthn } = useAuthentication();
-  const [success, setSuccess] = useState<boolean>(false);
-  const [webAuthnMessage, setWebAuthnMessage] = useState({
-    status: false,
-    message: '',
-  });
 
+  // States
+  const [success, setSuccess] = useState<boolean>(false);
+  // prettier-ignore
+  const [webAuthnMessage, setWebAuthnMessage] = useState({status: false, message: ''});
+
+  //* WebAuthn Registration Process
   const WebAuthnRegistration = async () => {
     const resp = await axios.post('/api/registration/generate-registration-options', {
       email: User.email,
@@ -48,7 +53,6 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
       } else {
         msg = JSON.stringify(err.message);
       }
-
 
       setWebAuthnMessage({
         status: true,
@@ -82,6 +86,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
     });
   };
 
+  //* Handle WebAuthn Registration
   const handleRegistration = () => {
     if (typeof window !== undefined) {
       WebAuthnRegistration();
@@ -91,20 +96,12 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
   return (
     <Dialog open={open} PaperProps={{ sx: { minWidth: '90vw', p: 2 } }}>
       <Box>
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="flex-start"
-          alignItems="center"
-          gap={1}
-          color="#555"
-        >
+        <Box display="flex" flexDirection="column" justifyContent="flex-start" alignItems="center" gap={1} color="#555">
           <Typography variant="h1" fontSize="25px">
             <strong>Biometrics setup</strong>
           </Typography>
           <Typography variant="body1" fontSize="13px" mb={5}>
-            Setup your biometrics to login to your account more securely and faster, you can also
-            use it to make payments and other transactions.
+            Setup your biometrics to login to your account more securely and faster, you can also use it to make payments and other transactions.
           </Typography>
           {webAuthnMessage.status && (
             <Typography variant="body1" fontSize="13px" mb={5} color="#555">

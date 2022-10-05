@@ -1,24 +1,13 @@
+/* Types*/
 import type { NextApiRequest, NextApiResponse } from 'next';
-
+import type { VerifyRegistrationResponseOpts, VerifiedRegistrationResponse } from '@simplewebauthn/server';
+import type { RegistrationCredentialJSON, AuthenticatorDevice } from '@simplewebauthn/typescript-types';
+/* Dependencies */
 import { verifyRegistrationResponse } from '@simplewebauthn/server';
+import { expectedOrigin, rpID } from '../../../constants/webAuthn';
+import { dbUsersWebAuthn } from '../../../database';
 
-import type {
-  VerifyRegistrationResponseOpts,
-  VerifiedRegistrationResponse,
-} from '@simplewebauthn/server';
-
-import type {
-  RegistrationCredentialJSON,
-  AuthenticatorDevice,
-} from '@simplewebauthn/typescript-types';
-
-import { expectedOrigin, loggedInUserId, rpID } from '../../../constants/webAuthn';
-
-import { connect, disconnect } from '../../../database/db';
-import { User } from '../../../models';
-
-import { dbUsers, dbUsersWebAuthn } from '../../../database';
-
+//* Next Route Handler
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
@@ -63,9 +52,7 @@ const postVerifyRegistration = async (req: NextApiRequest, res: NextApiResponse)
   if (verified && registrationInfo) {
     const { credentialPublicKey, credentialID, counter } = registrationInfo;
 
-    const existingDevice = userFromDB.devices.find((device: any) =>
-      device.credentialID.equals(credentialID),
-    );
+    const existingDevice = userFromDB.devices.find((device: any) => device.credentialID.equals(credentialID));
 
     if (!existingDevice) {
       /**

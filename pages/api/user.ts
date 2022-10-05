@@ -1,15 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import base64url from 'base64url';
-import { generateAuthenticationOptions } from '@simplewebauthn/server';
-import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
-
-import { loggedInUserId, rpID } from '../../constants/webAuthn';
-
-import { connect, disconnect } from '../../database/db';
-import { User } from '../../models';
-
 import { dbUsers } from '../../database';
 
+//* Next Route Handler
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':

@@ -1,46 +1,52 @@
-import { FC, useEffect, useState } from 'react'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useForm, SubmitHandler } from 'react-hook-form'
-import axios from '../../../libs/axios'
+// Next and React imports
+import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
+// Dependencies
+import { useForm, SubmitHandler } from 'react-hook-form';
+import axios from '../../../libs/axios';
+//Custom Hooks
+import useAuthentication from '../../../hooks/useAuthentication';
 
-import useAuthentication from '../../../hooks/useAuthentication'
+// UI and Components
+import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
-import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material'
-
+//* Form Inputs
 type RegistrationInputs = {
-  name: string
-  surname: string
-  email: string
-  password: string
-}
+  name: string;
+  surname: string;
+  email: string;
+  password: string;
+};
 
 export const RegistrationForm: FC = () => {
-  const [error, setError] = useState<string | null>(null)
-  const { Auth, User } = useAuthentication()
+  // Hooks
+  const { Auth, User } = useAuthentication();
+  const router = useRouter();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegistrationInputs>()
+  //States
+  const [error, setError] = useState<string | null>(null);
 
-  const router = useRouter()
+  // prettier-ignore
+  const { register, handleSubmit, formState: { errors }} = useForm<RegistrationInputs>();
 
+  //* useEffect Section
   useEffect(() => {
-    User.isLoggedIn && router.push('/')
-  }, [User.isLoggedIn])
+    User.isLoggedIn && router.push('/');
+  }, [User.isLoggedIn]);
+  //* useEffect Section end
 
+  //? Form Handler
   const onSubmit: SubmitHandler<RegistrationInputs> = async (data: RegistrationInputs) => {
     try {
-      const req = await axios.post('/api/signup', data)
+      const req = await axios.post('/api/signup', data);
 
-      const { user } = await req.data
-      Auth(user)
+      const { user } = await req.data;
+      Auth(user);
     } catch (error: any) {
-      setError(error.message)
+      setError(error.message);
     }
-  }
+  };
 
   return (
     <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
@@ -117,5 +123,5 @@ export const RegistrationForm: FC = () => {
         </form>
       </CardContent>
     </Card>
-  )
-}
+  );
+};

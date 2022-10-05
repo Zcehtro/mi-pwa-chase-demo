@@ -1,12 +1,13 @@
+/* Types */
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
+/* Dependencies */
 import base64url from 'base64url';
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
-import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
-
 import { rpID } from '../../../constants/webAuthn';
-
 import { dbUsersWebAuthn } from '../../../database';
 
+//* Next Route Handler
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
@@ -28,9 +29,7 @@ const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextA
   const userWebAuthnFromDB = await dbUsersWebAuthn.getUserById(id);
 
   if (!userWebAuthnFromDB) {
-    return res
-      .status(400)
-      .json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
+    return res.status(400).json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
   }
 
   const opts: GenerateAuthenticationOptionsOpts = {

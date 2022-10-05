@@ -1,21 +1,19 @@
-import { MainLayout } from '../components/layouts/MainLayout';
+/* Next and React imports */
 import { NextPage } from 'next';
 import Link from 'next/link';
-import { Box, Button, Chip, Typography } from '@mui/material';
+/* Dependencies */
 import { useGeolocated } from 'react-geolocated';
+/* UI and Components */
 import { Map } from '../components/ui/_shared/Map';
-import { useRouter } from 'next/dist/client/router';
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
 import { PageHeader } from '../components/ui/_shared/PageHeader';
+import { MainLayout } from '../components/layouts/MainLayout';
+import { Box, Button, Chip, Typography } from '@mui/material';
 
 const Location: NextPage = () => {
-  const { coords } = useGeolocated({
-    positionOptions: { enableHighAccuracy: true },
-  });
-
-  const router = useRouter();
+  // Hooks prettier-ignore
+  const { coords } = useGeolocated({ positionOptions: { enableHighAccuracy: true } });
 
   return (
     <MainLayout>

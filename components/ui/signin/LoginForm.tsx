@@ -1,139 +1,138 @@
-/*React and Next imports*/ import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { FC, useEffect, useState } from 'react'
+/*React and Next imports*/ import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
 /* Dependencies */
-import { useForm, SubmitHandler } from 'react-hook-form'
-import { startAuthentication } from '@simplewebauthn/browser'
-import axios from '../../../libs/axios'
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { startAuthentication } from '@simplewebauthn/browser';
+import axios from '../../../libs/axios';
 /* Custom Hooks */
-import useAuthentication from '../../../hooks/useAuthentication'
+import useAuthentication from '../../../hooks/useAuthentication';
 /* Types */
-import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types'
+import type { PublicKeyCredentialCreationOptionsJSON } from '@simplewebauthn/typescript-types';
 /* UI and Components */
-import { faFingerprint } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { Box, Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material'
+import { faFingerprint } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
-//? Input Type
+//* Form Inputs
 type Inputs = {
-  email: string
-  password: string
-}
+  email: string;
+  password: string;
+};
 
 export const LoginForm: FC = () => {
   // Hooks
-  const { User, Auth, Logout } = useAuthentication()
-  const router = useRouter()
+  const { User, Auth, Logout } = useAuthentication();
+  const router = useRouter();
   // prettier-ignore
   const { register, handleSubmit, formState: { errors } } = useForm<Inputs>()
 
   // States
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
-  const [webAuthnEnabled, setWebAuthnEnabled] = useState(false)
-  const [userName, setUserName] = useState<string | null>(null)
-  const [error, setError] = useState({ status: false, message: '' })
-  const [pressedLogOut, setPressedLogOut] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [webAuthnEnabled, setWebAuthnEnabled] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [error, setError] = useState({ status: false, message: '' });
+  const [pressedLogOut, setPressedLogOut] = useState(false);
 
   //* useEffect Section
   useEffect(() => {
-    setIsLoggedIn(User.isLoggedIn)
-    setWebAuthnEnabled(User.webAuthnEnabled)
-    setUserName(User.name)
-  }, [User])
+    setIsLoggedIn(User.isLoggedIn);
+    setWebAuthnEnabled(User.webAuthnEnabled);
+    setUserName(User.name);
+  }, [User]);
 
   useEffect(() => {
     if (isLoggedIn) {
-      router.push('/')
+      router.push('/');
     }
-  }, [isLoggedIn])
+  }, [isLoggedIn]);
 
   useEffect(() => {
     if (pressedLogOut) {
       setTimeout(() => {
-        setPressedLogOut(false)
-      }, 4000)
+        setPressedLogOut(false);
+      }, 4000);
     }
-  }, [pressedLogOut])
+  }, [pressedLogOut]);
   //* useEffect Section end
 
-  //? Submit Handler
+  //? Form Handler
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
-    const req = await axios.post('/api/signin', data)
+    const req = await axios.post('/api/signin', data);
+    const { user } = req.data;
 
-    const { user } = req.data
-
-    if (user) Auth(user)
-  }
+    if (user) Auth(user);
+  };
 
   //? WebAuthn Handler
   const AuthenticateWithBiometrics = async () => {
-    let resp: any
-    let asseResp
+    let resp: any;
+    let asseResp;
 
     try {
       resp = await axios.post('/api/auth/generate-authentication-options', {
         id: User.email,
-      })
+      });
     } catch (error) {
       setError({
         status: true,
-        message: `catch block:72 -> ${JSON.stringify(error, null, 2)}`,
-      })
+        message: `catch block -> ${JSON.stringify(error, null, 2)}`,
+      });
     }
 
     try {
-      const opts = resp.data as PublicKeyCredentialCreationOptionsJSON
+      const opts = resp.data as PublicKeyCredentialCreationOptionsJSON;
 
-      asseResp = await startAuthentication(opts)
+      asseResp = await startAuthentication(opts);
     } catch (error: any) {
       setError({
         status: true,
-        message: `catch block:87 -> ${JSON.stringify(error.message)}`,
-      })
-      return
+        message: `catch block -> ${JSON.stringify(error.message)}`,
+      });
+      return;
     }
 
     const verificationResp = await axios.post('/api/auth/verify-authentication', {
       attestation: asseResp,
       id: User.email,
-    })
+    });
 
-    const verificationJSON = await verificationResp.data
+    const verificationJSON = await verificationResp.data;
 
-    let msg
+    let msg;
     if (verificationJSON && verificationJSON.verified) {
       const req = await axios.post('/api/user', {
         email: User.email,
-      })
+      });
 
-      const user = req.data
+      const user = req.data;
 
       if (user) {
-        Auth(user)
-        router.push('/')
+        Auth(user);
+        router.push('/');
       } else {
         setError({
           status: true,
           message: 'User was not found in database',
-        })
+        });
       }
     } else {
-      msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`
+      msg = `Oh no, something went wrong! Response: ${JSON.stringify(verificationJSON.error)}`;
       setError({
         status: true,
         message: msg,
-      })
+      });
     }
-  }
+  };
 
   //? Logout Handler
   const handleLogout = () => {
-    Logout()
-  }
+    Logout();
+  };
 
   const handlePressedLogOut = () => {
-    setPressedLogOut(true)
-  }
+    setPressedLogOut(true);
+  };
 
   return (
     <>
@@ -278,5 +277,5 @@ export const LoginForm: FC = () => {
         </Card>
       )}
     </>
-  )
-}
+  );
+};

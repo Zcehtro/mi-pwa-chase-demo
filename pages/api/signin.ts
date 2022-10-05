@@ -1,5 +1,6 @@
-import { SignalCellular1BarSharp } from '@mui/icons-material';
-import { NextApiRequest, NextApiResponse } from 'next';
+/* Types */
+import type { NextApiRequest, NextApiResponse } from 'next';
+/* Dependencies */
 import { User } from '../../models';
 import { connect, disconnect } from '../../database/db';
 
@@ -11,6 +12,7 @@ export type UserEntry = {
   devices: string[];
 };
 
+//* Next Route Handler
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
