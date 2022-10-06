@@ -13,7 +13,7 @@ interface Props {
 }
 
 export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
-  const { CloseSession } = useAuthentication();
+  const { User, CloseSession } = useAuthentication();
 
   const handleCloseSession = () => {
     CloseSession();
@@ -25,14 +25,16 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
       <Box>
         <Box display="flex" justifyContent="flex-start" alignItems="center" gap={1} color="#555">
           <Typography variant="body1" fontSize="20px">
-            <strong>John Doe</strong>
+            <strong>
+              {User.name} {User.surname}
+            </strong>
           </Typography>
           <Typography variant="body1" fontSize="13px" mt="3px">
             #184263
           </Typography>
         </Box>
         <Typography variant="body1" fontSize="11px">
-          somemail@domain.com
+          {User.email}
         </Typography>
       </Box>
       <Typography variant="h5" fontSize="15px" fontWeight="bold" color="#555" mt={2}>
@@ -45,12 +47,12 @@ export const AccountsDialog: FC<Props> = ({ open, onClose }) => {
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="flex-start">
         <ImageCard
           image="https://upload.wikimedia.org/wikipedia/commons/f/fe/C%C3%A9dula_de_Identidad_electr%C3%B3nica_de_Uruguay_-_Frente.jpg"
-          title="Document overse"
+          title="Document front"
           updatedAt="29/08/2022 13:06"
         />
         <ImageCard
           image="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Dorso_de_la_C%C3%A9dula_de_Identidad_electr%C3%B3nica_de_Uruguay.jpg/220px-Dorso_de_la_C%C3%A9dula_de_Identidad_electr%C3%B3nica_de_Uruguay.jpg"
-          title="Document reverse"
+          title="Document back"
           updatedAt="29/08/2022 13:08"
         />
       </Box>
