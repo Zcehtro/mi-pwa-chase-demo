@@ -45,7 +45,7 @@ const Home: NextPage = () => {
           )}
           {!webAuthnEnabled && (
             <NotificationCard
-              title="Setup biometric authentication"
+              title="Set up biometric authentication"
               description="You have not registered your biometric authentication yet. Please register for a better authentication experience."
               icon={faFingerprint}
               onClick={() => setShowBiometricRegistration(true)}
@@ -53,8 +53,8 @@ const Home: NextPage = () => {
             />
           )}
           <NotificationCard
-            title="¿Where i am?"
-            description="¿Have you ever wanted to know where you are? Well, now you can!"
+            title="Where am I?"
+            description="Have you ever wanted to know where you are? Well, now you can!"
             icon={faLocationDot}
             onClick={goToLocation}
             readTime="30 secs"
