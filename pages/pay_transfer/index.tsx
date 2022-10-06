@@ -64,6 +64,7 @@ const PayTransfer: NextPage = () => {
           height: "100vh",
           width: "100vw",
           position: "absolute",
+          zIndex: -1,
         }}
       ></Box>
       <Box
