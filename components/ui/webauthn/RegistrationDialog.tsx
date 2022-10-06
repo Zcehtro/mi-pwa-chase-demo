@@ -74,7 +74,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
     let msg;
 
     if (verificationJSON && verificationJSON.verified) {
-      msg = '¡Success!';
+      msg = 'Success!';
       EnableWebAuthn();
       setSuccess(true);
     } else {
@@ -101,7 +101,7 @@ export const RegistrationDialog: FC<Props> = ({ open, onClose }) => {
             <strong>Biometrics setup</strong>
           </Typography>
           <Typography variant="body1" fontSize="13px" mb={5}>
-            Setup your biometrics to login to your account more securely and faster, you can also use it to make payments and other transactions.
+            Set up your biometrics to login to your account more securely and faster, you can also use it to make payments and other transactions.
           </Typography>
           {webAuthnMessage.status && (
             <Typography variant="body1" fontSize="13px" mb={5} color="#555">
