@@ -58,6 +58,8 @@ export const LoginForm: FC = () => {
 
   //? Form Handler
   const onSubmit: SubmitHandler<Inputs> = async (data: Inputs) => {
+    if (User) data.email = User.email;
+
     const req = await axios.post('/api/signin', data);
     const { user } = req.data;
 
