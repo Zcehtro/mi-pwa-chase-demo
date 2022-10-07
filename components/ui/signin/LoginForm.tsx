@@ -218,7 +218,7 @@ export const LoginForm: FC = () => {
                         Not registered yet?&nbsp;
                       </Typography>
                       <Link href="/signup" passHref>
-                        <Typography display="inline" color="primary" fontWeight="bold" variant="caption">
+                        <Typography display="inline" color="primary" fontWeight="bold" variant="caption" style={{ cursor: 'pointer' }}>
                           Click here&nbsp;
                         </Typography>
                       </Link>
@@ -245,7 +245,14 @@ export const LoginForm: FC = () => {
                       <Typography display="inline" variant="caption" color="#999">
                         Not you?&nbsp;
                       </Typography>
-                      <Typography display="inline" color="primary" fontWeight="bold" variant="caption" onClick={() => handlePressedLogOut()}>
+                      <Typography
+                        display="inline"
+                        color="primary"
+                        fontWeight="bold"
+                        variant="caption"
+                        onClick={() => handlePressedLogOut()}
+                        style={{ cursor: 'pointer' }}
+                      >
                         Click here&nbsp;
                       </Typography>
                       <Typography display="inline" variant="caption" color="#999">
