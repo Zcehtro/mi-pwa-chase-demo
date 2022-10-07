@@ -1,16 +1,16 @@
+/* Types */
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-import { generateRegistrationOptions } from '@simplewebauthn/server';
 import type { GenerateRegistrationOptionsOpts } from '@simplewebauthn/server';
-
+/* Dependencies */
+import { generateRegistrationOptions } from '@simplewebauthn/server';
 import { rpID } from '../../../constants/webAuthn';
-
 import { dbUsers, dbUsersWebAuthn } from '../../../database';
 
+//* Next Route Handler
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
-      return getGenerateRegistrationOptions(req, res);
+      return postGenerateRegistrationOptions(req, res);
 
     default:
       return res.status(400).json({
@@ -22,7 +22,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 /**
  * Registration (a.k.a. "Registration")
  */
-const getGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
+const postGenerateRegistrationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
 
   const user = {

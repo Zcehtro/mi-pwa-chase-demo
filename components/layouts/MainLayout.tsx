@@ -8,20 +8,6 @@ interface Props {
 }
 
 export const MainLayout: FC<Props> = ({ children }) => {
-  // Trabajar asi causa lo del hidratation error
-  // const router = useRouter();
-  // const { User } = useAuthentication();
-
-  // useEffect(() => {
-  //   if (!User.isLoggedIn) {
-  //     router.push('/signin');
-  //   }
-  // }, [User.isLoggedIn]);
-
-  // useEffect(() => {
-  //   console.log('[DEBUG] User state changed:', User);
-  // }, [User]);
-
   return (
     <>
       <Head>

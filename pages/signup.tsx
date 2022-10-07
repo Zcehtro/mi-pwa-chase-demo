@@ -1,9 +1,10 @@
+/* Next and React imports */
 import type { NextPage } from 'next';
-
-import { Box, Typography } from '@mui/material';
+/* UI and Components */
 import { RegistrationForm } from '../components/ui/signin/RegistrationForm';
 import { BottomLinks } from '../components/ui/signin/BottomLinks';
 import { AuthLayout } from '../components/layouts/AuthLayout';
+import { Box, Typography } from '@mui/material';
 
 const Login: NextPage = () => {
   return (

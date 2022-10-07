@@ -5,12 +5,9 @@ import type { AppProps } from 'next/app';
 import { Suspense } from 'react';
 import { ThemeProvider } from '@mui/system';
 import { lightTheme } from '../themes';
-//import redux provider
+
 import { Provider } from 'react-redux';
 import { store } from '../redux/store';
-
-// import { AnimatePresence } from "framer-motion";
-// import { Transition } from "../components/ui/_shared/transitions";
 
 // The following import prevents a Font Awesome icon server-side rendering bug,
 // where the icons flash from a very large icon down to a properly sized one:

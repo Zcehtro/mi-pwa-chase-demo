@@ -1,11 +1,11 @@
+// Next and React imports
 import type { NextPage } from 'next';
-
-import { Box, Typography } from '@mui/material';
-
+// Components
 import { AuthLayout } from '../components/layouts/AuthLayout';
-
 import { BottomLinks } from '../components/ui/signin/BottomLinks';
 import { LoginForm } from '../components/ui/signin/LoginForm';
+// UI Components
+import { Box, Typography } from '@mui/material';
 
 const SignIn: NextPage = () => {
   return (

@@ -4,9 +4,7 @@ import { Button, Card, CardContent, Typography, Divider } from '@mui/material';
 export const WebAuthnModal = () => {
   const router = useRouter();
 
-  const handleYesBtnClick = () => {
-    console.log('[DEBUG] Call webauthnRegistration function');
-  };
+  const handleYesBtnClick = () => {};
 
   return (
     <Card sx={{ maxWidth: 350, mt: 5, paddingY: 3, borderRadius: '10px' }}>
@@ -27,13 +25,7 @@ export const WebAuthnModal = () => {
         <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={handleYesBtnClick}>
           Yes
         </Button>
-        <Button
-          fullWidth
-          variant="contained"
-          sx={{ mt: 2 }}
-          //on click navigate to home
-          onClick={() => router.push('/')}
-        >
+        <Button fullWidth variant="contained" sx={{ mt: 2 }} onClick={() => router.push('/')}>
           No
         </Button>
       </CardContent>

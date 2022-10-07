@@ -1,12 +1,13 @@
+/* Types */
 import type { NextApiRequest, NextApiResponse } from 'next';
+import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
+/* Dependencies */
 import base64url from 'base64url';
 import { generateAuthenticationOptions } from '@simplewebauthn/server';
-import type { GenerateAuthenticationOptionsOpts } from '@simplewebauthn/server';
-
 import { rpID } from '../../../constants/webAuthn';
-
 import { dbUsersWebAuthn } from '../../../database';
 
+//* Next Route Handler
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {
     case 'POST':
@@ -24,27 +25,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
  */
 const postGenerateAuthenticationOptions = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.body;
-  console.log(`[DEBUG] postGenerateAuthenticationOptions, id: ${id}`);
 
   const userWebAuthnFromDB = await dbUsersWebAuthn.getUserById(id);
-  console.log(
-    `[DEBUG] postGenerateAuthenticationOptions, userWebAuthnFromDB: ${JSON.stringify(
-      userWebAuthnFromDB,
-    )}`,
-  );
 
   if (!userWebAuthnFromDB) {
-    return res
-      .status(400)
-      .json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
+    return res.status(400).json({ message: `ERROR: User has no registered WebAuthn data in the database.` });
   }
-
-  // if (!userFromDB) {
-  //   return res.status(400).json({
-  //     errorType: 'USERNAME_NOT_REGISTERED',
-  //     message: `User with the username "${loggedInUserId}" not register webauthn`
-  //   });
-  // }
 
   const opts: GenerateAuthenticationOptionsOpts = {
     timeout: 60000,

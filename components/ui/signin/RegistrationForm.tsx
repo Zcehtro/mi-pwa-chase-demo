@@ -1,13 +1,17 @@
-import { FC, useEffect, useState } from 'react';
+// Next and React imports
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { FC, useEffect, useState } from 'react';
+// Dependencies
 import { useForm, SubmitHandler } from 'react-hook-form';
 import axios from '../../../libs/axios';
-
+//Custom Hooks
 import useAuthentication from '../../../hooks/useAuthentication';
 
+// UI and Components
 import { Button, Card, CardContent, Checkbox, Grid, TextField, Typography } from '@mui/material';
 
+//* Form Inputs
 type RegistrationInputs = {
   name: string;
   surname: string;
@@ -16,32 +20,30 @@ type RegistrationInputs = {
 };
 
 export const RegistrationForm: FC = () => {
-  const [error, setError] = useState<string | null>(null);
+  // Hooks
   const { Auth, User } = useAuthentication();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegistrationInputs>();
-
   const router = useRouter();
 
+  //States
+  const [error, setError] = useState<string | null>(null);
+
+  // prettier-ignore
+  const { register, handleSubmit, formState: { errors }} = useForm<RegistrationInputs>();
+
+  //* useEffect Section
   useEffect(() => {
     User.isLoggedIn && router.push('/');
   }, [User.isLoggedIn]);
+  //* useEffect Section end
 
+  //? Form Handler
   const onSubmit: SubmitHandler<RegistrationInputs> = async (data: RegistrationInputs) => {
     try {
-      console.log('[DEBUG] RegistrationForm: onSubmit():', data);
-
       const req = await axios.post('/api/signup', data);
-      console.log('[DEBUG] RegistrationForm: onSubmit(): req:', req);
 
       const { user } = await req.data;
       Auth(user);
     } catch (error: any) {
-      console.log('[DEBUG] Error during user registration', error);
       setError(error.message);
     }
   };
@@ -54,8 +56,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Enter your name"
-                variant="standard"
+                label="First name"
+                variant="outlined"
                 {...register('name', { required: true })}
                 error={errors.name ? true : false}
                 helperText={errors.name ? 'Name is required' : ''}
@@ -64,8 +66,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={6}>
               <TextField
                 fullWidth
-                label="Enter your surname"
-                variant="standard"
+                label="Last name"
+                variant="outlined"
                 {...register('surname', { required: true })}
                 error={errors.surname ? true : false}
                 helperText={errors.surname ? 'Surname is required' : ''}
@@ -74,8 +76,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Enter your email"
-                variant="standard"
+                label="E-mail"
+                variant="outlined"
                 {...register('email', { required: true })}
                 error={errors.email ? true : false}
                 helperText={errors.email ? 'Email is required' : ''}
@@ -84,8 +86,8 @@ export const RegistrationForm: FC = () => {
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Enter your password"
-                variant="standard"
+                label="Password"
+                variant="outlined"
                 type="password"
                 {...register('password', { required: true })}
                 error={errors.password ? true : false}
@@ -98,13 +100,6 @@ export const RegistrationForm: FC = () => {
                 Remember me
               </Typography>
             </Grid>
-            <Grid item xs={6} display="flex" justifyContent="center" alignItems="center">
-              <Link href="/forgot-password">
-                <Typography variant="caption" color="primary">
-                  ¿Forgot password?
-                </Typography>
-              </Link>
-            </Grid>
             <Grid item xs={12}>
               {error && (
                 <Typography variant="caption" color="error">
@@ -114,7 +109,7 @@ export const RegistrationForm: FC = () => {
             </Grid>
             <Grid item xs={12}>
               <Button fullWidth variant="contained" type="submit" sx={{ my: 2 }}>
-                Register
+                Register and Log In
               </Button>
             </Grid>
           </Grid>
